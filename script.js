@@ -22,15 +22,19 @@ async function searchChemical(queryOverride) {
         state.wikiDesc = null;
         state.descSource = 'pubchem';
 
-        // Fetch PubChem Data + Description
-        const [props, syns, sdf, desc] = await Promise.all([
+        const [props, syns, sdfRaw, desc] = await Promise.all([
             safeFetch(`https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/${cid}/property/MolecularFormula,MolecularWeight,IUPACName,SMILES,ConnectivitySMILES,InChIKey,InChI,Charge/JSON`),
             safeFetch(`https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/${cid}/synonyms/JSON`),
             safeFetchText(`https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/${cid}/SDF?record_type=3d`),
             safeFetch(`https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/${cid}/description/JSON`)
         ]);
 
-        // Process PubChem Data
+        let sdf = sdfRaw;
+        if (sdf && sdf.includes('no 3D structure available')) {
+            sdf = null; // Treat as unavailable
+        }
+        state.sdf = sdf;
+
         const p = props?.PropertyTable?.Properties?.[0] || {};
         const sList = syns?.InformationList?.Information?.[0]?.Synonym || [];
 
@@ -166,7 +170,17 @@ async function fetchWikiDescription(chemName) {
 
 function renderUI(props, synonyms) {
     setText('chem-name', capitalize(state.name));
+
+    let cas = '-';
+    const casRegex = /^\d{2,7}-\d{2}-\d$/;
+    for (let syn of synonyms) {
+        if (casRegex.test(syn)) {
+            cas = syn;
+            break;
+        }
+    }
     setText('chem-iupac', props.IUPACName || "N/A");
+    setText('chem-cas', cas);
     const cidEl = document.getElementById('chem-cid');
     if (cidEl) {
         if (state.cid) {
@@ -357,27 +371,41 @@ function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 function setLoading(b) { document.getElementById('loader').classList.toggle('hidden', !b); }
 function handleEnter(e) { if (e.key === 'Enter') searchChemical(); }
 
-function setTab(t) {
-    const is2d = t === '2d';
-    document.getElementById('mol-img').classList.toggle('hidden', !is2d);
-    document.getElementById('mol-3d').classList.toggle('hidden', is2d);
-    document.getElementById('tab-2d').classList.toggle('border-blue-500', is2d);
-    document.getElementById('tab-2d').classList.toggle('text-blue-600', is2d);
-    document.getElementById('tab-2d').classList.toggle('text-gray-500', !is2d);
-    document.getElementById('tab-3d').classList.toggle('border-blue-500', !is2d);
-    document.getElementById('tab-3d').classList.toggle('text-blue-600', !is2d);
+function setTab(tab) {
+    document.getElementById('tab-2d').classList.toggle('border-blue-500', tab === '2d');
+    document.getElementById('tab-2d').classList.toggle('text-blue-600', tab === '2d');
+    document.getElementById('tab-2d').classList.toggle('bg-blue-50/50', tab === '2d');
+    document.getElementById('tab-2d').classList.toggle('dark:bg-blue-900/20', tab === '2d');
+    document.getElementById('tab-2d').classList.toggle('font-bold', tab === '2d');
+    document.getElementById('tab-2d').classList.toggle('text-gray-500', tab !== '2d');
+    document.getElementById('tab-2d').classList.toggle('font-medium', tab !== '2d');
 
-    if (!is2d && state.sdf) {
-        const el = document.getElementById('mol-3d');
-        const isDark = document.documentElement.classList.contains('dark');
-        const v = $3Dmol.createViewer(el, { backgroundColor: isDark ? '#1e293b' : 'white' });
-        v.addModel(state.sdf, "sdf");
-        v.setStyle({}, { stick: { radius: 0.15 }, sphere: { scale: 0.3 } });
-        v.zoomTo(); v.render(); v.spin(true);
-    } else if (!is2d) {
-        document.getElementById('no-3d').classList.remove('hidden');
-    } else {
+    document.getElementById('tab-3d').classList.toggle('border-blue-500', tab === '3d');
+    document.getElementById('tab-3d').classList.toggle('text-blue-600', tab === '3d');
+    document.getElementById('tab-3d').classList.toggle('bg-blue-50/50', tab === '3d');
+    document.getElementById('tab-3d').classList.toggle('dark:bg-blue-900/20', tab === '3d');
+    document.getElementById('tab-3d').classList.toggle('font-bold', tab === '3d');
+    document.getElementById('tab-3d').classList.toggle('text-gray-500', tab !== '3d');
+    document.getElementById('tab-3d').classList.toggle('font-medium', tab !== '3d');
+
+    if (tab === '2d') {
+        document.getElementById('mol-img').classList.remove('hidden');
+        document.getElementById('mol-3d').classList.add('hidden');
         document.getElementById('no-3d').classList.add('hidden');
+    } else {
+        document.getElementById('mol-img').classList.add('hidden');
+        if (!state.sdf) { // Enhanced check for unavailable/invalid SDF
+            document.getElementById('mol-3d').classList.add('hidden');
+            document.getElementById('no-3d').classList.remove('hidden');
+            return;
+        }
+        document.getElementById('no-3d').classList.add('hidden');
+        document.getElementById('mol-3d').classList.remove('hidden');
+        const viewer = $3Dmol.createViewer(document.getElementById('mol-3d'), { backgroundColor: 'white' }); // Or 'transparent' if preferred
+        viewer.addModel(state.sdf, 'sdf');
+        viewer.setStyle({}, { stick: { radius: 0.15, color: 'spectrum' }, sphere: { scale: 0.3 } });
+        viewer.zoomTo();
+        viewer.render();
     }
 }
 
