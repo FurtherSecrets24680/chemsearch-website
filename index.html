@@ -5,728 +5,2698 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ChemSearch</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/3Dmol/2.0.4/3Dmol-min.js"></script>
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <script src="https://unpkg.com/openchemlib@latest/full.js"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
-        rel="stylesheet">
-
+    <meta name="description" content="ChemSearch is a native Kotlin + Jetpack Compose app for searching, exploring, and learning chemical compounds.">
     <link rel="icon" href="favicon.png" type="image/png">
-
-    <!-- KaTeX for LaTeX Rendering -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
-                    colors: { brand: { 500: '#3b82f6', 600: '#2563eb' } }
-                }
-            }
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        :root {
+            --bg: #eef3fb;
+            --paper: rgba(255, 255, 255, 0.68);
+            --paper-strong: rgba(255, 255, 255, 0.84);
+            --paper-soft: rgba(245, 248, 255, 0.66);
+            --ink: #17233d;
+            --muted: #6b768d;
+            --line: rgba(148, 165, 204, 0.28);
+            --line-strong: rgba(112, 132, 182, 0.44);
+            --accent: #356bdf;
+            --accent-soft: rgba(53, 107, 223, 0.14);
+            --accent-deep: #214cae;
+            --accent-fog: rgba(96, 137, 232, 0.18);
+            --accent-dust: #8e9cbe;
+            --rust: #5b84ea;
+            --mustard: #84a0e4;
+            --shadow: 0 18px 48px rgba(33, 58, 117, 0.14);
+            --shadow-soft: 0 10px 28px rgba(33, 58, 117, 0.1);
+            --panel-blur: 18px;
+            --radius-xl: 16px;
+            --radius-lg: 11px;
+            --radius-md: 8px;
+            --max: 1860px;
         }
-    </script>
-    <style>        
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
         body {
-            -webkit-font-smoothing: antialiased;
+            margin: 0;
+            padding: 0;
         }
 
-        ::-webkit-scrollbar {
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: "Manrope", sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at 12% 0%, rgba(87, 135, 255, 0.16), transparent 24%),
+                radial-gradient(circle at 100% 18%, rgba(53, 107, 223, 0.11), transparent 22%),
+                linear-gradient(180deg, #f8faff 0%, var(--bg) 100%);
+            line-height: 1.55;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background:
+                linear-gradient(rgba(97, 118, 167, 0.06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(97, 118, 167, 0.05) 1px, transparent 1px);
+            background-size: 28px 28px;
+            z-index: -1;
+        }
+
+        .ambient {
+            display: none;
+        }
+
+        .wrap {
+            width: min(var(--max), calc(100vw - clamp(24px, 4vw, 92px)));
+            margin: 0 auto 56px;
+        }
+
+        .skip-link {
+            position: absolute;
+            left: 12px;
+            top: -56px;
+            z-index: 100;
+            background: #13203b;
+            color: #f6f9ff;
+            border-radius: 6px;
+            padding: 9px 12px;
+            font-size: 0.84rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: top 0.2s ease;
+        }
+
+        .skip-link:focus {
+            top: 10px;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        .site-header {
+            position: sticky;
+            top: 10px;
+            z-index: 30;
+            margin-top: 18px;
+            padding: 14px 16px;
+            border: 1px solid var(--line-strong);
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(244, 248, 255, 0.62));
+            border-radius: 12px;
+            box-shadow: var(--shadow-soft);
+            backdrop-filter: blur(var(--panel-blur));
+            -webkit-backdrop-filter: blur(var(--panel-blur));
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            border: 1px solid var(--line-strong);
+            background: rgba(255, 255, 255, 0.66);
+            color: var(--ink);
+            cursor: pointer;
+            backdrop-filter: blur(calc(var(--panel-blur) * 0.7));
+            -webkit-backdrop-filter: blur(calc(var(--panel-blur) * 0.7));
+        }
+
+        .mobile-menu-toggle i {
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+
+        .mobile-menu-toggle:hover {
+            background: rgba(255, 255, 255, 0.84);
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--ink);
+            min-width: 0;
+        }
+
+        .brand-text {
+            min-width: 0;
+        }
+
+        .brand img {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: 0;
+            background: transparent;
+            padding: 0;
+            object-fit: cover;
+            clip-path: inset(1.5px round 8px);
+        }
+
+        .brand-title {
+            display: block;
+            font-family: "Bricolage Grotesque", sans-serif;
+            font-size: 1.08rem;
+            font-weight: 700;
+            line-height: 1.05;
+            letter-spacing: -0.01em;
+        }
+
+        .brand-sub {
+            display: block;
+            margin-top: 3px;
+            color: var(--muted);
+            font-size: 0.73rem;
+            letter-spacing: 0.02em;
+        }
+
+        .header-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .pill-link,
+        .theme-toggle,
+        .release-chip {
+            appearance: none;
+            text-decoration: none;
+            color: var(--ink);
+            border: 1px solid var(--line);
+            background: rgba(255, 255, 255, 0.64);
+            border-radius: 8px;
+            padding: 9px 12px;
+            font: inherit;
+            font-size: 0.82rem;
+            font-weight: 700;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(calc(var(--panel-blur) * 0.7));
+        }
+
+        .pill-link:hover,
+        .theme-toggle:hover,
+        .release-chip:hover {
+            background: rgba(255, 255, 255, 0.84);
+            border-color: var(--line-strong);
+        }
+
+        .theme-toggle {
+            cursor: pointer;
+        }
+
+        .pill-link i,
+        .btn i,
+        .section-link i,
+        .release-chip i,
+        .lightbox-close i {
+            font-size: 1rem;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        .utility-bar {
+            position: sticky;
+            top: 84px;
+            z-index: 24;
+            margin-top: 10px;
+            padding: 10px 12px;
+            border: 1px solid var(--line);
+            background:
+                linear-gradient(180deg, rgba(249, 251, 255, 0.74), rgba(239, 244, 252, 0.66));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            backdrop-filter: blur(var(--panel-blur));
+            -webkit-backdrop-filter: blur(var(--panel-blur));
+        }
+
+        .section-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+        }
+
+        .mobile-action-row {
+            display: none;
+        }
+
+        .section-link {
+            text-decoration: none;
+            color: var(--muted);
+            border: 1px solid transparent;
+            border-radius: 999px;
+            background: transparent;
+            padding: 7px 12px;
+            font-size: 0.84rem;
+            font-weight: 700;
+            letter-spacing: 0.01em;
+            text-transform: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .section-link:hover {
+            color: var(--ink);
+            background: rgba(255, 255, 255, 0.64);
+            border-color: var(--line);
+        }
+
+        .section-link.is-active {
+            color: var(--accent);
+            background: rgba(53, 107, 223, 0.12);
+            border-color: rgba(53, 107, 223, 0.24);
+        }
+
+        main {
+            padding-top: 22px;
+        }
+
+        .hero {
+            display: grid;
+            gap: 18px;
+        }
+
+        .hero-main {
+            position: relative;
+            overflow: hidden;
+            padding: 32px 30px 24px;
+            border: 1px solid var(--line-strong);
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.76), rgba(246, 249, 255, 0.64)),
+                var(--paper);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(calc(var(--panel-blur) * 0.75));
+            -webkit-backdrop-filter: blur(calc(var(--panel-blur) * 0.75));
+            display: grid;
+            grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.8fr);
+            column-gap: 30px;
+        }
+
+        .hero-main::after {
+            content: "";
+            position: absolute;
+            right: -16px;
+            top: -16px;
+            width: 120px;
+            height: 120px;
+            border-radius: 999px;
+            background: radial-gradient(circle, rgba(53, 107, 223, 0.16), transparent 68%);
+            pointer-events: none;
+        }
+
+        h1 {
+            margin: 0;
+            font-family: "Bricolage Grotesque", sans-serif;
+            font-size: clamp(2.35rem, 5.2vw, 4.7rem);
+            line-height: 0.94;
+            letter-spacing: -0.04em;
+            max-width: 13ch;
+            text-wrap: balance;
+            grid-column: 1;
+        }
+
+        .hero-lead {
+            margin: 18px 0 0;
+            max-width: 62ch;
+            color: var(--muted);
+            font-size: 1.02rem;
+            line-height: 1.7;
+            grid-column: 1;
+        }
+
+        .hero-lead strong {
+            color: var(--ink);
+        }
+
+        .hero-meta {
+            margin: 16px 0 0;
+            padding: 0;
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 16px;
+            color: var(--muted);
+            font-size: 0.82rem;
+            font-weight: 700;
+            grid-column: 1;
+        }
+
+        .hero-meta li {
+            position: relative;
+            padding-left: 14px;
+        }
+
+        .hero-meta li::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0.52em;
             width: 6px;
             height: 6px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 3px;
-        }
-
-        .dark ::-webkit-scrollbar-thumb {
-            background: #475569;
-        }
-
-        /* 3D Viewer */
-        #viewer-canvas {
-            position: relative;
-            width: 100%;
-            height: 100%;
-        }
-
-        .loader {
-            border: 3px solid #e2e8f0;
-            border-top-color: #3b82f6;
             border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            animation: spin 0.8s linear infinite;
+            background: var(--accent);
         }
 
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
+        .cta-row {
+            margin-top: 22px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            grid-column: 1;
+        }
+
+        .btn {
+            text-decoration: none;
+            border-radius: 8px;
+            padding: 12px 15px;
+            font-size: 0.92rem;
+            font-weight: 800;
+            border: 1px solid transparent;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            color: #f8fbff;
+            background: linear-gradient(180deg, #3f78ee 0%, #2c5fd2 100%);
+            border-color: rgba(39, 76, 162, 0.84);
+            box-shadow: 0 10px 22px rgba(53, 107, 223, 0.24);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(180deg, #477ff2 0%, #315fc8 100%);
+        }
+
+        .btn-secondary {
+            color: var(--ink);
+            background: rgba(255, 255, 255, 0.58);
+            border-color: var(--line);
+            backdrop-filter: blur(calc(var(--panel-blur) * 0.55));
+            -webkit-backdrop-filter: blur(calc(var(--panel-blur) * 0.55));
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.8);
+            border-color: var(--line-strong);
+        }
+
+        .hero-facts {
+            margin-top: 6px;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            grid-column: 2;
+            grid-row: 1 / span 4;
+            align-self: start;
+        }
+
+        .fact {
+            grid-column: span 1;
+            padding: 16px 15px 15px;
+            border: 1px solid var(--line);
+            border-radius: 12px 12px 16px 12px;
+            background: rgba(255, 255, 255, 0.56);
+            backdrop-filter: blur(calc(var(--panel-blur) * 0.55));
+            -webkit-backdrop-filter: blur(calc(var(--panel-blur) * 0.55));
+        }
+
+        .fact:nth-child(1) {
+            grid-column: span 2;
+        }
+
+        .fact:nth-child(2) {
+            grid-column: span 1;
+        }
+
+        .fact:nth-child(3) {
+            grid-column: span 1;
+        }
+
+        .fact:nth-child(4) {
+            grid-column: span 2;
+        }
+
+        .fact i {
+            width: 34px;
+            height: 34px;
+            display: grid;
+            place-items: center;
+            border-radius: 10px;
+            font-size: 1rem;
+            color: var(--accent);
+            background: rgba(53, 107, 223, 0.12);
+        }
+
+        .fact:nth-child(2) i,
+        .fact:nth-child(2) strong {
+            color: #5779d8;
+        }
+
+        .fact:nth-child(3) i,
+        .fact:nth-child(3) strong {
+            color: #4462bf;
+        }
+
+        .fact:nth-child(4) i,
+        .fact:nth-child(4) strong {
+            color: #6789e7;
+        }
+
+        .fact strong {
+            display: block;
+            margin-top: 10px;
+            font-family: "Bricolage Grotesque", sans-serif;
+            font-size: 1.4rem;
+            line-height: 1;
+            letter-spacing: -0.03em;
+        }
+
+        .fact span {
+            display: block;
+            margin-top: 4px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.01em;
+            text-transform: none;
+            color: var(--muted);
+        }
+
+        .hero-support {
+            margin-top: 28px;
+            padding-top: 18px;
+            border-top: 2px solid var(--line-strong);
+            display: grid;
+            grid-template-columns: minmax(220px, 0.72fr) minmax(0, 1.28fr);
+            column-gap: 22px;
+            row-gap: 10px;
+            align-items: start;
+            grid-column: 1 / -1;
+        }
+
+        .hero-support h2 {
+            margin: 0;
+            font-family: "Bricolage Grotesque", sans-serif;
+            font-size: 1.45rem;
+            line-height: 1.02;
+            letter-spacing: -0.02em;
+            max-width: 12ch;
+        }
+
+        .hero-support p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.95rem;
+            line-height: 1.68;
+        }
+
+        .hero-support-copy {
+            grid-column: 2;
+            display: grid;
+            gap: 10px;
+            align-items: start;
+        }
+
+        .support-points {
+            display: grid;
+            gap: 10px;
+        }
+
+        .panel-note {
+            padding: 12px 14px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.48);
+            color: var(--muted);
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            font-size: 0.86rem;
+            line-height: 1.55;
+            backdrop-filter: blur(calc(var(--panel-blur) * 0.55));
+            -webkit-backdrop-filter: blur(calc(var(--panel-blur) * 0.55));
+        }
+
+        .panel-note:nth-child(2) {
+            background: rgba(245, 248, 255, 0.62);
+        }
+
+        .panel-note i {
+            margin-top: 1px;
+            width: 30px;
+            height: 30px;
+            display: grid;
+            place-items: center;
+            border-radius: 9px;
+            font-size: 1rem;
+            color: var(--accent);
+            background: rgba(53, 107, 223, 0.12);
+            flex-shrink: 0;
+        }
+
+        .panel-note:nth-child(2) i {
+            color: var(--rust);
+            background: rgba(91, 132, 234, 0.12);
+        }
+
+        .section {
+            margin-top: 28px;
+            padding: 26px;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(245, 249, 255, 0.58)),
+                var(--paper);
+            box-shadow: var(--shadow-soft);
+            backdrop-filter: blur(calc(var(--panel-blur) * 0.72));
+            -webkit-backdrop-filter: blur(calc(var(--panel-blur) * 0.72));
+        }
+
+        #features.section {
+            padding: 24px 26px 30px;
+            margin-right: clamp(0px, 0.9vw, 12px);
+        }
+
+        #tools.section {
+            padding: 30px 26px 24px;
+            margin-left: clamp(0px, 1.6vw, 26px);
+        }
+
+        #screenshots.section {
+            padding: 24px 26px 34px;
+            margin-right: clamp(0px, 1.2vw, 18px);
+        }
+
+        #stack.section {
+            padding: 32px 26px 24px;
+            margin-left: clamp(0px, 0.8vw, 12px);
+        }
+
+        .section h2 {
+            margin: 0;
+            font-family: "Bricolage Grotesque", sans-serif;
+            font-size: clamp(1.5rem, 2.7vw, 2.4rem);
+            line-height: 1;
+            letter-spacing: -0.03em;
+        }
+
+        .section-heading {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-heading i,
+        .feature-card h3 i,
+        .meta-card h3 i {
+            font-size: 1rem;
+            color: var(--accent);
+        }
+
+        .section-intro {
+            margin: 12px 0 0;
+            max-width: 70ch;
+            color: var(--muted);
+            font-size: 0.98rem;
+            line-height: 1.7;
+        }
+
+        #tools .section-intro {
+            max-width: 64ch;
+        }
+
+        #screenshots .section-intro {
+            max-width: 56ch;
+            margin-bottom: 2px;
+        }
+
+        .feature-grid {
+            margin-top: 18px;
+            display: grid;
+            grid-template-columns: repeat(12, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .feature-card {
+            grid-column: span 4;
+            padding: 18px 18px 18px 20px;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.54);
+            backdrop-filter: blur(calc(var(--panel-blur) * 0.55));
+            -webkit-backdrop-filter: blur(calc(var(--panel-blur) * 0.55));
+        }
+
+        .feature-card:nth-child(1),
+        .feature-card:nth-child(4) {
+            grid-column: span 5;
+        }
+
+        .feature-card:nth-child(2) {
+            grid-column: span 3;
+            background: rgba(242, 246, 255, 0.7);
+        }
+
+        .feature-card:nth-child(3) {
+            grid-column: span 4;
+            padding-top: 20px;
+        }
+
+        .feature-card:nth-child(5) {
+            grid-column: span 4;
+            background: rgba(248, 250, 255, 0.68);
+        }
+
+        .feature-card:nth-child(6) {
+            grid-column: span 3;
+            background: rgba(247, 250, 255, 0.72);
+        }
+
+        .feature-card h3 {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: "Bricolage Grotesque", sans-serif;
+            font-size: 1.05rem;
+            letter-spacing: -0.01em;
+        }
+
+        .feature-card h3 i,
+        .meta-card h3 i,
+        .tool-head i {
+            width: 32px;
+            height: 32px;
+            display: grid;
+            place-items: center;
+            border-radius: 10px;
+            background: rgba(53, 107, 223, 0.12);
+        }
+
+        .feature-card:nth-child(2) h3 i,
+        .meta-card:nth-child(2) h3 i {
+            color: #5779d8;
+            background: rgba(87, 121, 216, 0.12);
+        }
+
+        .feature-card:nth-child(3) h3 i,
+        .meta-card:nth-child(3) h3 i {
+            color: #4462bf;
+            background: rgba(68, 98, 191, 0.12);
+        }
+
+        .feature-card ul {
+            margin: 12px 0 0;
+            padding-left: 18px;
+            color: var(--muted);
+            font-size: 0.92rem;
+            line-height: 1.62;
+        }
+
+        .tools-controls {
+            margin-top: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .tools-controls input,
+        .tools-controls button {
+            font: inherit;
+            font-size: 0.9rem;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.58);
+            color: var(--ink);
+            backdrop-filter: blur(calc(var(--panel-blur) * 0.5));
+            -webkit-backdrop-filter: blur(calc(var(--panel-blur) * 0.5));
+        }
+
+        .tools-controls input {
+            flex: 1;
+            min-width: 240px;
+            padding: 10px 12px;
+        }
+
+        .tools-controls button {
+            padding: 10px 12px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .tools-controls button:hover {
+            background: rgba(255, 255, 255, 0.82);
+            border-color: var(--line-strong);
+        }
+
+        .tools-hint {
+            margin: 10px 1px 0;
+            color: var(--muted);
+            font-size: 0.8rem;
+            line-height: 1.45;
+        }
+
+        .tool.is-hidden {
+            display: none;
+        }
+
+        .tools-empty {
+            display: none;
+            margin-top: 10px;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .tools-empty.is-visible {
+            display: block;
+        }
+
+        .tools-grid {
+            margin-top: 18px;
+            display: grid;
+            grid-template-columns: repeat(12, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .tool {
+            grid-column: span 4;
+            padding: 16px 14px 14px;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.56);
+            backdrop-filter: blur(calc(var(--panel-blur) * 0.55));
+            -webkit-backdrop-filter: blur(calc(var(--panel-blur) * 0.55));
+        }
+
+        .tool:nth-child(1),
+        .tool:nth-child(5),
+        .tool:nth-child(8) {
+            grid-column: span 5;
+        }
+
+        .tool:nth-child(2),
+        .tool:nth-child(6),
+        .tool:nth-child(9) {
+            grid-column: span 3;
+        }
+
+        .tool:nth-child(3),
+        .tool:nth-child(7),
+        .tool:nth-child(11) {
+            background: rgba(248, 250, 255, 0.7);
+        }
+
+        .tool:nth-child(2),
+        .tool:nth-child(4),
+        .tool:nth-child(10) {
+            background: rgba(244, 247, 255, 0.72);
+        }
+
+        .tool-head {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            margin-bottom: 6px;
+        }
+
+        .tool-head i {
+            font-size: 1rem;
+            color: var(--accent);
+            margin-top: 2px;
+        }
+
+        .tool strong {
+            display: block;
+            font-size: 0.94rem;
+            letter-spacing: -0.01em;
+        }
+
+        .tool span {
+            color: var(--muted);
+            font-size: 0.86rem;
+            line-height: 1.55;
+        }
+
+        .screenshots-shell {
+            margin-top: 18px;
+            display: grid;
+            gap: 12px;
+        }
+
+        .carousel-wrap {
+            position: relative;
+            padding: 0 42px;
+        }
+
+        .carousel-viewport {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            padding: 2px 0 8px;
+            scrollbar-width: none;
+            touch-action: pan-x;
+            cursor: grab;
+            user-select: none;
+        }
+
+        .carousel-viewport:active {
+            cursor: grabbing;
+        }
+
+        .carousel-viewport::-webkit-scrollbar {
+            display: none;
+        }
+
+        .carousel-slide {
+            margin: 0;
+            flex: 0 0 min(100%, clamp(260px, 44vw, 560px));
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(calc(var(--panel-blur) * 0.55));
+            -webkit-backdrop-filter: blur(calc(var(--panel-blur) * 0.55));
+            display: flex;
+            flex-direction: column;
+            align-self: start;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            min-width: 0;
+        }
+
+        .gallery-card {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            width: 100%;
+            height: auto;
+            padding: 0;
+            border: 0;
+            background: none;
+            cursor: zoom-in;
+        }
+
+        .carousel-slide img {
+            display: block;
+            width: auto;
+            max-width: 100%;
+            height: auto;
+            max-height: min(70vh, 760px);
+            object-fit: contain;
+            filter: contrast(1.02);
+            background: rgba(219, 228, 250, 0.38);
+            aspect-ratio: auto;
+        }
+
+        .carousel-slide figcaption {
+            padding: 10px 11px;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.01em;
+            text-transform: none;
+        }
+
+        .gallery-card:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: -2px;
+        }
+
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            border: 1px solid var(--line-strong);
+            background: rgba(255, 255, 255, 0.74);
+            color: var(--ink);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            backdrop-filter: blur(calc(var(--panel-blur) * 0.65));
+            -webkit-backdrop-filter: blur(calc(var(--panel-blur) * 0.65));
+            z-index: 2;
+        }
+
+        .carousel-arrow:hover:not(:disabled) {
+            border-color: rgba(87, 121, 216, 0.58);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .carousel-arrow:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+
+        .carousel-arrow i {
+            font-size: 1rem;
+            line-height: 1;
+        }
+
+        .carousel-arrow.prev {
+            left: 0;
+        }
+
+        .carousel-arrow.next {
+            right: 0;
+        }
+
+        .carousel-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding: 0 2px;
+        }
+
+        .carousel-dots {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .carousel-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            border: 0;
+            background: rgba(113, 131, 172, 0.38);
+            padding: 0;
+            cursor: pointer;
+            transition: transform 0.18s ease, background-color 0.18s ease;
+        }
+
+        .carousel-dot:hover {
+            background: rgba(53, 107, 223, 0.52);
+        }
+
+        .carousel-dot.is-active {
+            background: var(--accent);
+            transform: scale(1.25);
+        }
+
+        .carousel-status {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.79rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+        }
+
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            z-index: 80;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            background: rgba(9, 15, 29, 0.9);
+        }
+
+        .lightbox[hidden] {
+            display: none;
+        }
+
+        .lightbox-shell {
+            width: min(1100px, calc(100vw - 32px));
+            max-height: calc(100vh - 48px);
+            display: grid;
+            gap: 12px;
+            justify-items: center;
+        }
+
+        .lightbox-close {
+            justify-self: end;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 12px;
+            border: 1px solid rgba(188, 209, 255, 0.18);
+            border-radius: 8px;
+            background: rgba(31, 47, 82, 0.38);
+            color: #f3f7ff;
+            font: inherit;
+            font-size: 0.8rem;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .lightbox-figure {
+            margin: 0;
+            width: 100%;
+            display: grid;
+            gap: 10px;
+            justify-items: center;
+        }
+
+        .lightbox-figure img {
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: calc(100vh - 150px);
+            object-fit: contain;
+            border: 1px solid rgba(188, 209, 255, 0.16);
+            border-radius: 10px;
+            background: #0f1729;
+        }
+
+        .lightbox-caption {
+            color: #eef3ff;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .table-wrap {
+            margin-top: 18px;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .source-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            color: var(--ink);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .source-link i {
+            color: var(--accent);
+            font-size: 0.95rem;
+        }
+
+        .source-link:hover {
+            color: var(--accent);
+            text-decoration: underline;
+        }
+
+        .source-note {
+            display: block;
+            margin-top: 4px;
+            font-size: 0.8rem;
+            color: var(--muted);
+            line-height: 1.45;
+        }
+
+        .source-note .source-link {
+            margin-top: 4px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--muted);
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+        .source-note .source-link i {
+            font-size: 0.86rem;
+            color: inherit;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid var(--line-strong);
+            background: rgba(255, 255, 255, 0.58);
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 10px 11px;
+            border-bottom: 1px solid var(--line);
+            vertical-align: top;
+            font-size: 0.88rem;
+        }
+
+        th {
+            background: rgba(228, 236, 252, 0.88);
+            color: var(--ink);
+            font-size: 0.74rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        td {
+            color: var(--muted);
+        }
+
+        tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .meta-grid {
+            margin-top: 16px;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .meta-card {
+            padding: 16px;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.56);
+            backdrop-filter: blur(calc(var(--panel-blur) * 0.55));
+            -webkit-backdrop-filter: blur(calc(var(--panel-blur) * 0.55));
+        }
+
+        .meta-card:nth-child(2) {
+            background: rgba(244, 247, 255, 0.72);
+        }
+
+        .meta-card:nth-child(3) {
+            background: rgba(248, 250, 255, 0.68);
+        }
+
+        .meta-card h3 {
+            margin: 0 0 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: "Bricolage Grotesque", sans-serif;
+            font-size: 1rem;
+        }
+
+        .meta-card p,
+        .meta-card ul {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .meta-card ul {
+            padding-left: 18px;
+        }
+
+        .info-card {
+            transition: border-color 0.24s ease, box-shadow 0.24s ease, transform 0.2s ease;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            .info-card:hover {
+                transform: translateY(-2px);
+                border-color: rgba(94, 132, 226, 0.58);
+                box-shadow: 0 0 0 1px rgba(94, 132, 226, 0.25), 0 16px 34px rgba(53, 107, 223, 0.2);
             }
         }
 
-        .ai-text strong {
-            font-weight: 600;
-            color: #2563eb;
+        code {
+            font-family: "IBM Plex Mono", monospace;
+            font-size: 0.83em;
+            color: #23438a;
+            background: rgba(229, 236, 255, 0.82);
+            border: 1px solid rgba(140, 162, 216, 0.45);
+            border-radius: 6px;
+            padding: 0.15em 0.38em;
         }
 
-        .dark .ai-text strong {
-            color: #60a5fa;
+        .footer {
+            margin: 28px 0 8px;
+            padding: 16px 2px 0;
+            border-top: 2px solid var(--line-strong);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 10px;
+            color: var(--muted);
+            font-size: 0.84rem;
         }
 
-        .katex {
-            font-size: 1.1em;
+        .footer a {
+            color: var(--accent);
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .reveal,
+        .reveal.is-visible {
+            opacity: 1;
+            transform: none;
+        }
+
+        .to-top {
+            position: fixed;
+            right: 14px;
+            bottom: 16px;
+            z-index: 35;
+            width: 44px;
+            height: 44px;
+            border: 1px solid var(--line-strong);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.64);
+            color: var(--accent);
+            font-size: 1rem;
+            font-weight: 900;
+            box-shadow: var(--shadow-soft);
+            cursor: pointer;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(10px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            backdrop-filter: blur(calc(var(--panel-blur) * 0.6));
+            -webkit-backdrop-filter: blur(calc(var(--panel-blur) * 0.6));
+        }
+
+        .to-top.is-visible {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        body[data-theme="dark"] {
+            --bg: #10182a;
+            --paper: rgba(18, 27, 46, 0.76);
+            --paper-strong: rgba(25, 35, 58, 0.9);
+            --paper-soft: rgba(21, 31, 53, 0.82);
+            --ink: #f2f6ff;
+            --muted: #99a5c0;
+            --line: rgba(111, 130, 174, 0.28);
+            --line-strong: rgba(132, 154, 211, 0.4);
+            --accent: #3d79ef;
+            --accent-soft: rgba(61, 121, 239, 0.18);
+            --accent-deep: #7ea6ff;
+            --accent-fog: rgba(61, 121, 239, 0.24);
+            --accent-dust: #8f9cbc;
+            --rust: #5f8eff;
+            --mustard: #84a6ff;
+            --shadow: 0 20px 52px rgba(0, 0, 0, 0.34);
+            --shadow-soft: 0 12px 30px rgba(0, 0, 0, 0.24);
+            background-color: var(--bg);
+            background-image:
+                radial-gradient(circle at 18% 0%, rgba(61, 121, 239, 0.22), transparent 28%),
+                radial-gradient(circle at 100% 20%, rgba(31, 59, 126, 0.56), transparent 34%),
+                linear-gradient(180deg, #121b2f 0%, var(--bg) 100%);
+        }
+
+        body[data-theme="dark"]::before {
+            background:
+                linear-gradient(rgba(129, 149, 197, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(129, 149, 197, 0.04) 1px, transparent 1px);
+            background-size: 28px 28px;
+        }
+
+        body[data-theme="dark"] .site-header,
+        body[data-theme="dark"] .utility-bar,
+        body[data-theme="dark"] .hero-main,
+        body[data-theme="dark"] .section,
+        body[data-theme="dark"] .feature-card,
+        body[data-theme="dark"] .tool,
+        body[data-theme="dark"] .meta-card,
+        body[data-theme="dark"] .carousel-slide,
+        body[data-theme="dark"] .fact,
+        body[data-theme="dark"] table {
+            background:
+                linear-gradient(180deg, rgba(24, 35, 59, 0.92), rgba(17, 25, 43, 0.68)),
+                var(--paper);
+            border-color: var(--line);
+            color: var(--ink);
+        }
+
+        body[data-theme="dark"] .mobile-menu-toggle {
+            background: rgba(27, 39, 66, 0.72);
+            border-color: var(--line);
+            color: var(--ink);
+        }
+
+        body[data-theme="dark"] .mobile-menu-toggle:hover {
+            background: rgba(36, 52, 88, 0.9);
+        }
+
+        body[data-theme="dark"] .pill-link,
+        body[data-theme="dark"] .theme-toggle,
+        body[data-theme="dark"] .release-chip,
+        body[data-theme="dark"] .btn-secondary,
+        body[data-theme="dark"] .tools-controls input,
+        body[data-theme="dark"] .tools-controls button {
+            background: rgba(27, 39, 66, 0.72);
+            border-color: var(--line);
+            color: var(--ink);
+        }
+
+        body[data-theme="dark"] .pill-link:hover,
+        body[data-theme="dark"] .theme-toggle:hover,
+        body[data-theme="dark"] .release-chip:hover,
+        body[data-theme="dark"] .btn-secondary:hover,
+        body[data-theme="dark"] .tools-controls button:hover,
+        body[data-theme="dark"] .section-link:hover {
+            background: rgba(36, 52, 88, 0.9);
+        }
+
+        body[data-theme="dark"] .section-link {
+            color: var(--muted);
+        }
+
+        body[data-theme="dark"] .section-link.is-active {
+            color: var(--accent);
+            background: rgba(61, 121, 239, 0.18);
+            border-color: rgba(123, 161, 255, 0.3);
+        }
+
+        body[data-theme="dark"] .brand-sub,
+        body[data-theme="dark"] .hero-lead,
+        body[data-theme="dark"] .hero-support p,
+        body[data-theme="dark"] .section-intro,
+        body[data-theme="dark"] .feature-card ul,
+        body[data-theme="dark"] .tool span,
+        body[data-theme="dark"] .carousel-slide figcaption,
+        body[data-theme="dark"] .meta-card p,
+        body[data-theme="dark"] .meta-card ul,
+        body[data-theme="dark"] .footer,
+        body[data-theme="dark"] .tools-empty,
+        body[data-theme="dark"] td {
+            color: var(--muted);
+        }
+
+        body[data-theme="dark"] .hero-lead strong,
+        body[data-theme="dark"] .tool strong,
+        body[data-theme="dark"] .feature-card h3,
+        body[data-theme="dark"] .meta-card h3,
+        body[data-theme="dark"] .fact strong,
+        body[data-theme="dark"] .section h2,
+        body[data-theme="dark"] .hero-support h2,
+        body[data-theme="dark"] th {
+            color: var(--ink);
+        }
+
+        body[data-theme="dark"] .section-heading i,
+        body[data-theme="dark"] .feature-card h3 i,
+        body[data-theme="dark"] .meta-card h3 i,
+        body[data-theme="dark"] .fact i,
+        body[data-theme="dark"] .tool-head i,
+        body[data-theme="dark"] .panel-note i {
+            color: var(--accent);
+            background: rgba(61, 121, 239, 0.16);
+        }
+
+        body[data-theme="dark"] .feature-card:nth-child(2) h3 i,
+        body[data-theme="dark"] .meta-card:nth-child(2) h3 i,
+        body[data-theme="dark"] .fact:nth-child(2) i {
+            color: #8eadff;
+            background: rgba(132, 166, 255, 0.18);
+        }
+
+        body[data-theme="dark"] .feature-card:nth-child(3) h3 i,
+        body[data-theme="dark"] .meta-card:nth-child(3) h3 i,
+        body[data-theme="dark"] .fact:nth-child(3) i,
+        body[data-theme="dark"] .panel-note:nth-child(2) i {
+            color: #9bb6ff;
+            background: rgba(95, 142, 255, 0.18);
+        }
+
+        body[data-theme="dark"] .panel-note {
+            background: rgba(27, 39, 66, 0.74);
+            border-color: var(--line);
+        }
+
+        body[data-theme="dark"] .panel-note:nth-child(2) {
+            background: rgba(22, 34, 60, 0.8);
+        }
+
+        body[data-theme="dark"] .source-link {
+            color: #dce7ff;
+        }
+
+        body[data-theme="dark"] .source-link:hover {
+            color: #9fc1ff;
+        }
+
+        body[data-theme="dark"] .source-note {
+            color: var(--muted);
+        }
+
+        body[data-theme="dark"] .source-note .source-link {
+            color: #b5c7f2;
+        }
+
+        body[data-theme="dark"] .source-note .source-link:hover {
+            color: #d6e3ff;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            body[data-theme="dark"] .info-card:hover {
+                border-color: rgba(122, 162, 255, 0.62);
+                box-shadow: 0 0 0 1px rgba(122, 162, 255, 0.22), 0 18px 38px rgba(7, 13, 30, 0.58);
+            }
+        }
+
+        body[data-theme="dark"] th {
+            background: rgba(38, 52, 86, 0.94);
+            border-bottom-color: var(--line);
+        }
+
+        body[data-theme="dark"] td {
+            border-bottom-color: var(--line);
+        }
+
+        body[data-theme="dark"] .carousel-slide figcaption {
+            border-top-color: var(--line);
+        }
+
+        body[data-theme="dark"] .carousel-arrow {
+            background: rgba(27, 39, 66, 0.85);
+            border-color: var(--line);
+            color: var(--ink);
+        }
+
+        body[data-theme="dark"] .carousel-arrow:hover:not(:disabled) {
+            background: rgba(36, 52, 88, 0.94);
+            border-color: rgba(122, 162, 255, 0.6);
+        }
+
+        body[data-theme="dark"] .carousel-dot {
+            background: rgba(146, 165, 210, 0.45);
+        }
+
+        body[data-theme="dark"] .carousel-dot.is-active {
+            background: #89b0ff;
+        }
+
+        body[data-theme="dark"] code {
+            background: rgba(37, 54, 92, 0.88);
+            border-color: rgba(127, 153, 222, 0.36);
+            color: #dbe5ff;
+        }
+
+        body[data-theme="dark"] .lightbox-close,
+        body[data-theme="dark"] .lightbox-figure img {
+            border-color: rgba(188, 209, 255, 0.18);
+        }
+
+        body[data-theme="dark"] .footer a,
+        body[data-theme="dark"] .to-top {
+            color: var(--accent);
+        }
+
+        body[data-theme="dark"] .to-top {
+            background: rgba(27, 39, 66, 0.8);
+            border-color: var(--line);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+        }
+
+        @media (max-width: 1120px) {
+            .hero-main {
+                grid-template-columns: 1fr;
+                column-gap: 0;
+            }
+
+            .hero-facts {
+                grid-column: 1;
+                grid-row: auto;
+                margin-top: 24px;
+            }
+
+            .hero-support,
+            .table-wrap,
+            .meta-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-support-copy {
+                grid-column: 1;
+            }
+
+            .feature-card,
+            .feature-card:nth-child(1),
+            .feature-card:nth-child(2),
+            .feature-card:nth-child(3),
+            .feature-card:nth-child(4),
+            .feature-card:nth-child(5),
+            .feature-card:nth-child(6) {
+                grid-column: span 6;
+            }
+
+            .tool,
+            .tool:nth-child(1),
+            .tool:nth-child(2),
+            .tool:nth-child(5),
+            .tool:nth-child(6),
+            .tool:nth-child(8),
+            .tool:nth-child(9) {
+                grid-column: span 6;
+            }
+
+            .fact,
+            .fact:nth-child(1),
+            .fact:nth-child(2),
+            .fact:nth-child(3),
+            .fact:nth-child(4) {
+                grid-column: span 1;
+            }
+
+            #features.section,
+            #tools.section,
+            #screenshots.section,
+            #stack.section {
+                margin-left: 0;
+                margin-right: 0;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .wrap {
+                width: calc(100vw - 14px);
+            }
+
+            main {
+                padding-top: 12px;
+            }
+
+            .hero {
+                gap: 12px;
+            }
+
+            .site-header,
+            .utility-bar,
+            .hero-main,
+            .section {
+                position: static;
+            }
+
+            .site-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 10px;
+                padding: 12px;
+            }
+
+            .mobile-menu-toggle {
+                display: inline-flex;
+                flex-shrink: 0;
+            }
+
+            .site-header .brand {
+                width: auto;
+                max-width: calc(100% - 56px);
+                align-items: center;
+            }
+
+            .site-header .brand-title {
+                font-size: 0.98rem;
+            }
+
+            .site-header .brand-sub {
+                display: none;
+            }
+
+            .site-header .header-links {
+                display: none;
+            }
+
+            .utility-bar {
+                position: static;
+                display: block;
+                margin-top: 8px;
+                padding: 0 12px;
+                max-height: 0;
+                opacity: 0;
+                overflow: hidden;
+                pointer-events: none;
+                transition: max-height 0.28s ease, opacity 0.2s ease, padding 0.2s ease;
+            }
+
+            body.mobile-nav-open .utility-bar {
+                max-height: 520px;
+                opacity: 1;
+                pointer-events: auto;
+                padding: 12px;
+            }
+
+            body:not(.mobile-nav-open) .utility-bar {
+                margin-top: 0;
+                border-color: transparent;
+                background: transparent;
+                box-shadow: none;
+                backdrop-filter: none;
+                -webkit-backdrop-filter: none;
+            }
+
+            .mobile-action-row {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 8px;
+                margin-bottom: 10px;
+            }
+
+            .mobile-action-row .pill-link {
+                min-height: 42px;
+                justify-content: center;
+                font-size: 0.86rem;
+                padding: 10px 10px;
+            }
+
+            .header-links {
+                justify-content: flex-start;
+            }
+
+            .section-nav {
+                width: 100%;
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 8px;
+            }
+
+            .section-link {
+                min-height: 42px;
+                justify-content: flex-start;
+                font-size: 0.92rem;
+                padding: 10px 12px;
+            }
+
+            .utility-bar .header-links {
+                width: 100%;
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 8px;
+            }
+
+            .utility-bar .theme-toggle,
+            .utility-bar .release-chip {
+                min-height: 42px;
+            }
+
+            .utility-bar .theme-toggle {
+                justify-content: center;
+            }
+
+            .utility-bar .release-chip {
+                grid-column: 1 / -1;
+                width: 100%;
+                justify-content: center;
+                text-align: center;
+            }
+
+            .section,
+            .hero-main {
+                padding: 18px 14px;
+            }
+
+            .section {
+                margin-top: 16px;
+            }
+
+            .feature-grid,
+            .tools-grid,
+            .meta-grid,
+            .table-wrap,
+            .hero-facts,
+            .support-points {
+                grid-template-columns: 1fr;
+            }
+
+            .feature-card,
+            .feature-card:nth-child(1),
+            .feature-card:nth-child(2),
+            .feature-card:nth-child(3),
+            .feature-card:nth-child(4),
+            .feature-card:nth-child(5),
+            .feature-card:nth-child(6),
+            .tool,
+            .tool:nth-child(1),
+            .tool:nth-child(2),
+            .tool:nth-child(5),
+            .tool:nth-child(6),
+            .tool:nth-child(8),
+            .tool:nth-child(9),
+            .fact,
+            .fact:nth-child(1),
+            .fact:nth-child(2),
+            .fact:nth-child(3),
+            .fact:nth-child(4) {
+                grid-column: span 1;
+            }
+
+            .carousel-wrap {
+                padding: 0 34px;
+            }
+
+            .carousel-slide {
+                flex-basis: min(100%, 82vw);
+            }
+
+            .carousel-arrow {
+                width: 30px;
+                height: 30px;
+                border-radius: 9px;
+            }
+
+            h1 {
+                font-size: clamp(1.96rem, 10.8vw, 2.8rem);
+                max-width: none;
+                line-height: 0.97;
+            }
+
+            .hero-lead {
+                margin-top: 14px;
+                font-size: 1rem;
+                line-height: 1.58;
+            }
+
+            .hero-meta {
+                margin-top: 14px;
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .hero-meta li {
+                font-size: 0.9rem;
+            }
+
+            .cta-row {
+                margin-top: 16px;
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .btn {
+                width: 100%;
+                min-height: 44px;
+                font-size: 0.94rem;
+            }
+
+            .hero-facts {
+                margin-top: 16px;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 8px;
+            }
+
+            .fact {
+                padding: 12px 10px;
+                border-radius: 10px;
+            }
+
+            .fact i {
+                width: 28px;
+                height: 28px;
+                border-radius: 8px;
+            }
+
+            .fact strong {
+                margin-top: 8px;
+                font-size: 1.15rem;
+            }
+
+            .fact span {
+                font-size: 0.73rem;
+            }
+
+            .hero-support {
+                margin-top: 14px;
+                padding-top: 14px;
+                gap: 12px;
+            }
+
+            .hero-support h2 {
+                font-size: 1.1rem;
+                max-width: none;
+            }
+
+            .hero-support p {
+                font-size: 0.94rem;
+                line-height: 1.55;
+            }
+
+            .panel-note {
+                padding: 10px 11px;
+                font-size: 0.84rem;
+                line-height: 1.45;
+            }
+
+            .panel-note i {
+                width: 26px;
+                height: 26px;
+            }
+
+            .section h2 {
+                font-size: clamp(1.34rem, 6.8vw, 1.9rem);
+            }
+
+            .section-intro {
+                font-size: 0.94rem;
+                line-height: 1.56;
+            }
         }
     </style>
 </head>
 
-<body class="bg-gray-50 text-slate-900 dark:bg-slate-900 dark:text-slate-100 h-screen flex flex-col">
-    <div class="flex-1 md:flex md:flex-row">
+<body>
+    <a class="skip-link" href="#content">Skip to content</a>
+    <div class="ambient" aria-hidden="true"></div>
 
-    <!-- SIDEBAR -->
-    <aside
-        class="w-full md:w-80 bg-white dark:bg-slate-800 border-r border-gray-200 dark:border-slate-700 flex flex-col z-20 shadow-xl md:shadow-none">
-        <div class="p-5 border-b border-gray-100 dark:border-slate-700">
-                <div class="flex items-center justify-between mb-5">
-                <div class="flex items-center gap-3">
-                    <div
-                        class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white text-xl shadow-lg shadow-blue-500/30">
-                        <i class="ph-fill ph-flask"></i>
-                    </div>
-                    <div>
-                        <h1 class="font-bold text-lg leading-none">ChemSearch</h1>
-                        <span class="text-[10px] font-bold text-blue-500 tracking-widest uppercase">Web Edition</span>
-                    </div>
-                </div>
-                <div class="flex items-center">
-                    <button onclick="toggleTheme()" class="p-2 text-gray-400 hover:text-blue-500 transition-colors">
-                        <i class="ph-fill ph-moon dark:hidden"></i>
-                        <i class="ph-fill ph-sun hidden dark:block"></i>
-                    </button>
-                    <button id="aboutBtn" onclick="showAbout()" class="p-2 ml-2 text-gray-400 hover:text-blue-500 transition-colors" title="About this app">
-                        <i class="ph-fill ph-info"></i>
-                    </button>
-                    <button id="faqBtn" onclick="showFAQ()" class="p-2 ml-2 text-gray-400 hover:text-blue-500 transition-colors" title="FAQ">
-                        <i class="ph-fill ph-question"></i>
-                    </button>
-                </div>
-            </div>
-
-            <div class="relative group">
-                <input type="text" id="searchInput" placeholder="Search chemical..."
-                    class="w-full pl-10 pr-12 py-3 bg-gray-100 dark:bg-slate-900 border-2 border-transparent focus:border-blue-500 focus:bg-white dark:focus:bg-slate-950 rounded-xl outline-none transition-all font-medium text-sm placeholder-gray-400"
-                    onkeypress="handleEnter(event)">
-                <i
-                    class="ph-bold ph-magnifying-glass absolute left-3.5 top-3.5 text-gray-400 group-focus-within:text-blue-500 transition-colors"></i>
-                <button id="clearSearchBtn" onclick="clearSearch()"
-                    class="absolute right-14 top-2 p-1.5 text-gray-400 hover:text-red-500 hover:bg-white dark:hover:bg-slate-800 rounded-md transition-all shadow-sm hidden"
-                    title="Clear search">
-                    <i class="ph-bold ph-x"></i>
-                </button>
-                <button onclick="searchChemical()"
-                    class="absolute right-2 top-2 p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors shadow-sm"
-                    title="Search">
-                    <i class="ph-bold ph-arrow-right"></i>
-                </button>
-            </div>
-
-                <!-- Autosuggestions dropdown (compact width) -->
-                <div id="suggestionsDropdown" 
-                    class="hidden absolute z-50 left-0 w-full max-w-72 mt-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl shadow-xl max-h-64 overflow-y-auto py-2">
-                    <ul id="suggestionsList" class="text-sm"></ul>
-                </div>
-        </div>
-
-        <button id="historyToggle"
-            class="block md:hidden w-full py-2 px-4 bg-gray-100 dark:bg-slate-900 text-left font-medium text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors">Show
-            History</button>
-
-        <div id="historyContainer" class="hidden md:block flex-1 overflow-y-auto p-2">
-            <div class="flex justify-end mb-2">
-                <button onclick="clearHistory()"
-                    class="text-xs text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors">Clear
-                    History</button>
-            </div>
-            <div id="historyList" class="space-y-1"></div>
-        </div>
-    </aside>
-
-    <!-- MAIN AREA -->
-    <main class="flex-1 relative overflow-hidden flex flex-col bg-gray-50 dark:bg-slate-900">
-
-        <!-- Loading State -->
-        <div id="loader"
-            class="hidden absolute inset-0 bg-white/90 dark:bg-slate-900/90 z-50 flex flex-col items-center justify-center backdrop-blur-sm">
-            <div class="loader mb-4"></div>
-            <p class="text-sm font-semibold text-gray-500 animate-pulse">Running Analysis...</p>
-        </div>
-
-        <!-- Empty State -->
-        <div id="emptyState"
-            class="absolute inset-0 flex flex-col items-center justify-center text-center p-6 text-gray-300 dark:text-slate-700 pointer-events-none">
-            <i class="ph-duotone ph-atom text-6xl md:text-9xl mb-4 opacity-50"></i>
-            <h2 class="text-xl font-bold text-gray-400 dark:text-slate-600">Enter a compound to begin</h2>
-        </div>
-
-        <!-- Content -->
-        <div id="content" class="hidden flex-1 overflow-y-auto p-4 md:p-8 custom-scroll">
-            <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
-
-                <!-- Left: Visuals -->
-                <div class="lg:col-span-5 space-y-4">
-                    <div
-                        class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
-                        <div class="flex border-b border-gray-100 dark:border-slate-700">
-                            <button onclick="setTab('2d')" id="tab-2d"
-                                class="flex-1 py-3 text-sm font-bold border-b-2 border-blue-500 text-blue-600 bg-blue-50/50 dark:bg-blue-900/20">2D
-                                Structure</button>
-                            <button onclick="setTab('3d')" id="tab-3d"
-                                class="flex-1 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">3D
-                                Model</button>
-                        </div>
-                        <div class="h-72 md:h-[360px] relative bg-white dark:bg-slate-800 flex items-center justify-center p-6">
-                            <img id="mol-img" class="max-h-full object-contain drop-shadow-sm" src="" alt="Structure">
-                            <div id="mol-3d" class="hidden w-full h-full relative cursor-move"></div>
-                            <div id="no-3d"
-                                class="hidden text-gray-400 text-sm font-medium flex flex-col items-center gap-2">
-                                <i class="ph-duotone ph-cube text-2xl"></i>
-                                3D Model Unavailable
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-3">
-                        <button onclick="downloadPNG()" class="btn-secondary">
-                            <i class="ph-bold ph-download-simple"></i> Save PNG
-                        </button>
-                        <button onclick="openExternal()" class="btn-secondary">
-                            <i class="ph-bold ph-arrow-square-out"></i> PubChem
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Right: Data -->
-                <div class="lg:col-span-7 space-y-8 pb-10">
-
-                    <!-- Header -->
-                    <div>
-                        <h2 id="chem-name"
-                            class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white leading-tight">
-                        </h2>
-                        <p id="chem-iupac"
-                            class="text-sm md:text-base text-gray-500 dark:text-gray-400 mt-1 font-mono break-words">
-                        </p>
-                    <div class="mt-2 flex items-center gap-3">
-                        <span class="text-xs text-gray-400">CID:</span>
-                        <a id="chem-cid" href="#" target="_blank" rel="noopener noreferrer" class="text-xs font-mono text-blue-600 dark:text-blue-400 hover:underline">-</a>
-                        <span class="text-xs text-gray-400 ml-4">CAS:</span>
-                        <span id="chem-cas" class="text-xs font-mono text-blue-600 dark:text-blue-400">-</span>
-                    </div>
-                </div>
-
-                    <!-- Key Stats -->
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div class="stat-card">
-                            <span class="label">Formula</span>
-                            <div id="val-formula" class="value text-xl font-bold text-blue-600 dark:text-blue-400">-
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <span class="label">Weight</span>
-                            <div id="val-weight" class="value">-</div>
-                        </div>
-                        <div class="stat-card">
-                            <span class="label">Charge</span>
-                            <div id="val-charge" class="value">-</div>
-                        </div>
-                        <div class="stat-card">
-                            <span class="label">Empirical</span>
-                            <div id="val-empirical" class="value">-</div>
-                        </div>
-                    </div>
-
-                    <!-- Composition -->
-                    <div>
-                        <h3 class="section-title">Elemental Analysis</h3>
-                        <div id="composition-bar"
-                            class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-gray-200 dark:border-slate-700 space-y-3 shadow-sm">
-                        </div>
-                    </div>
-
-                    <!-- Identifiers (SMILES) -->
-                    <div class="space-y-4">
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="group">
-                                <h3 class="section-title flex items-center gap-2">SMILES (Connectivity)<button onclick="showInfo('smiles-connectivity')" class="text-gray-400 hover:text-blue-500 transition-colors"><i class="ph-bold ph-info"></i></button></h3>
-                                <div class="relative mt-1">
-                                    <div id="val-smiles-connectivity"
-                                        class="w-full bg-gray-100 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg p-3 pr-12 font-mono text-sm text-gray-700 dark:text-gray-300 break-all leading-relaxed min-h-[3rem] flex items-center">
-                                        -
-                                    </div>
-                                    <button onclick="copyText('val-smiles-connectivity')"
-                                        class="absolute right-2 top-2 p-1.5 text-gray-400 hover:text-blue-500 hover:bg-white dark:hover:bg-slate-800 rounded-md transition-all shadow-sm">
-                                        <i class="ph-bold ph-copy text-lg"></i>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="group">
-                                <h3 class="section-title flex items-center gap-2">SMILES (Full)<button onclick="showInfo('smiles-full')" class="text-gray-400 hover:text-blue-500 transition-colors"><i class="ph-bold ph-info"></i></button></h3>
-                                <div class="relative mt-1">
-                                    <div id="val-smiles-full"
-                                        class="w-full bg-gray-100 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg p-3 pr-12 font-mono text-sm text-gray-700 dark:text-gray-300 break-all leading-relaxed min-h-[3rem] flex items-center">
-                                        -
-                                    </div>
-                                    <button onclick="copyText('val-smiles-full')"
-                                        class="absolute right-2 top-2 p-1.5 text-gray-400 hover:text-blue-500 hover:bg-white dark:hover:bg-slate-800 rounded-md transition-all shadow-sm">
-                                        <i class="ph-bold ph-copy text-lg"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                                                <!-- NEW: InChI -->
-                        <div class="group">
-                            <h3 class="section-title flex items-center gap-2">InChI<button onclick="showInfo('inchi')" class="text-gray-400 hover:text-blue-500 transition-colors"><i class="ph-bold ph-info"></i></button></h3>
-                            <div class="relative mt-1">
-                                <div id="val-inchi"
-                                    class="w-full bg-gray-100 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg p-3 pr-12 font-mono text-sm text-gray-700 dark:text-gray-300 break-all leading-relaxed min-h-[3rem] flex items-center">
-                                    -
-                                </div>
-                                <button onclick="copyText('val-inchi')"
-                                    class="absolute right-2 top-2 p-1.5 text-gray-400 hover:text-blue-500 hover:bg-white dark:hover:bg-slate-800 rounded-md transition-all shadow-sm">
-                                    <i class="ph-bold ph-copy text-lg"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="group">
-                            <h3 class="section-title flex items-center gap-2">InChI Key<button onclick="showInfo('inchikey')" class="text-gray-400 hover:text-blue-500 transition-colors"><i class="ph-bold ph-info"></i></button></h3>
-                            <div class="relative mt-1">
-                                <div id="val-inchikey"
-                                    class="w-full bg-gray-100 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg p-3 pr-12 font-mono text-sm text-gray-700 dark:text-gray-300 truncate">
-                                    -
-                                </div>
-                                <button onclick="copyText('val-inchikey')"
-                                    class="absolute right-2 top-1.5 p-1.5 text-gray-400 hover:text-blue-500 hover:bg-white dark:hover:bg-slate-800 rounded-md transition-all shadow-sm">
-                                    <i class="ph-bold ph-copy text-lg"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- About & Synonyms -->
-                    <div id="section-about" class="hidden">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-2">
-                                <h3 class="section-title">Description</h3>
-                                <button onclick="openDefaultSettingsModal()" class="text-gray-400 hover:text-blue-500 transition-colors" title="Set default description source">
-                                    <i class="ph-fill ph-gear"></i>
-                                </button>
-                            </div>
-
-                            <div class="flex gap-2 items-center">
-                                <button id="descPubBtn" onclick="setDescriptionSource('pubchem')"
-                                    class="text-xs px-3 py-1 rounded-full font-semibold transition-all bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border border-blue-200 dark:border-blue-700/50">
-                                    PubChem
-                                </button>
-                                <button id="descWikiBtn" onclick="handleWikiDescriptionClick()"
-                                    class="text-xs px-3 py-1 rounded-full font-semibold transition-all bg-transparent text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-600">
-                                    Wikipedia
-                                </button>
-                                <div class="flex gap-1">
-                                    <button id="descAIBtn" onclick="handleAIDescriptionClick()"
-                                        class="text-xs px-3 py-1 rounded-full font-semibold transition-all bg-transparent text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-600">
-                                        AI (Gemini)
-                                    </button>
-                                    <button id="regenerateAIBtn" onclick="regenerateAIDescription()" class="p-1 text-gray-400 hover:text-blue-500 transition-colors hidden" title="Regenerate AI description">
-                                        <i class="ph-bold ph-arrows-clockwise text-sm"></i>
-                                    </button>
-                                    <button id="editAPIKeyBtn" onclick="openAPIKeyModal()" class="p-1 text-gray-400 hover:text-blue-500 transition-colors" title="Edit API Key">
-                                        <i class="ph-bold ph-gear text-sm"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div
-                            class="mt-2 p-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm relative overflow-hidden">
-                            <div id="ai-loading"
-                                class="hidden absolute inset-0 bg-white/80 dark:bg-slate-800/80 flex items-center justify-center z-10">
-                                <div
-                                    class="flex items-center gap-2 text-blue-600 dark:text-blue-400 font-medium text-sm animate-pulse">
-                                    <i class="ph-bold ph-sparkle"></i> Generating insights...
-                                </div>
-                            </div>
-                            <p id="val-desc" class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed ai-text">
-                            </p>
-                        </div>
-                    </div>
-
-                    <div id="section-synonyms" class="hidden">
-                        <h3 class="section-title">Common Synonyms</h3>
-                        <div id="list-synonyms" class="flex flex-wrap gap-2 mt-2"></div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </main>
-    </div>
-
-    <!-- Footer -->
-    <footer class="w-full bg-white dark:bg-slate-800 border-t border-gray-200 dark:border-slate-700 px-5 py-4">
-        <div class="flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-gray-600 dark:text-gray-400">
-            <div class="flex items-center gap-2">
-                <span>Data sourced from</span>
-                <a href="https://pubchem.ncbi.nlm.nih.gov/" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">PubChem</a>
-            </div>
-
-            <div class="flex items-center gap-4">
-                <div class="flex items-center gap-2 text-gray-500 dark:text-gray-400">
-                    <span>Made by</span>
-                    <span class="font-medium text-blue-600 dark:text-blue-400">FurtherSecrets</span>
-                </div>
-
-                <div class="flex items-center gap-2">
-                    <a href="https://x.com/FurSec24680" target="_blank" rel="noopener noreferrer" aria-label="X" class="p-1 text-gray-600 dark:text-gray-300 hover:text-blue-500 rounded-full transition-colors">
-                        <i class="ph-bold ph-x-logo text-lg"></i>
-                    </a>
-                    <a href="https://instagram.com/notfurthersecrets" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="p-1 text-gray-600 dark:text-gray-300 hover:text-pink-500 rounded-full transition-colors">
-                        <i class="ph-bold ph-instagram-logo text-lg"></i>
-                    </a>
-                    <a href="https://www.youtube.com/@furthersecrets" target="_blank" rel="noopener noreferrer" aria-label="YouTube" class="p-1 text-gray-600 dark:text-gray-300 hover:text-red-500 rounded-full transition-colors">
-                        <i class="ph-bold ph-youtube-logo text-lg"></i>
-                    </a>
-                    <a href="https://www.reddit.com/user/FurtherSecrets24680/" target="_blank" rel="noopener noreferrer" aria-label="Reddit" class="p-1 text-gray-600 dark:text-gray-300 hover:text-orange-500 rounded-full transition-colors">
-                        <i class="ph-bold ph-reddit-logo text-lg"></i>
-                    </a>
-                </div>
-            </div>
-
-            <a href="https://github.com/FurtherSecrets24680/ChemSearch" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:underline font-medium">
-                <i class="ph-bold ph-github-logo"></i>
-                View on GitHub
+    <div class="wrap">
+        <header class="site-header reveal">
+            <a href="index.html" class="brand" aria-label="ChemSearch Home">
+                <img src="chemsearch-logo.png" alt="ChemSearch logo">
+                <span class="brand-text">
+                    <span class="brand-title">ChemSearch</span>
+                    <span class="brand-sub">Native Android chemistry app</span>
+                </span>
             </a>
-        </div>
-    </footer>
 
-    <!-- Floating Feedback Button -->
-<button onclick="openFeedbackModal()" 
-        class="fixed bottom-6 right-6 z-[70] flex items-center gap-3 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3.5 rounded-3xl shadow-2xl transition-all hover:scale-105 active:scale-95">
-    <i class="ph-fill ph-chat-circle-dots text-2xl"></i>
-</button>
+            <nav class="header-links" aria-label="Quick links">
+                <a class="pill-link" href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer"><i class="ph-bold ph-download-simple" aria-hidden="true"></i><span>Download APK</span></a>
+            </nav>
 
-    <!-- Toast -->
-    <div id="toast" role="status" aria-live="polite"
-        class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 bg-slate-900 text-white px-4 py-3 rounded-lg shadow-xl translate-y-24 opacity-0 transition-all duration-300 flex items-center gap-3 z-50">
-        <i class="ph-fill ph-check-circle text-green-400 text-xl"></i>
-        <span id="toastMsg" class="font-medium">Copied to clipboard</span>
-    </div>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" type="button" aria-controls="mobileNavPanel" aria-expanded="false">
+                <span class="sr-only">Toggle menu</span>
+                <i class="ph-bold ph-list" id="mobileMenuIcon" aria-hidden="true"></i>
+            </button>
+        </header>
 
-    <!-- About Modal -->
-    <div id="aboutModalBackdrop" class="fixed inset-0 bg-black/40 dark:bg-black/50 backdrop-blur-sm hidden z-50 flex items-start sm:items-center justify-center py-6 overflow-y-auto" aria-hidden="true">
-        <div id="aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle" tabindex="-1" class="max-w-xl w-full mx-4 max-h-[90vh] overflow-y-auto rounded-2xl p-6 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-gray-200 dark:border-slate-700 shadow-xl transform transition-all scale-95 opacity-0">
-            <div class="flex items-start justify-between">
-                <h3 id="aboutTitle" class="text-lg font-bold">About ChemSearch</h3>
-                <button onclick="hideAbout()" class="text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white p-1" aria-label="Close about dialog"><i class="ph-fill ph-x"></i></button>
+        <div class="utility-bar reveal delay-1" id="mobileNavPanel" aria-label="Page controls">
+            <div class="mobile-action-row">
+                <a class="pill-link" href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer"><i class="ph-bold ph-download-simple" aria-hidden="true"></i><span>Download APK</span></a>
             </div>
-            <div class="mt-3 text-sm space-y-3">
-                <p class="leading-relaxed">ChemSearch is a lightweight web tool for quickly looking up chemical structures and basic properties using PubChem data. It provides 2D images, 3D interactive views, identifiers and short AI-generated descriptions where available.</p>
-                <div>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">Credits & libraries used:</p>
-                    <div class="mt-2 overflow-hidden rounded-md border border-gray-100 dark:border-slate-700">
-                        <table class="w-full text-sm bg-white dark:bg-slate-800">
-                            <thead class="hidden">
-                                <tr><th>Library</th><th>Link</th></tr>
-                            </thead>
-                            <tbody>
-                                <tr class="border-b border-gray-100 dark:border-slate-700">
-                                    <td class="px-4 py-3 text-gray-700 dark:text-gray-200">Tailwind CSS (CSS Framework)</td>
-                                    <td class="px-4 py-3"><a href="https://tailwindcss.com" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400 hover:underline">https://tailwindcss.com</a></td>
-                                </tr>
-                                <tr class="border-b border-gray-100 dark:border-slate-700">
-                                    <td class="px-4 py-3 text-gray-700 dark:text-gray-200">3Dmol.js (3D Viewer)</td>
-                                    <td class="px-4 py-3"><a href="https://3dmol.org" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400 hover:underline">https://3dmol.org</a></td>
-                                </tr>
-                                <tr class="border-b border-gray-100 dark:border-slate-700">
-                                    <td class="px-4 py-3 text-gray-700 dark:text-gray-200">Phosphor Icons (Icon Library)</td>
-                                    <td class="px-4 py-3"><a href="https://phosphoricons.com" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400 hover:underline">https://phosphoricons.com</a></td>
-                                </tr>
-                                <tr class="border-b border-gray-100 dark:border-slate-700">
-                                    <td class="px-4 py-3 text-gray-700 dark:text-gray-200">KaTeX (LaTeX Rendering Library)</td>
-                                    <td class="px-4 py-3"><a href="https://katex.org" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400 hover:underline">https://katex.org</a></td>
-                                </tr>
-                                <tr class="border-b border-gray-100 dark:border-slate-700">
-                                    <td class="px-4 py-3 text-gray-700 dark:text-gray-200">PubChem PUG REST API</td>
-                                    <td class="px-4 py-3"><a href="https://pubchem.ncbi.nlm.nih.gov/" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400 hover:underline">https://pubchem.ncbi.nlm.nih.gov/</a></td>
-                                </tr>
+            <nav class="section-nav" aria-label="Section quick links">
+                <a class="section-link" href="#features"><i class="ph-bold ph-sparkle" aria-hidden="true"></i><span>Features</span></a>
+                <a class="section-link" href="#tools"><i class="ph-bold ph-toolbox" aria-hidden="true"></i><span>Tools</span></a>
+                <a class="section-link" href="#screenshots"><i class="ph-bold ph-images-square" aria-hidden="true"></i><span>Screenshots</span></a>
+                <a class="section-link" href="#stack"><i class="ph-bold ph-cpu" aria-hidden="true"></i><span>Tech</span></a>
+            </nav>
+            <div class="header-links">
+                <button class="pill-link theme-toggle" id="themeToggle" type="button" aria-pressed="false"><i class="ph-fill ph-moon-stars" id="themeToggleIcon" aria-hidden="true"></i><span id="themeToggleLabel">Dark Mode</span></button>
+                <a class="release-chip" id="releaseStatus" href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer" aria-live="polite" aria-busy="true"><i class="ph-fill ph-rocket-launch" aria-hidden="true"></i><span id="releaseStatusText">Checking latest release...</span></a>
+            </div>
+        </div>
 
-                                <tr class="border-b border-gray-100 dark:border-slate-700">
-                                    <td class="px-4 py-3 text-gray-700 dark:text-gray-200">Wikipedia REST API</td>
-                                    <td class="px-4 py-3"><a href="https://en.wikipedia.org/api/rest_v1/" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400 hover:underline">https://en.wikipedia.org/api/rest_v1/</a></td>
-                                </tr>
+        <main id="content" tabindex="-1">
+            <section class="hero">
+                <article class="hero-main reveal delay-1">
+                    <h1>Fast chemistry search, built for Android.</h1>
+                    <p class="hero-lead">
+                        Find compounds by name, CAS, or CID. Check safety details, inspect structures, and open calculators without jumping between screens.
+                    </p>
 
-                                <tr>
-                                    <td class="px-4 py-3 text-gray-700 dark:text-gray-200">Google Gemini / Generative AI</td>
-                                    <td class="px-4 py-3"><a href="https://developers.generativeai.google/" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400 hover:underline">https://developers.generativeai.google/</a></td>
-                                </tr>
+                    <ul class="hero-meta" aria-label="At a glance">
+                        <li>Android 8.0+</li>
+                        <li>Search, safety, structures, calculators</li>
+                        <li>Favorites and recent history</li>
+                        <li>Optional AI summaries</li>
+                    </ul>
 
-                                <tr>
-                                    <td class="px-4 py-3 text-gray-700 dark:text-gray-200">Formspree (Form Provider)</td>
-                                    <td class="px-4 py-3"><a href="https://formspree.io" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400 hover:underline">https://formspree.io</a></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="cta-row">
+                        <a class="btn btn-primary" href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer"><i class="ph-bold ph-download-simple" aria-hidden="true"></i><span>Download the APK</span></a>
+                        <a class="btn btn-secondary" href="#screenshots"><i class="ph-bold ph-images-square" aria-hidden="true"></i><span>View Screenshots</span></a>
+                        <a class="btn btn-secondary" href="https://github.com/FurtherSecrets24680/chemsearch-android" target="_blank" rel="noopener noreferrer"><i class="ph-bold ph-github-logo" aria-hidden="true"></i><span>GitHub</span></a>
+                    </div>
+
+                    <div class="hero-facts" aria-label="Key metrics">
+                        <div class="fact info-card"><i class="ph-fill ph-toolbox" aria-hidden="true"></i><strong>10+</strong><span>Chemistry Tools</span></div>
+                        <div class="fact info-card"><i class="ph-fill ph-chat-centered-text" aria-hidden="true"></i><strong>3</strong><span>Info Sources</span></div>
+                        <div class="fact info-card"><i class="ph-fill ph-atom" aria-hidden="true"></i><strong>118</strong><span>Elements in CPK 3D</span></div>
+                        <div class="fact info-card"><i class="ph-fill ph-device-mobile" aria-hidden="true"></i><strong>26+</strong><span>Android API Level</span></div>
+                    </div>
+
+                    <div class="hero-support">
+                        <h2>Good on a bus. Better at a lab bench.</h2>
+                        <div class="hero-support-copy">
+                            <p>The app keeps the common stuff close: quick lookups, readable identifiers, proper safety cards, and calculators you can open without digging through a maze of tabs.</p>
+                            <div class="support-points">
+                                <div class="panel-note info-card"><i class="ph-fill ph-check-circle" aria-hidden="true"></i><span>Favorites, search history, zoomable structures, tap-to-copy values. The boring-but-important details are handled.</span></div>
+                                <div class="panel-note info-card"><i class="ph-fill ph-sliders-horizontal" aria-hidden="true"></i><span>If you want AI summaries, bring your own key. If you do not, ignore that part and carry on with your day.</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </section>
+
+            <section class="section reveal delay-1" id="features">
+                <h2><span class="section-heading"><i class="ph-fill ph-sparkle" aria-hidden="true"></i><span>The useful bits</span></span></h2>
+                <p class="section-intro">Not a chemistry encyclopedia pretending to be an app. Just the things you actually reach for when you need an answer quickly.</p>
+
+                <div class="feature-grid">
+                    <article class="feature-card info-card">
+                        <h3><i class="ph-fill ph-magnifying-glass" aria-hidden="true"></i><span>Search without guesswork</span></h3>
+                        <ul>
+                            <li>Look up compounds by common name, IUPAC name, CAS, or CID.</li>
+                            <li>Autocomplete helps when the spelling gets ugly.</li>
+                            <li>Favorites and recent searches keep repeat lookups quick.</li>
+                        </ul>
+                    </article>
+
+                    <article class="feature-card info-card">
+                        <h3><i class="ph-fill ph-identification-card" aria-hidden="true"></i><span>IDs where you need them</span></h3>
+                        <ul>
+                            <li>Formula, molar mass, CID, and CAS show up first, not buried.</li>
+                            <li>SMILES, InChI, InChIKey, charge, and empirical formula are one tap away.</li>
+                            <li>Tap-to-copy is everywhere it ought to be.</li>
+                        </ul>
+                    </article>
+
+                    <article class="feature-card info-card">
+                        <h3><i class="ph-fill ph-cube-transparent" aria-hidden="true"></i><span>3D that behaves itself</span></h3>
+                        <ul>
+                            <li>View the 2D structure fast, then jump into the 3D model.</li>
+                            <li>Rotate, pinch, and inspect without the whole thing turning into soup.</li>
+                            <li>All 118 elements use proper CPK colors, so it looks like chemistry and not confetti.</li>
+                        </ul>
+                    </article>
+
+                    <article class="feature-card info-card">
+                        <h3><i class="ph-fill ph-shield-checkered" aria-hidden="true"></i><span>Safety notes you can actually read</span></h3>
+                        <ul>
+                            <li>GHS signal words, pictograms, and hazard codes are laid out cleanly.</li>
+                            <li>Descriptions can come from PubChem, Wikipedia, or your own AI provider.</li>
+                            <li>Useful when you need the summary first and the paper later.</li>
+                        </ul>
+                    </article>
+
+                    <article class="feature-card info-card">
+                        <h3><i class="ph-fill ph-sliders-horizontal" aria-hidden="true"></i><span>Keeps your place</span></h3>
+                        <ul>
+                            <li>Light or dark theme, whichever hurts your eyes less.</li>
+                            <li>Pick a default description source and leave it there.</li>
+                            <li>Cached results make repeat lookups less annoying.</li>
+                        </ul>
+                    </article>
+
+                    <article class="feature-card info-card">
+                        <h3><i class="ph-fill ph-chat-circle-dots" aria-hidden="true"></i><span>Optional AI, not a hostage situation</span></h3>
+                        <ul>
+                            <li>The app works fine without AI turned on.</li>
+                            <li>If you do want extra summaries, add your own Gemini or Groq key.</li>
+                            <li>No key farming, no fake "smart" layer glued over everything.</li>
+                        </ul>
+                    </article>
+                </div>
+            </section>
+
+            <section class="section reveal delay-2" id="tools">
+                <h2><span class="section-heading"><i class="ph-fill ph-toolbox" aria-hidden="true"></i><span>10+ chemistry tools built in</span></span></h2>
+                <p class="section-intro">This is the drawer you open when chemistry stops being friendly. Most of the usual classroom and lab calculations are already here.</p>
+
+                <div class="tools-controls">
+                    <input type="search" id="toolSearch" placeholder="Find a tool by name or by the job you need done..." aria-label="Filter tools" autocomplete="off" autocapitalize="none" spellcheck="false">
+                    <button type="button" id="clearToolSearch">Clear</button>
+                </div>
+                <p class="tools-hint">Tip: press <code>/</code> or <code>Ctrl/Cmd + K</code> to jump to this filter.</p>
+
+                <p class="tools-empty" id="toolsEmpty">No tools matched this filter yet.</p>
+
+                <div class="tools-grid" id="toolsGrid">
+                    <article class="tool info-card"><div class="tool-head"><i class="ph-fill ph-cube" aria-hidden="true"></i><strong>Custom 3D Molecule Viewer</strong></div><span>Open your own MOL or SDF file and spin it around without leaving the app.</span></article>
+                    <article class="tool info-card"><div class="tool-head"><i class="ph-fill ph-scales" aria-hidden="true"></i><strong>Molar Mass Calculator</strong></div><span>Handles brackets, hydrates, and the sort of formulas people write when coffee has failed them.</span></article>
+                    <article class="tool info-card"><div class="tool-head"><i class="ph-fill ph-lightning" aria-hidden="true"></i><strong>Oxidation State Finder</strong></div><span>Useful for the compounds that stop being obvious halfway through the line.</span></article>
+                    <article class="tool info-card"><div class="tool-head"><i class="ph-fill ph-bezier-curve" aria-hidden="true"></i><strong>SMILES Visualizer</strong></div><span>Paste SMILES, get a structure, move on.</span></article>
+                    <article class="tool info-card"><div class="tool-head"><i class="ph-fill ph-equals" aria-hidden="true"></i><strong>Reaction Balancer</strong></div><span>Balances awkward equations without the pencil-chewing stage.</span></article>
+                    <article class="tool info-card"><div class="tool-head"><i class="ph-fill ph-squares-four" aria-hidden="true"></i><strong>Isomer Finder</strong></div><span>Handy when one formula stubbornly refuses to mean one molecule.</span></article>
+                    <article class="tool info-card"><div class="tool-head"><i class="ph-fill ph-funnel" aria-hidden="true"></i><strong>Limiting Reagent</strong></div><span>Tells you what runs out first and what you can realistically make.</span></article>
+                    <article class="tool info-card"><div class="tool-head"><i class="ph-fill ph-percent" aria-hidden="true"></i><strong>Percent Yield</strong></div><span>Quick reality check between theory and whatever actually happened on the bench.</span></article>
+                    <article class="tool info-card"><div class="tool-head"><i class="ph-fill ph-arrows-out-cardinal" aria-hidden="true"></i><strong>Reaction Scaling</strong></div><span>Scale a reaction without rewriting every number by hand.</span></article>
+                    <article class="tool info-card"><div class="tool-head"><i class="ph-fill ph-drop" aria-hidden="true"></i><strong>Dilution Calculator</strong></div><span>For when <span aria-hidden="true">C1V1 = C2V2</span> vanishes from your brain the second you need it.</span></article>
+                    <article class="tool info-card"><div class="tool-head"><i class="ph-fill ph-wind" aria-hidden="true"></i><strong>Ideal Gas Law</strong></div><span>PV = nRT, minus the ritual suffering.</span></article>
+                </div>
+            </section>
+
+            <section class="section reveal delay-3" id="screenshots">
+                <h2><span class="section-heading"><i class="ph-fill ph-images-square" aria-hidden="true"></i><span>A quick look around</span></span></h2>
+                <p class="section-intro">Search, favorites, tool screens, safety cards, and the structure viewer. No mystery here.</p>
+
+                <div class="screenshots-shell">
+                    <div class="carousel-wrap">
+                        <button class="carousel-arrow prev" id="screenshotsPrev" type="button" aria-label="Previous screenshot" aria-controls="screenshotsCarouselTrack">
+                            <i class="ph-bold ph-caret-left" aria-hidden="true"></i>
+                        </button>
+                        <div class="carousel-viewport" id="screenshotsCarouselTrack" tabindex="0" aria-label="Screenshots carousel. Use left and right arrows to navigate.">
+                            <figure class="carousel-slide info-card"><button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/home_dark.jpg" data-preview-caption="Search (Dark)" aria-label="Open screenshot preview: Search dark mode"><img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/home_dark.jpg" alt="Home screen dark mode"></button><figcaption>Search (Dark)</figcaption></figure>
+                            <figure class="carousel-slide info-card"><button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/home_light.jpg" data-preview-caption="Search (Light)" aria-label="Open screenshot preview: Search light mode"><img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/home_light.jpg" alt="Home screen light mode"></button><figcaption>Search (Light)</figcaption></figure>
+                            <figure class="carousel-slide info-card"><button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/3dmolecule.jpg" data-preview-caption="3D Molecule Viewer" aria-label="Open screenshot preview: 3D molecule viewer"><img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/3dmolecule.jpg" alt="3D molecule viewer"></button><figcaption>3D Molecule Viewer</figcaption></figure>
+                            <figure class="carousel-slide info-card"><button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/favorites.jpg" data-preview-caption="Favorites" aria-label="Open screenshot preview: Favorites"><img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/favorites.jpg" alt="Favorites screen"></button><figcaption>Favorites</figcaption></figure>
+                            <figure class="carousel-slide info-card"><button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/tools_page.jpg" data-preview-caption="Tools Page" aria-label="Open screenshot preview: Tools page"><img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/tools_page.jpg" alt="Tools screen"></button><figcaption>Tools Page</figcaption></figure>
+                            <figure class="carousel-slide info-card"><button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/iden_ea.jpg" data-preview-caption="Identifiers + Elemental Analysis" aria-label="Open screenshot preview: Identifiers and elemental analysis"><img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/iden_ea.jpg" alt="Identifiers and elemental analysis"></button><figcaption>Identifiers + Elemental Analysis</figcaption></figure>
+                            <figure class="carousel-slide info-card"><button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/ghs_safety.jpg" data-preview-caption="GHS Safety Information" aria-label="Open screenshot preview: GHS safety information"><img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/ghs_safety.jpg" alt="GHS safety information"></button><figcaption>GHS Safety Information</figcaption></figure>
+                            <figure class="carousel-slide info-card"><button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/tool_mmc.jpg" data-preview-caption="Molar Mass Calculator" aria-label="Open screenshot preview: Molar mass calculator"><img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/tool_mmc.jpg" alt="Molar mass calculator"></button><figcaption>Molar Mass Calculator</figcaption></figure>
+                        </div>
+                        <button class="carousel-arrow next" id="screenshotsNext" type="button" aria-label="Next screenshot" aria-controls="screenshotsCarouselTrack">
+                            <i class="ph-bold ph-caret-right" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div class="carousel-meta">
+                        <div class="carousel-dots" id="screenshotsCarouselDots" role="tablist" aria-label="Screenshot navigation dots"></div>
+                        <p class="carousel-status" id="screenshotsCarouselStatus" aria-live="polite">1 / 8</p>
                     </div>
                 </div>
-                    <p class="text-xs text-gray-400 dark:text-gray-500">If you use this app, please cite PubChem, Wikipedia, and the respective libraries. This project is provided as-is for educational use.</p>            </div>
-            <div class="mt-4 flex justify-end">
-                <button onclick="hideAbout()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Close</button>
-            </div>
+            </section>
+
+            <section class="section reveal" id="stack">
+                <h2><span class="section-heading"><i class="ph-fill ph-cpu" aria-hidden="true"></i><span>Under the hood</span></span></h2>
+                <p class="section-intro">Native Android app. Straight API calls. No mystery backend humming in the corner.</p>
+
+                <div class="table-wrap">
+                    <table class="info-card">
+                        <thead>
+                            <tr><th>Component</th><th>Technology</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Language</td><td>Kotlin</td></tr>
+                            <tr><td>UI</td><td>Jetpack Compose + Material 3</td></tr>
+                            <tr><td>Networking</td><td>Retrofit 2 + OkHttp</td></tr>
+                            <tr><td>Image loading</td><td>Coil</td></tr>
+                            <tr><td>Async</td><td>Kotlin Coroutines + StateFlow</td></tr>
+                            <tr><td>JSON</td><td>Gson</td></tr>
+                            <tr><td>3D rendering</td><td>Custom native Canvas engine</td></tr>
+                            <tr><td>Storage</td><td>SharedPreferences + local cache</td></tr>
+                        </tbody>
+                    </table>
+
+                    <table class="info-card">
+                        <thead>
+                            <tr><th>Source</th><th>Used for</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <a class="source-link" href="https://pubchem.ncbi.nlm.nih.gov/docs/pug-rest-tutorial" target="_blank" rel="noopener noreferrer">
+                                        <i class="ph-fill ph-flask" aria-hidden="true"></i>
+                                        <span>PubChem PUG REST</span>
+                                    </a>
+                                    <span class="source-note">Official PubChem endpoint docs.</span>
+                                </td>
+                                <td>Compound lookup, properties, autocomplete hints, synonyms, and downloadable structure files.</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a class="source-link" href="https://pubchem.ncbi.nlm.nih.gov/docs/pug-view" target="_blank" rel="noopener noreferrer">
+                                        <i class="ph-fill ph-warning-diamond" aria-hidden="true"></i>
+                                        <span>PubChem PUG View</span>
+                                    </a>
+                                    <span class="source-note">Structured safety and annotation records.</span>
+                                </td>
+                                <td>GHS hazard summaries, signal words, and safety card details.</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a class="source-link" href="https://en.wikipedia.org/api/rest_v1/" target="_blank" rel="noopener noreferrer">
+                                        <i class="ph-fill ph-newspaper-clipping" aria-hidden="true"></i>
+                                        <span>Wikipedia REST API</span>
+                                    </a>
+                                    <span class="source-note">Fallback source for plain-language summaries.</span>
+                                </td>
+                                <td>Short overview text for compounds when PubChem descriptions are sparse.</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a class="source-link" href="https://ai.google.dev/gemini-api/docs" target="_blank" rel="noopener noreferrer">
+                                        <i class="ph-fill ph-sparkle" aria-hidden="true"></i>
+                                        <span>Gemini API</span>
+                                    </a>
+                                    <span class="source-note">
+                                        Optional provider:
+                                        <a class="source-link" href="https://console.groq.com/docs/api-reference" target="_blank" rel="noopener noreferrer">
+                                            <i class="ph-fill ph-lightning" aria-hidden="true"></i>
+                                            <span>Groq API</span>
+                                        </a>
+                                    </span>
+                                </td>
+                                <td>Bring-your-own-key AI summaries. The app runs fully without these.</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a class="source-link" href="https://docs.github.com/en/rest/releases/releases?apiVersion=2022-11-28#get-the-latest-release" target="_blank" rel="noopener noreferrer">
+                                        <i class="ph-fill ph-github-logo" aria-hidden="true"></i>
+                                        <span>GitHub Releases API</span>
+                                    </a>
+                                    <span class="source-note">Release metadata endpoint.</span>
+                                </td>
+                                <td>Checks the latest APK version and shows update status in the header.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="meta-grid">
+                    <article class="meta-card info-card">
+                        <h3><i class="ph-fill ph-check-circle" aria-hidden="true"></i><span>What you need</span></h3>
+                        <ul>
+                            <li>Android 8.0+ (API 26+)</li>
+                            <li>An internet connection for lookups and descriptions</li>
+                            <li>Android Studio Hedgehog or newer if you want to build it yourself</li>
+                        </ul>
+                    </article>
+
+                    <article class="meta-card info-card">
+                        <h3><i class="ph-fill ph-lock-key" aria-hidden="true"></i><span>Permissions</span></h3>
+                        <ul>
+                            <li><code>INTERNET</code> for compound data and release checks</li>
+                            <li><code>POST_NOTIFICATIONS</code> for optional update alerts</li>
+                            <li><code>WRITE_EXTERNAL_STORAGE</code> on Android 9 and below</li>
+                        </ul>
+                    </article>
+
+                    <article class="meta-card info-card">
+                        <h3><i class="ph-fill ph-shield-check" aria-hidden="true"></i><span>Privacy</span></h3>
+                        <p>No analytics, no telemetry, no creepy extras. Favorites, search history, cache, and provider keys stay on the device unless you deliberately use an external API.</p>
+                    </article>
+                </div>
+            </section>
+
+            <footer class="footer reveal">
+                <span>MIT licensed. Built by FurtherSecrets24680. No account wall, no nonsense.</span>
+                <span>
+                    <a href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer">Releases</a> |
+                    <a href="https://github.com/FurtherSecrets24680/chemsearch-android" target="_blank" rel="noopener noreferrer">Repository</a>
+                </span>
+            </footer>
+        </main>
+    </div>
+
+    <div class="lightbox" id="galleryLightbox" hidden>
+        <div class="lightbox-shell" role="dialog" aria-modal="true" aria-labelledby="galleryLightboxCaption">
+            <button class="lightbox-close" id="galleryLightboxClose" type="button" aria-label="Close screenshot preview"><i class="ph-bold ph-x" aria-hidden="true"></i><span>Close</span></button>
+            <figure class="lightbox-figure">
+                <img id="galleryLightboxImage" src="" alt="">
+                <figcaption class="lightbox-caption" id="galleryLightboxCaption"></figcaption>
+            </figure>
         </div>
     </div>
 
-    <!-- FAQ Modal -->
-    <div id="faqModalBackdrop" class="fixed inset-0 bg-black/40 dark:bg-black/50 backdrop-blur-sm hidden z-50 flex items-start sm:items-center justify-center py-6 overflow-y-auto" aria-hidden="true">
-        <div id="faqModal" role="dialog" aria-modal="true" aria-labelledby="faqTitle" tabindex="-1" class="max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto rounded-2xl p-6 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-gray-200 dark:border-slate-700 shadow-xl transform transition-all scale-95 opacity-0">
-            <div class="flex items-start justify-between">
-                <h3 id="faqTitle" class="text-lg font-bold">Frequently Asked Questions</h3>
-                <button onclick="hideFAQ()" class="text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white p-1" aria-label="Close FAQ dialog"><i class="ph-fill ph-x"></i></button>
-            </div>
-            <div class="mt-3 text-sm space-y-3">
+    <button class="to-top" id="toTopBtn" type="button" aria-label="Back to top">Top</button>
 
-                <div>
-                    <p class="font-bold">Where does the chemical data come from?</p>
-                    <p class="text-gray-700 dark:text-gray-300">All chemical data, structures, identifiers, and images are fetched live from the official <strong>PubChem PUG REST API</strong> maintained by the U.S. National Institutes of Health (NCBI).</p>
-                </div>
+    <script>
+        (function () {
+            const body = document.body;
+            const themeToggle = document.getElementById('themeToggle');
+            const themeToggleIcon = document.getElementById('themeToggleIcon');
+            const themeToggleLabel = document.getElementById('themeToggleLabel');
+            const releaseStatus = document.getElementById('releaseStatus');
+            const releaseStatusText = document.getElementById('releaseStatusText');
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const mobileMenuIcon = document.getElementById('mobileMenuIcon');
+            const mobileNavPanel = document.getElementById('mobileNavPanel');
+            const sectionLinks = Array.from(document.querySelectorAll('.section-link'));
+            const sections = sectionLinks
+                .map((link) => document.querySelector(link.getAttribute('href')))
+                .filter(Boolean);
+            const galleryLightbox = document.getElementById('galleryLightbox');
+            const galleryLightboxImage = document.getElementById('galleryLightboxImage');
+            const galleryLightboxCaption = document.getElementById('galleryLightboxCaption');
+            const galleryLightboxClose = document.getElementById('galleryLightboxClose');
+            const galleryCards = Array.from(document.querySelectorAll('.gallery-card'));
+            const screenshotsCarouselTrack = document.getElementById('screenshotsCarouselTrack');
+            const screenshotsPrev = document.getElementById('screenshotsPrev');
+            const screenshotsNext = document.getElementById('screenshotsNext');
+            const screenshotsDots = document.getElementById('screenshotsCarouselDots');
+            const screenshotsStatus = document.getElementById('screenshotsCarouselStatus');
+            const screenshotSlides = screenshotsCarouselTrack ? Array.from(screenshotsCarouselTrack.querySelectorAll('.carousel-slide')) : [];
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const themeKey = 'chemsearch-theme';
+            const mobileBreakpoint = window.matchMedia('(max-width: 760px)');
+            let galleryReturnFocus = null;
 
-                <div>
-                    <p class="font-bold">What are the different description sources?</p>
-                    <p class="text-gray-700 dark:text-gray-300">You can choose between three sources:<br>
-                    • <strong>PubChem</strong> – Official description<br>
-                    • <strong>Wikipedia</strong> – Clean first-paragraph summary<br>
-                    • <strong>AI (Gemini)</strong> – Short, readable description with real-world uses (requires free API key)</p>
-                </div>
+            function setMobileNavState(isOpen) {
+                body.classList.toggle('mobile-nav-open', isOpen);
+                if (mobileMenuToggle) {
+                    mobileMenuToggle.setAttribute('aria-expanded', String(isOpen));
+                }
+                if (mobileMenuIcon) {
+                    mobileMenuIcon.className = isOpen ? 'ph-bold ph-x' : 'ph-bold ph-list';
+                }
+            }
 
-                <div>
-                    <p class="font-bold">How do I set my preferred description source?</p>
-                    <p class="text-gray-700 dark:text-gray-300">Click the ⚙️ gear icon next to the “Description” title. Your choice is saved in your browser and will be used automatically for every new search.</p>
-                </div>
+            function closeMobileNavIfNeeded() {
+                if (mobileBreakpoint.matches) {
+                    setMobileNavState(false);
+                }
+            }
 
-                <div>
-                    <p class="font-bold">Why is the 3D model sometimes missing?</p>
-                    <p class="text-gray-700 dark:text-gray-300">Not every compound in PubChem has a computed 3D structure. When unavailable, the app automatically falls back to the 2D image and shows a small notice.</p>
-                </div>
+            function setTheme(theme, persist) {
+                const finalTheme = theme === 'dark' ? 'dark' : 'light';
+                body.setAttribute('data-theme', finalTheme);
+                if (themeToggle) {
+                    const isDark = finalTheme === 'dark';
+                    if (themeToggleLabel) {
+                        themeToggleLabel.textContent = isDark ? 'Light Mode' : 'Dark Mode';
+                    }
+                    if (themeToggleIcon) {
+                        themeToggleIcon.className = isDark ? 'ph-fill ph-sun-dim' : 'ph-fill ph-moon-stars';
+                    }
+                    themeToggle.setAttribute('aria-pressed', String(isDark));
+                }
+                if (persist) {
+                    localStorage.setItem(themeKey, finalTheme);
+                }
+            }
 
-                <div>
-                    <p class="font-bold">What do InChI and InChI Key mean?</p>
-                    <p class="text-gray-700 dark:text-gray-300">InChI is a unique text representation of a molecule’s structure. InChI Key is a shortened, searchable version of it (27 characters). Click the ℹ️ icon next to them for a simple explanation.</p>
-                </div>
+            const savedTheme = localStorage.getItem(themeKey);
+            if (savedTheme) {
+                setTheme(savedTheme, false);
+            } else {
+                const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                setTheme(systemTheme, false);
+            }
 
-                <div>
-                    <p class="font-bold">Why are there two SMILES formats?</p>
-                    <p class="text-gray-700 dark:text-gray-300">SMILES (Connectivity) is a simplified version (no stereochemistry). SMILES (Full) includes all atoms, bonds, and stereochemistry. Both are useful depending on your needs.</p>
-                </div>
+            if (themeToggle) {
+                themeToggle.addEventListener('click', () => {
+                    const current = body.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+                    setTheme(current === 'dark' ? 'light' : 'dark', true);
+                });
+            }
 
-                <div>
-                    <p class="font-bold">How does the search suggestion (autocomplete) work?</p>
-                    <p class="text-gray-700 dark:text-gray-300">As you type, the app uses PubChem’s official autocomplete service to show real compound names in real time — just like Google. Click any suggestion to instantly search it.</p>
-                </div>
+            if (mobileMenuToggle && mobileNavPanel) {
+                mobileMenuToggle.addEventListener('click', () => {
+                    const isOpen = body.classList.contains('mobile-nav-open');
+                    setMobileNavState(!isOpen);
+                });
+            }
 
-                <div>
-                    <p class="font-bold">Is my Gemini API key safe?</p>
-                    <p class="text-gray-700 dark:text-gray-300">Yes. The key is stored only in your browser’s localStorage and is never sent to any server except Google’s official Gemini API. We never see or store it.</p>
-                </div>
+            const mobileCloseTriggers = Array.from(document.querySelectorAll('.section-link, .mobile-action-row .pill-link'));
+            mobileCloseTriggers.forEach((link) => {
+                link.addEventListener('click', () => {
+                    closeMobileNavIfNeeded();
+                });
+            });
 
-                <div>
-                    <p class="font-bold">Can I use ChemSearch offline?</p>
-                    <p class="text-gray-700 dark:text-gray-300">No. The app needs internet access to fetch data from PubChem, Wikipedia, and optionally Gemini. Once a compound is loaded, most information stays visible even if you lose connection.</p>
-                </div>
+            document.addEventListener('click', (event) => {
+                if (!body.classList.contains('mobile-nav-open') || !mobileBreakpoint.matches) return;
+                const target = event.target;
+                if (!(target instanceof Node)) return;
+                if (
+                    (mobileNavPanel && mobileNavPanel.contains(target)) ||
+                    (mobileMenuToggle && mobileMenuToggle.contains(target))
+                ) return;
+                setMobileNavState(false);
+            });
 
-                <div>
-                    <p class="font-bold">How can I send feedback or report a bug?</p>
-                    <p class="text-gray-700 dark:text-gray-300">Click the blue floating “Feedback” button in the bottom-right corner. Your message goes directly to the developer via Formspree.</p>
-                </div>
+            if (typeof mobileBreakpoint.addEventListener === 'function') {
+                mobileBreakpoint.addEventListener('change', (event) => {
+                    if (!event.matches) {
+                        setMobileNavState(false);
+                    }
+                });
+            } else if (typeof mobileBreakpoint.addListener === 'function') {
+                mobileBreakpoint.addListener((event) => {
+                    if (!event.matches) {
+                        setMobileNavState(false);
+                    }
+                });
+            }
 
-                <div>
-                    <p class="font-bold">Why does Wikipedia sometimes say “description not available”?</p>
-                    <p class="text-gray-700 dark:text-gray-300">Wikipedia pages must have an exact title match. The app automatically converts PubChem names to title case, but some compounds (especially salts, complexes, or very new ones) don’t have a Wikipedia page yet.</p>
-                </div>
+            if (sectionLinks[0]) {
+                sectionLinks[0].classList.add('is-active');
+            }
 
-                <div>
-                    <p class="font-bold">Can I search using a CAS number or InChI Key?</p>
-                    <p class="text-gray-700 dark:text-gray-300">Yes! The search box accepts CAS numbers, InChI Keys, and most common synonyms. PubChem’s backend handles the resolution automatically.</p>
-                </div>
+            if (sections.length > 0 && sectionLinks.length > 0) {
+                const sectionObserver = new IntersectionObserver((entries) => {
+                    entries.forEach((entry) => {
+                        if (!entry.isIntersecting) return;
+                        const activeId = entry.target.id;
+                        sectionLinks.forEach((link) => {
+                            const isActive = link.getAttribute('href') === `#${activeId}`;
+                            link.classList.toggle('is-active', isActive);
+                        });
+                    });
+                }, {
+                    rootMargin: '-38% 0px -52% 0px',
+                    threshold: 0
+                });
+                sections.forEach((section) => sectionObserver.observe(section));
+            }
 
-                <div>
-                    <p class="font-bold">Why does the elemental composition bar sometimes not add up to exactly 100%?</p>
-                    <p class="text-gray-700 dark:text-gray-300">It’s due to rounding to one decimal place. The actual calculation uses precise atomic weights — the total is always 100% before rounding.</p>
-                </div>
+            const toolsGrid = document.getElementById('toolsGrid');
+            const toolSearch = document.getElementById('toolSearch');
+            const clearToolSearch = document.getElementById('clearToolSearch');
+            const toolsEmpty = document.getElementById('toolsEmpty');
+            const tools = toolsGrid ? Array.from(toolsGrid.querySelectorAll('.tool')) : [];
 
-                <div>
-                    <p class="font-bold">Why does the typewriter effect only appear on AI descriptions?</p>
-                    <p class="text-gray-700 dark:text-gray-300">It’s a deliberate design choice to make AI-generated text feel more dynamic and engaging. PubChem and Wikipedia descriptions load instantly, so no animation is needed.</p>
-                </div>
+            function filterTools() {
+                if (!tools.length || !toolSearch) return;
+                const query = toolSearch.value.trim().toLowerCase();
+                let visibleCount = 0;
+                tools.forEach((tool) => {
+                    const text = tool.textContent.toLowerCase();
+                    const matched = !query || text.includes(query);
+                    tool.classList.toggle('is-hidden', !matched);
+                    if (matched) visibleCount += 1;
+                });
+                if (toolsEmpty) {
+                    toolsEmpty.classList.toggle('is-visible', visibleCount === 0);
+                }
+            }
 
-                <div>
-                    <p class="font-bold">Does the app support isotopes, salts, or charged species?</p>
-                    <p class="text-gray-700 dark:text-gray-300">Yes. PubChem handles most isotopes, hydrates, salts, and charged molecules. Just search with the correct name or formula (e.g. “D2O”, “NaCl”, “sulfate ion”).</p>
-                </div>
+            if (toolSearch) {
+                toolSearch.addEventListener('input', filterTools);
+            }
+            if (clearToolSearch && toolSearch) {
+                clearToolSearch.addEventListener('click', () => {
+                    toolSearch.value = '';
+                    filterTools();
+                    toolSearch.focus();
+                });
+            }
 
-                <div>
-                    <p class="font-bold">Is my search history or API key shared with anyone?</p>
-                    <p class="text-gray-700 dark:text-gray-300">No. Everything is stored only in your browser’s localStorage. Nothing is sent to any server except the official PubChem and Gemini APIs when needed.</p>
-                </div>
+            function isTextEntryTarget(target) {
+                if (!(target instanceof HTMLElement)) return false;
+                const tag = target.tagName.toLowerCase();
+                return tag === 'input' || tag === 'textarea' || target.isContentEditable;
+            }
 
-                <div>
-                    <p class="font-bold">Why is the InChI string sometimes extremely long?</p>
-                    <p class="text-gray-700 dark:text-gray-300">Complex molecules with many rings, branches, or stereocenters produce longer InChI strings. This is normal — it contains complete structural information.</p>
-                </div>
+            function closeGalleryLightbox() {
+                if (!galleryLightbox) return;
+                galleryLightbox.hidden = true;
+                body.style.overflow = '';
+                if (galleryReturnFocus) {
+                    galleryReturnFocus.focus();
+                    galleryReturnFocus = null;
+                }
+            }
 
-            </div>
-            <div class="mt-4 flex justify-end">
-                <button onclick="hideFAQ()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Close</button>
-            </div>
-        </div>
-    </div>
+            function openGalleryLightbox(src, caption, alt) {
+                if (!galleryLightbox || !galleryLightboxImage || !galleryLightboxCaption || !src) return;
+                galleryReturnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+                galleryLightboxImage.src = src;
+                galleryLightboxImage.alt = alt || caption || 'ChemSearch screenshot preview';
+                galleryLightboxCaption.textContent = caption || '';
+                galleryLightbox.hidden = false;
+                body.style.overflow = 'hidden';
+                if (galleryLightboxClose) {
+                    galleryLightboxClose.focus();
+                }
+            }
 
-        <!-- Error Modal -->
-        <div id="errorModalBackdrop" class="fixed inset-0 bg-black/40 dark:bg-black/50 backdrop-blur-sm hidden z-50 flex items-center justify-center py-6 overflow-y-auto" aria-hidden="true">
-            <div id="errorModal" role="alertdialog" aria-modal="true" aria-labelledby="errorTitle" tabindex="-1" class="max-w-md w-full mx-4 rounded-2xl p-6 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-gray-200 dark:border-slate-700 shadow-xl transform transition-all scale-95 opacity-0">
-                <div class="flex items-start justify-between">
-                    <h3 id="errorTitle" class="text-lg font-bold text-red-600">Not Found</h3>
-                    <button onclick="hideError()" class="text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white p-1" aria-label="Close error dialog"><i class="ph-fill ph-x"></i></button>
-                </div>
-                <div class="mt-3 text-sm space-y-3">
-                    <p id="errorMsg" class="text-gray-700 dark:text-gray-300">The requested chemical could not be found.</p>
-                </div>
-                <div class="mt-4 flex justify-end">
-                    <button onclick="hideError()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">Close</button>
-                </div>
-            </div>
-        </div>
+            galleryCards.forEach((card) => {
+                card.addEventListener('click', () => {
+                    if (screenshotsCarouselTrack && screenshotsCarouselTrack.dataset.dragged === '1') {
+                        return;
+                    }
+                    const image = card.querySelector('img');
+                    openGalleryLightbox(
+                        card.getAttribute('data-preview-src'),
+                        card.getAttribute('data-preview-caption'),
+                        image ? image.alt : ''
+                    );
+                });
+            });
 
-    <!-- API Key Modal -->
-    <div id="apiKeyModalBackdrop" class="fixed inset-0 bg-black/40 dark:bg-black/50 backdrop-blur-sm hidden z-50 flex items-center justify-center" aria-hidden="true">
-        <div id="apiKeyModal" role="dialog" aria-modal="true" aria-labelledby="apiKeyTitle" tabindex="-1" class="w-full max-w-sm mx-4 rounded-2xl p-6 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-gray-200 dark:border-slate-700 shadow-xl">
-            <h3 id="apiKeyTitle" class="text-lg font-bold mb-2">Gemini API Key</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Enter your Google Gemini API key to enable AI-powered descriptions. Your key will be stored locally in your browser.</p>
+            if (screenshotsCarouselTrack && screenshotSlides.length > 0) {
+                let carouselIndex = 0;
+                let isTicking = false;
+                let isDragging = false;
+                let dragStartX = 0;
+                let dragStartLeft = 0;
+                let didDrag = false;
+                const dotButtons = [];
 
-            <div class="space-y-4">
-                <div>
-                    <label for="apiKeyInput" class="block text-sm font-medium mb-2">API Key</label>
-                    <input type="password" id="apiKeyInput" placeholder="AIza..."
-                        class="w-full px-3 py-2 border border-gray-200 dark:border-slate-700 rounded-lg bg-gray-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:border-blue-500 focus:outline-none transition-colors">
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Get your free API key at <a href="https://aistudio.google.com/api-keys" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400 hover:underline">aistudio.google.com/api-keys</a></p>
-                </div>
+                function getSlideStep() {
+                    const firstSlide = screenshotSlides[0];
+                    if (!firstSlide) return 0;
+                    const style = window.getComputedStyle(screenshotsCarouselTrack);
+                    const gap = Number.parseFloat(style.gap || style.columnGap || '0');
+                    return firstSlide.getBoundingClientRect().width + gap;
+                }
 
-                <div class="flex gap-3 justify-end">
-                    <button onclick="closeAPIKeyModal()" class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors">Cancel</button>
-                    <button onclick="saveAPIKey()" class="px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">Save & Load</button>
-                </div>
-            </div>
-        </div>
-    </div>
+                function clampIndex(value) {
+                    return Math.max(0, Math.min(screenshotSlides.length - 1, value));
+                }
 
-    <style>
-        .btn-secondary {
-            @apply flex items-center justify-center gap-2 py-3 px-4 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl font-semibold text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700 transition-all shadow-sm;
-        }
+                function setCarouselState(index, syncScroll) {
+                    carouselIndex = clampIndex(index);
+                    if (screenshotsPrev) screenshotsPrev.disabled = carouselIndex <= 0;
+                    if (screenshotsNext) screenshotsNext.disabled = carouselIndex >= screenshotSlides.length - 1;
+                    if (screenshotsStatus) screenshotsStatus.textContent = `${carouselIndex + 1} / ${screenshotSlides.length}`;
+                    dotButtons.forEach((dot, dotIndex) => {
+                        const isActive = dotIndex === carouselIndex;
+                        dot.classList.toggle('is-active', isActive);
+                        dot.setAttribute('aria-selected', String(isActive));
+                        dot.tabIndex = isActive ? 0 : -1;
+                    });
+                    if (syncScroll) {
+                        const step = getSlideStep();
+                        if (step > 0) {
+                            screenshotsCarouselTrack.scrollTo({
+                                left: step * carouselIndex,
+                                behavior: prefersReducedMotion ? 'auto' : 'smooth'
+                            });
+                        }
+                    }
+                }
 
-        .stat-card {
-            @apply bg-white dark:bg-slate-800 p-3 rounded-xl border border-gray-200 dark:border-slate-700;
-        }
+                screenshotSlides.forEach((slide, index) => {
+                    slide.setAttribute('data-slide-index', String(index));
+                    if (!screenshotsDots) return;
+                    const dot = document.createElement('button');
+                    dot.type = 'button';
+                    dot.className = 'carousel-dot';
+                    dot.setAttribute('role', 'tab');
+                    dot.setAttribute('aria-label', `Go to screenshot ${index + 1}`);
+                    dot.setAttribute('aria-selected', 'false');
+                    dot.tabIndex = -1;
+                    dot.addEventListener('click', () => {
+                        setCarouselState(index, true);
+                    });
+                    screenshotsDots.appendChild(dot);
+                    dotButtons.push(dot);
+                });
 
-        .stat-card .label {
-            @apply block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1;
-        }
+                function syncIndexFromScroll() {
+                    const step = getSlideStep();
+                    if (step <= 0) return;
+                    const nextIndex = clampIndex(Math.round(screenshotsCarouselTrack.scrollLeft / step));
+                    if (nextIndex !== carouselIndex) {
+                        setCarouselState(nextIndex, false);
+                    } else {
+                        setCarouselState(carouselIndex, false);
+                    }
+                }
 
-        .stat-card .value {
-            @apply font-mono font-medium text-gray-900 dark:text-white truncate;
-        }
+                screenshotsCarouselTrack.addEventListener('scroll', () => {
+                    if (isTicking) return;
+                    isTicking = true;
+                    requestAnimationFrame(() => {
+                        syncIndexFromScroll();
+                        isTicking = false;
+                    });
+                }, { passive: true });
 
-        .section-title {
-            @apply text-xs font-bold text-gray-400 uppercase tracking-wider;
-        }
+                screenshotsCarouselTrack.addEventListener('keydown', (event) => {
+                    if (event.key === 'ArrowRight') {
+                        event.preventDefault();
+                        setCarouselState(carouselIndex + 1, true);
+                    } else if (event.key === 'ArrowLeft') {
+                        event.preventDefault();
+                        setCarouselState(carouselIndex - 1, true);
+                    } else if (event.key === 'Home') {
+                        event.preventDefault();
+                        setCarouselState(0, true);
+                    } else if (event.key === 'End') {
+                        event.preventDefault();
+                        setCarouselState(screenshotSlides.length - 1, true);
+                    }
+                });
 
-        #aboutModalBackdrop[data-open="true"], #faqModalBackdrop[data-open="true"] {
-            display: flex;
-        }
+                screenshotsCarouselTrack.addEventListener('wheel', (event) => {
+                    if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+                    event.preventDefault();
+                    screenshotsCarouselTrack.scrollLeft += event.deltaY;
+                }, { passive: false });
 
-        #aboutModal[data-open="true"], #faqModal[data-open="true"] {
-            transform: scale(1);
-            opacity: 1;
-        }
+                screenshotsCarouselTrack.addEventListener('pointerdown', (event) => {
+                    if (event.pointerType === 'mouse' && event.button !== 0) return;
+                    isDragging = true;
+                    didDrag = false;
+                    dragStartX = event.clientX;
+                    dragStartLeft = screenshotsCarouselTrack.scrollLeft;
+                    screenshotsCarouselTrack.setPointerCapture(event.pointerId);
+                });
 
-        #aboutModalBackdrop, #faqModalBackdrop { z-index: 60; }
-    </style>
+                screenshotsCarouselTrack.addEventListener('pointermove', (event) => {
+                    if (!isDragging) return;
+                    const deltaX = event.clientX - dragStartX;
+                    if (Math.abs(deltaX) > 6) {
+                        didDrag = true;
+                    }
+                    screenshotsCarouselTrack.scrollLeft = dragStartLeft - deltaX;
+                });
 
-    <script src="script.js"></script>
+                function stopDrag(event) {
+                    if (!isDragging) return;
+                    isDragging = false;
+                    if (didDrag) {
+                        screenshotsCarouselTrack.dataset.dragged = '1';
+                        requestAnimationFrame(() => {
+                            screenshotsCarouselTrack.dataset.dragged = '0';
+                        });
+                    }
+                    if (event && screenshotsCarouselTrack.hasPointerCapture(event.pointerId)) {
+                        screenshotsCarouselTrack.releasePointerCapture(event.pointerId);
+                    }
+                }
 
-        <!-- Default Description Settings Modal -->
-    <div id="defaultSettingsModalBackdrop" class="fixed inset-0 bg-black/40 dark:bg-black/50 backdrop-blur-sm hidden z-50 flex items-center justify-center" aria-hidden="true">
-        <div id="defaultSettingsModal" role="dialog" aria-modal="true" class="w-full max-w-sm mx-4 rounded-2xl p-6 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-gray-200 dark:border-slate-700 shadow-xl">
-            <h3 class="text-lg font-bold mb-4">Default Description Source</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Choose which description appears automatically on every new search.</p>
-            <div class="space-y-2">
-                <button onclick="setDefaultDescSource('pubchem')" class="w-full text-left px-4 py-3 rounded-xl border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 flex items-center justify-between">
-                    <span>PubChem</span>
-                    <span id="default-pubchem" class="text-xs bg-blue-100 text-blue-600 px-2 py-0.5 rounded">default</span>
-                </button>
-                <button onclick="setDefaultDescSource('wiki')" class="w-full text-left px-4 py-3 rounded-xl border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 flex items-center justify-between">
-                    <span>Wikipedia</span>
-                    <span id="default-wiki" class="text-xs bg-blue-100 text-blue-600 px-2 py-0.5 rounded hidden">default</span>
-                </button>
-                <button onclick="setDefaultDescSource('ai')" class="w-full text-left px-4 py-3 rounded-xl border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 flex items-center justify-between">
-                    <span>AI (Gemini)</span>
-                    <span id="default-ai" class="text-xs bg-blue-100 text-blue-600 px-2 py-0.5 rounded hidden">default</span>
-                </button>
-            </div>
-            <div class="mt-6 flex justify-end">
-                <button onclick="closeDefaultSettingsModal()" class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors">Close</button>
-            </div>
-        </div>
-    </div>
+                screenshotsCarouselTrack.addEventListener('pointerup', stopDrag);
+                screenshotsCarouselTrack.addEventListener('pointercancel', stopDrag);
+                screenshotsCarouselTrack.addEventListener('pointerleave', stopDrag);
 
-        <!-- Feedback Modal -->
-    <div id="feedbackModalBackdrop" class="fixed inset-0 bg-black/40 dark:bg-black/50 backdrop-blur-sm hidden z-[80] flex items-center justify-center" aria-hidden="true">
-        <div id="feedbackModal" role="dialog" class="w-full max-w-md mx-4 rounded-3xl p-6 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-gray-200 dark:border-slate-700 shadow-2xl">
-            <div class="flex items-start justify-between mb-5">
-                <div>
-                    <h3 class="text-xl font-bold">Send Feedback</h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Help us improve ChemSearch</p>
-                </div>
-                <button onclick="closeFeedbackModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
-                    <i class="ph-fill ph-x text-2xl"></i>
-                </button>
-            </div>
+                if (screenshotsPrev) {
+                    screenshotsPrev.addEventListener('click', () => {
+                        setCarouselState(carouselIndex - 1, true);
+                    });
+                }
 
-            <form id="feedbackForm" onsubmit="handleFeedbackSubmit(event)">
-                <textarea id="feedbackMessage" rows="5" 
-                    class="w-full px-4 py-3 bg-gray-100 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-2xl resize-none focus:outline-none focus:border-blue-500 text-sm"
-                    placeholder="What do you like? What can be better? Any bugs?" required></textarea>
+                if (screenshotsNext) {
+                    screenshotsNext.addEventListener('click', () => {
+                        setCarouselState(carouselIndex + 1, true);
+                    });
+                }
 
-                <div class="mt-4">
-                    <label class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 block">Email / Name (optional)</label>
-                    <input type="text" id="feedbackEmail" 
-                        class="w-full px-4 py-3 bg-gray-100 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-2xl focus:outline-none focus:border-blue-500"
-                        placeholder="Write your email or name">
-                </div>
+                window.addEventListener('resize', () => {
+                    setCarouselState(carouselIndex, true);
+                });
 
-                <button type="submit" id="feedbackSubmitBtn"
-                    class="mt-6 w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-2xl transition-colors flex items-center justify-center gap-2">
-                    Send Feedback
-                </button>
-            </form>
-        </div>
-    </div>
+                setCarouselState(0, false);
+            }
+
+            if (galleryLightboxClose) {
+                galleryLightboxClose.addEventListener('click', closeGalleryLightbox);
+            }
+
+            if (galleryLightbox) {
+                galleryLightbox.addEventListener('click', (event) => {
+                    if (event.target === galleryLightbox) {
+                        closeGalleryLightbox();
+                    }
+                });
+            }
+
+            document.addEventListener('keydown', (event) => {
+                const key = event.key.toLowerCase();
+                const targetIsTextEntry = isTextEntryTarget(event.target);
+
+                if ((event.key === '/' || ((event.metaKey || event.ctrlKey) && key === 'k')) && toolSearch && !targetIsTextEntry) {
+                    event.preventDefault();
+                    toolSearch.focus();
+                    toolSearch.select();
+                    return;
+                }
+
+                if (event.key === 'Escape' && galleryLightbox && !galleryLightbox.hidden) {
+                    closeGalleryLightbox();
+                    return;
+                }
+
+                if (event.key === 'Escape' && toolSearch && document.activeElement === toolSearch && toolSearch.value.trim().length > 0) {
+                    toolSearch.value = '';
+                    filterTools();
+                    return;
+                }
+
+                if (event.key === 'Escape' && body.classList.contains('mobile-nav-open')) {
+                    setMobileNavState(false);
+                }
+            });
+
+            const toTopBtn = document.getElementById('toTopBtn');
+            if (toTopBtn) {
+                const handleScroll = () => {
+                    const shouldShow = window.scrollY > 420;
+                    toTopBtn.classList.toggle('is-visible', shouldShow);
+                };
+
+                window.addEventListener('scroll', handleScroll, { passive: true });
+                handleScroll();
+
+                toTopBtn.addEventListener('click', () => {
+                    window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+                });
+            }
+
+            async function loadLatestRelease() {
+                if (!releaseStatus) return;
+                releaseStatus.setAttribute('aria-busy', 'true');
+                try {
+                    const response = await fetch('https://api.github.com/repos/FurtherSecrets24680/chemsearch-android/releases/latest', {
+                        headers: { Accept: 'application/vnd.github+json' }
+                    });
+                    if (!response.ok) throw new Error('release fetch failed');
+                    const release = await response.json();
+                    const tag = release.tag_name || 'latest';
+                    const date = release.published_at ? new Date(release.published_at).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                    }) : '';
+                    releaseStatus.href = release.html_url || releaseStatus.href;
+                    if (releaseStatusText) {
+                        releaseStatusText.textContent = date ? `Latest: ${tag} (${date})` : `Latest: ${tag}`;
+                    } else {
+                        releaseStatus.textContent = date ? `Latest: ${tag} (${date})` : `Latest: ${tag}`;
+                    }
+                } catch (err) {
+                    if (releaseStatusText) {
+                        releaseStatusText.textContent = 'Latest release: open on GitHub';
+                    } else {
+                        releaseStatus.textContent = 'Latest release: open on GitHub';
+                    }
+                } finally {
+                    releaseStatus.setAttribute('aria-busy', 'false');
+                }
+            }
+
+            loadLatestRelease();
+        })();
+    </script>
 </body>
 
 </html>
