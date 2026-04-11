@@ -4,61 +4,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChemSearch</title>
-    <meta name="description" content="ChemSearch is a native Kotlin + Jetpack Compose app for searching, exploring, and learning chemical compounds.">
+    <title>ChemSearch — Chemistry Search for Android</title>
+    <meta name="description" content="ChemSearch: search any compound by name, CAS or CID. Get 3D structure models, GHS safety data, elemental analysis and 11 chemistry tools. Native Kotlin app for Android.">
     <link rel="icon" href="favicon.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
+        /* ── Variables ── */
         :root {
-            --bg: #eef3fb;
-            --paper: rgba(255, 255, 255, 0.68);
-            --paper-strong: rgba(255, 255, 255, 0.84);
-            --paper-soft: rgba(245, 248, 255, 0.66);
-            --ink: #17233d;
-            --muted: #6b768d;
-            --line: rgba(148, 165, 204, 0.28);
-            --line-strong: rgba(112, 132, 182, 0.44);
-            --accent: #356bdf;
-            --accent-soft: rgba(53, 107, 223, 0.14);
-            --accent-deep: #214cae;
-            --accent-fog: rgba(96, 137, 232, 0.18);
-            --accent-dust: #8e9cbe;
-            --rust: #5b84ea;
-            --mustard: #84a0e4;
-            --shadow: 0 18px 48px rgba(33, 58, 117, 0.14);
-            --shadow-soft: 0 10px 28px rgba(33, 58, 117, 0.1);
-            --panel-blur: 18px;
-            --radius-xl: 16px;
-            --radius-lg: 11px;
-            --radius-md: 8px;
-            --max: 1860px;
+            --bg: #f0f2f8;
+            --surface: rgba(255, 255, 255, 0.9);
+            --surface-2: rgba(248, 250, 255, 0.88);
+            --surface-float: rgba(255, 255, 255, 0.68);
+            --surface-deep: rgba(240, 244, 255, 0.7);
+            --ink: #0c1526;
+            --ink-2: #1b2b47;
+            --muted: #546080;
+            --muted-2: #8698bc;
+            --line: rgba(100, 128, 190, 0.16);
+            --line-strong: rgba(80, 108, 178, 0.3);
+            --accent: #059968;
+            --accent-dim: rgba(5, 153, 104, 0.1);
+            --accent-glow: rgba(5, 153, 104, 0.16);
+            --accent-hi: #07b87a;
+            --accent-text: #056f4c;
+            --blue: #2a5de0;
+            --blue-dim: rgba(42, 93, 224, 0.1);
+            --blue-2: #3b70f5;
+            --shadow: 0 18px 52px rgba(14, 28, 80, 0.13);
+            --shadow-sm: 0 6px 22px rgba(14, 28, 80, 0.08);
+            --blur: 20px;
+            --r-xl: 18px;
+            --r-lg: 12px;
+            --r-md: 8px;
+            --r-sm: 5px;
+            --max: 1720px;
         }
 
-        * {
-            box-sizing: border-box;
-        }
+        /* ── Reset ── */
+        *, *::before, *::after { box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
 
-        html,
+        /* ── Base ── */
         body {
-            margin: 0;
-            padding: 0;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: "Manrope", sans-serif;
+            font-family: "Plus Jakarta Sans", system-ui, sans-serif;
             color: var(--ink);
-            background:
-                radial-gradient(circle at 12% 0%, rgba(87, 135, 255, 0.16), transparent 24%),
-                radial-gradient(circle at 100% 18%, rgba(53, 107, 223, 0.11), transparent 22%),
-                linear-gradient(180deg, #f8faff 0%, var(--bg) 100%);
-            line-height: 1.55;
+            background-color: var(--bg);
+            background-image:
+                radial-gradient(ellipse at 8% -8%, rgba(5, 153, 104, 0.07) 0%, transparent 42%),
+                radial-gradient(ellipse at 94% 12%, rgba(42, 93, 224, 0.08) 0%, transparent 38%),
+                linear-gradient(180deg, #eef1fb 0%, var(--bg) 60%);
+            line-height: 1.6;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
         }
 
         body::before {
@@ -66,134 +67,96 @@
             position: fixed;
             inset: 0;
             pointer-events: none;
-            background:
-                linear-gradient(rgba(97, 118, 167, 0.06) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(97, 118, 167, 0.05) 1px, transparent 1px);
-            background-size: 28px 28px;
-            z-index: -1;
+            z-index: 0;
+            background-image:
+                linear-gradient(rgba(90, 120, 180, 0.048) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(90, 120, 180, 0.048) 1px, transparent 1px);
+            background-size: 30px 30px;
         }
 
-        .ambient {
-            display: none;
-        }
-
-        .wrap {
-            width: min(var(--max), calc(100vw - clamp(24px, 4vw, 92px)));
-            margin: 0 auto 56px;
-        }
-
+        /* ── Accessibility ── */
         .skip-link {
             position: absolute;
             left: 12px;
-            top: -56px;
-            z-index: 100;
-            background: #13203b;
-            color: #f6f9ff;
-            border-radius: 6px;
-            padding: 9px 12px;
+            top: -60px;
+            z-index: 200;
+            background: var(--ink);
+            color: #f0f6ff;
+            border-radius: var(--r-md);
+            padding: 10px 14px;
             font-size: 0.84rem;
-            font-weight: 700;
+            font-weight: 600;
             text-decoration: none;
             transition: top 0.2s ease;
         }
-
-        .skip-link:focus {
-            top: 10px;
-        }
+        .skip-link:focus { top: 10px; }
 
         .sr-only {
             position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
+            width: 1px; height: 1px;
+            padding: 0; margin: -1px;
             overflow: hidden;
-            clip: rect(0, 0, 0, 0);
+            clip: rect(0,0,0,0);
             white-space: nowrap;
             border: 0;
         }
 
+        /* ── Layout ── */
+        .wrap {
+            width: min(var(--max), calc(100vw - clamp(24px, 4vw, 88px)));
+            margin: 0 auto 60px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── Header ── */
         .site-header {
             position: sticky;
-            top: 10px;
-            z-index: 30;
-            margin-top: 18px;
-            padding: 14px 16px;
+            top: 12px;
+            z-index: 40;
+            margin-top: 16px;
+            padding: 13px 18px;
+            background: var(--surface);
             border: 1px solid var(--line-strong);
-            background:
-                linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(244, 248, 255, 0.62));
-            border-radius: 12px;
-            box-shadow: var(--shadow-soft);
-            backdrop-filter: blur(var(--panel-blur));
-            -webkit-backdrop-filter: blur(var(--panel-blur));
+            border-radius: var(--r-lg);
+            box-shadow: var(--shadow-sm);
+            backdrop-filter: blur(var(--blur));
+            -webkit-backdrop-filter: blur(var(--blur));
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 16px;
         }
 
-        .mobile-menu-toggle {
-            display: none;
-            align-items: center;
-            justify-content: center;
-            width: 42px;
-            height: 42px;
-            border-radius: 10px;
-            border: 1px solid var(--line-strong);
-            background: rgba(255, 255, 255, 0.66);
-            color: var(--ink);
-            cursor: pointer;
-            backdrop-filter: blur(calc(var(--panel-blur) * 0.7));
-            -webkit-backdrop-filter: blur(calc(var(--panel-blur) * 0.7));
-        }
-
-        .mobile-menu-toggle i {
-            font-size: 1.2rem;
-            line-height: 1;
-        }
-
-        .mobile-menu-toggle:hover {
-            background: rgba(255, 255, 255, 0.84);
-        }
-
         .brand {
             display: inline-flex;
             align-items: center;
-            gap: 12px;
+            gap: 11px;
             text-decoration: none;
             color: var(--ink);
             min-width: 0;
         }
-
-        .brand-text {
-            min-width: 0;
-        }
-
         .brand img {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            border: 0;
-            background: transparent;
-            padding: 0;
+            width: 38px;
+            height: 38px;
+            border-radius: var(--r-md);
             object-fit: cover;
-            clip-path: inset(1.5px round 8px);
         }
-
+        .brand-text { min-width: 0; }
         .brand-title {
             display: block;
-            font-family: "Bricolage Grotesque", sans-serif;
-            font-size: 1.08rem;
+            font-family: "Syne", sans-serif;
+            font-size: 1.05rem;
             font-weight: 700;
-            line-height: 1.05;
-            letter-spacing: -0.01em;
+            letter-spacing: -0.015em;
+            line-height: 1.1;
         }
-
         .brand-sub {
             display: block;
-            margin-top: 3px;
+            margin-top: 2px;
             color: var(--muted);
-            font-size: 0.73rem;
+            font-size: 0.72rem;
+            font-weight: 500;
             letter-spacing: 0.02em;
         }
 
@@ -201,77 +164,73 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: flex-end;
-            gap: 8px;
+            gap: 7px;
             align-items: center;
         }
 
-        .pill-link,
-        .theme-toggle,
-        .release-chip {
+        .pill-link, .theme-toggle, .release-chip {
             appearance: none;
             text-decoration: none;
             color: var(--ink);
-            border: 1px solid var(--line);
-            background: rgba(255, 255, 255, 0.64);
-            border-radius: 8px;
-            padding: 9px 12px;
+            border: 1px solid var(--line-strong);
+            background: var(--surface-float);
+            border-radius: var(--r-sm);
+            padding: 8px 12px;
             font: inherit;
             font-size: 0.82rem;
-            font-weight: 700;
+            font-weight: 600;
             line-height: 1;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            backdrop-filter: blur(calc(var(--panel-blur) * 0.7));
-        }
-
-        .pill-link:hover,
-        .theme-toggle:hover,
-        .release-chip:hover {
-            background: rgba(255, 255, 255, 0.84);
-            border-color: var(--line-strong);
-        }
-
-        .theme-toggle {
+            gap: 7px;
+            transition: background 0.15s, border-color 0.15s, color 0.15s;
             cursor: pointer;
+            backdrop-filter: blur(12px);
         }
-
-        .pill-link i,
-        .btn i,
-        .section-link i,
-        .release-chip i,
-        .lightbox-close i {
-            font-size: 1rem;
-            line-height: 1;
-            flex-shrink: 0;
+        .pill-link:hover, .theme-toggle:hover, .release-chip:hover {
+            background: var(--surface);
+            border-color: var(--line-strong);
+            color: var(--accent-text);
         }
+        .pill-link i, .release-chip i, .theme-toggle i,
+        .btn i, .section-link i, .lightbox-close i { font-size: 1rem; flex-shrink: 0; }
 
+        .mobile-menu-toggle {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            width: 40px; height: 40px;
+            border-radius: var(--r-md);
+            border: 1px solid var(--line-strong);
+            background: var(--surface-float);
+            color: var(--ink);
+            cursor: pointer;
+            backdrop-filter: blur(12px);
+        }
+        .mobile-menu-toggle:hover { background: var(--surface); }
+
+        /* ── Utility bar ── */
         .utility-bar {
             position: sticky;
             top: 84px;
-            z-index: 24;
-            margin-top: 10px;
-            padding: 10px 12px;
+            z-index: 30;
+            margin-top: 8px;
+            padding: 9px 12px;
             border: 1px solid var(--line);
-            background:
-                linear-gradient(180deg, rgba(249, 251, 255, 0.74), rgba(239, 244, 252, 0.66));
-            border-radius: 10px;
+            background: var(--surface-2);
+            border-radius: var(--r-lg);
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 10px;
-            backdrop-filter: blur(var(--panel-blur));
-            -webkit-backdrop-filter: blur(var(--panel-blur));
+            backdrop-filter: blur(var(--blur));
+            -webkit-backdrop-filter: blur(var(--blur));
         }
 
         .section-nav {
             display: flex;
             flex-wrap: wrap;
-            gap: 7px;
-        }
-
-        .mobile-action-row {
-            display: none;
+            gap: 4px;
         }
 
         .section-link {
@@ -280,476 +239,450 @@
             border: 1px solid transparent;
             border-radius: 999px;
             background: transparent;
-            padding: 7px 12px;
-            font-size: 0.84rem;
-            font-weight: 700;
-            letter-spacing: 0.01em;
-            text-transform: none;
+            padding: 6px 13px;
+            font-size: 0.82rem;
+            font-weight: 600;
             display: inline-flex;
             align-items: center;
-            gap: 7px;
+            gap: 6px;
+            transition: color 0.15s, background 0.15s, border-color 0.15s;
         }
-
         .section-link:hover {
             color: var(--ink);
-            background: rgba(255, 255, 255, 0.64);
-            border-color: var(--line);
+            background: var(--surface-float);
+            border-color: var(--line-strong);
         }
-
         .section-link.is-active {
-            color: var(--accent);
-            background: rgba(53, 107, 223, 0.12);
-            border-color: rgba(53, 107, 223, 0.24);
+            color: var(--accent-text);
+            background: var(--accent-dim);
+            border-color: rgba(5, 153, 104, 0.28);
         }
+        .mobile-action-row { display: none; }
 
-        main {
-            padding-top: 22px;
+        /* ── Reveal animation ── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(14px);
+            transition: opacity 0.48s ease, transform 0.48s ease;
         }
+        .reveal.is-visible { opacity: 1; transform: none; }
+        .reveal.delay-1 { transition-delay: 0.08s; }
+        .reveal.delay-2 { transition-delay: 0.16s; }
+        .reveal.delay-3 { transition-delay: 0.24s; }
 
-        .hero {
-            display: grid;
-            gap: 18px;
-        }
+        /* ── Main + Hero ── */
+        main { padding-top: 22px; }
+
+        .hero { display: grid; gap: 0; }
 
         .hero-main {
             position: relative;
             overflow: hidden;
-            padding: 32px 30px 24px;
+            padding: 36px 34px 32px;
             border: 1px solid var(--line-strong);
-            background:
-                linear-gradient(180deg, rgba(255, 255, 255, 0.76), rgba(246, 249, 255, 0.64)),
-                var(--paper);
-            border-radius: var(--radius-xl);
+            background: var(--surface);
+            border-radius: var(--r-xl);
             box-shadow: var(--shadow);
-            backdrop-filter: blur(calc(var(--panel-blur) * 0.75));
-            -webkit-backdrop-filter: blur(calc(var(--panel-blur) * 0.75));
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             display: grid;
-            grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.8fr);
-            column-gap: 30px;
+            grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+            column-gap: 32px;
+            align-items: start;
         }
 
+        /* Decorative accent corner */
         .hero-main::after {
             content: "";
             position: absolute;
-            right: -16px;
-            top: -16px;
-            width: 120px;
-            height: 120px;
-            border-radius: 999px;
-            background: radial-gradient(circle, rgba(53, 107, 223, 0.16), transparent 68%);
+            right: 0; top: 0;
+            width: 280px; height: 280px;
+            background: radial-gradient(ellipse at top right, rgba(5, 153, 104, 0.08), transparent 65%);
             pointer-events: none;
+        }
+
+        /* Section eyebrow */
+        .hero-eyebrow {
+            grid-column: 1;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin: 0 0 18px;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--accent-text);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+        .hero-eyebrow::before {
+            content: "";
+            display: block;
+            width: 28px; height: 2px;
+            background: var(--accent);
+            border-radius: 2px;
         }
 
         h1 {
             margin: 0;
-            font-family: "Bricolage Grotesque", sans-serif;
-            font-size: clamp(2.35rem, 5.2vw, 4.7rem);
-            line-height: 0.94;
-            letter-spacing: -0.04em;
-            max-width: 13ch;
-            text-wrap: balance;
+            font-family: "Syne", sans-serif;
+            font-size: clamp(2.4rem, 4.8vw, 4.6rem);
+            font-weight: 800;
+            line-height: 0.95;
+            letter-spacing: -0.045em;
+            max-width: 14ch;
             grid-column: 1;
+            color: var(--ink);
+        }
+        h1 em {
+            font-style: normal;
+            color: var(--accent-text);
         }
 
         .hero-lead {
-            margin: 18px 0 0;
-            max-width: 62ch;
-            color: var(--muted);
-            font-size: 1.02rem;
-            line-height: 1.7;
             grid-column: 1;
+            margin: 20px 0 0;
+            max-width: 58ch;
+            color: var(--muted);
+            font-size: 1rem;
+            line-height: 1.72;
         }
-
-        .hero-lead strong {
-            color: var(--ink);
-        }
+        .hero-lead strong { color: var(--ink); font-weight: 600; }
 
         .hero-meta {
-            margin: 16px 0 0;
+            grid-column: 1;
+            margin: 14px 0 0;
             padding: 0;
             list-style: none;
             display: flex;
             flex-wrap: wrap;
-            gap: 10px 16px;
+            gap: 8px 18px;
             color: var(--muted);
-            font-size: 0.82rem;
-            font-weight: 700;
-            grid-column: 1;
+            font-size: 0.8rem;
+            font-weight: 600;
         }
-
         .hero-meta li {
-            position: relative;
-            padding-left: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
-
         .hero-meta li::before {
             content: "";
-            position: absolute;
-            left: 0;
-            top: 0.52em;
-            width: 6px;
-            height: 6px;
+            display: block;
+            width: 5px; height: 5px;
             border-radius: 50%;
             background: var(--accent);
         }
 
         .cta-row {
-            margin-top: 22px;
+            grid-column: 1;
+            margin-top: 24px;
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            grid-column: 1;
+            gap: 9px;
         }
 
         .btn {
             text-decoration: none;
-            border-radius: 8px;
-            padding: 12px 15px;
-            font-size: 0.92rem;
-            font-weight: 800;
+            border-radius: var(--r-md);
+            padding: 11px 16px;
+            font-size: 0.9rem;
+            font-weight: 700;
             border: 1px solid transparent;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
+            transition: background 0.15s, box-shadow 0.15s, transform 0.12s;
+            cursor: pointer;
         }
-
         .btn-primary {
-            color: #f8fbff;
-            background: linear-gradient(180deg, #3f78ee 0%, #2c5fd2 100%);
-            border-color: rgba(39, 76, 162, 0.84);
-            box-shadow: 0 10px 22px rgba(53, 107, 223, 0.24);
+            color: #fff;
+            background: var(--accent);
+            border-color: var(--accent-text);
+            box-shadow: 0 6px 22px rgba(5, 153, 104, 0.32);
         }
-
         .btn-primary:hover {
-            background: linear-gradient(180deg, #477ff2 0%, #315fc8 100%);
+            background: var(--accent-hi);
+            box-shadow: 0 8px 28px rgba(5, 153, 104, 0.42);
+            transform: translateY(-1px);
         }
-
         .btn-secondary {
             color: var(--ink);
-            background: rgba(255, 255, 255, 0.58);
-            border-color: var(--line);
-            backdrop-filter: blur(calc(var(--panel-blur) * 0.55));
-            -webkit-backdrop-filter: blur(calc(var(--panel-blur) * 0.55));
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.8);
+            background: var(--surface-float);
             border-color: var(--line-strong);
+            backdrop-filter: blur(10px);
+        }
+        .btn-secondary:hover {
+            background: var(--surface);
+            border-color: rgba(80, 108, 178, 0.5);
         }
 
+        /* ── Hero stats panel ── */
         .hero-facts {
-            margin-top: 6px;
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 12px;
             grid-column: 2;
-            grid-row: 1 / span 4;
+            grid-row: 1 / span 5;
             align-self: start;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 2px;
         }
 
         .fact {
-            grid-column: span 1;
-            padding: 16px 15px 15px;
+            padding: 16px 14px;
             border: 1px solid var(--line);
-            border-radius: 12px 12px 16px 12px;
-            background: rgba(255, 255, 255, 0.56);
-            backdrop-filter: blur(calc(var(--panel-blur) * 0.55));
-            -webkit-backdrop-filter: blur(calc(var(--panel-blur) * 0.55));
+            border-radius: var(--r-lg);
+            background: var(--surface-2);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
         }
-
-        .fact:nth-child(1) {
-            grid-column: span 2;
+        .fact::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--accent-dim) 0%, transparent 60%);
+            pointer-events: none;
         }
-
-        .fact:nth-child(2) {
-            grid-column: span 1;
-        }
-
-        .fact:nth-child(3) {
-            grid-column: span 1;
-        }
-
-        .fact:nth-child(4) {
-            grid-column: span 2;
-        }
+        .fact:nth-child(1) { grid-column: span 2; }
+        .fact:nth-child(4) { grid-column: span 2; }
 
         .fact i {
-            width: 34px;
-            height: 34px;
-            display: grid;
-            place-items: center;
-            border-radius: 10px;
+            width: 32px; height: 32px;
+            display: grid; place-items: center;
+            border-radius: var(--r-md);
             font-size: 1rem;
-            color: var(--accent);
-            background: rgba(53, 107, 223, 0.12);
+            color: var(--accent-text);
+            background: var(--accent-dim);
         }
-
-        .fact:nth-child(2) i,
-        .fact:nth-child(2) strong {
-            color: #5779d8;
-        }
-
-        .fact:nth-child(3) i,
-        .fact:nth-child(3) strong {
-            color: #4462bf;
-        }
-
-        .fact:nth-child(4) i,
-        .fact:nth-child(4) strong {
-            color: #6789e7;
-        }
+        .fact:nth-child(2) i { color: var(--blue); background: var(--blue-dim); }
+        .fact:nth-child(3) i { color: #7b40d0; background: rgba(123, 64, 208, 0.1); }
+        .fact:nth-child(4) i { color: var(--accent-text); background: var(--accent-dim); }
 
         .fact strong {
             display: block;
             margin-top: 10px;
-            font-family: "Bricolage Grotesque", sans-serif;
-            font-size: 1.4rem;
+            font-family: "Syne", sans-serif;
+            font-size: 1.65rem;
+            font-weight: 800;
             line-height: 1;
-            letter-spacing: -0.03em;
+            letter-spacing: -0.04em;
+            color: var(--ink);
         }
-
         .fact span {
             display: block;
             margin-top: 4px;
-            font-size: 0.8rem;
-            font-weight: 700;
+            font-size: 0.76rem;
+            font-weight: 600;
             letter-spacing: 0.01em;
-            text-transform: none;
             color: var(--muted);
         }
 
+        /* ── Hero lower band ── */
         .hero-support {
+            grid-column: 1 / -1;
             margin-top: 28px;
-            padding-top: 18px;
-            border-top: 2px solid var(--line-strong);
+            padding-top: 20px;
+            border-top: 1px solid var(--line-strong);
             display: grid;
-            grid-template-columns: minmax(220px, 0.72fr) minmax(0, 1.28fr);
-            column-gap: 22px;
+            grid-template-columns: minmax(190px, 0.65fr) 1fr;
+            column-gap: 28px;
             row-gap: 10px;
             align-items: start;
-            grid-column: 1 / -1;
         }
-
         .hero-support h2 {
             margin: 0;
-            font-family: "Bricolage Grotesque", sans-serif;
-            font-size: 1.45rem;
-            line-height: 1.02;
-            letter-spacing: -0.02em;
-            max-width: 12ch;
+            font-family: "Syne", sans-serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            color: var(--ink);
+            max-width: 13ch;
         }
-
         .hero-support p {
             margin: 0;
             color: var(--muted);
-            font-size: 0.95rem;
+            font-size: 0.94rem;
             line-height: 1.68;
         }
-
         .hero-support-copy {
             grid-column: 2;
             display: grid;
-            gap: 10px;
+            gap: 9px;
             align-items: start;
         }
-
-        .support-points {
-            display: grid;
-            gap: 10px;
-        }
+        .support-points { display: grid; gap: 9px; }
 
         .panel-note {
             padding: 12px 14px;
             border: 1px solid var(--line);
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.48);
+            border-radius: var(--r-md);
+            background: var(--surface-deep);
             color: var(--muted);
             display: flex;
             gap: 10px;
             align-items: flex-start;
-            font-size: 0.86rem;
-            line-height: 1.55;
-            backdrop-filter: blur(calc(var(--panel-blur) * 0.55));
-            -webkit-backdrop-filter: blur(calc(var(--panel-blur) * 0.55));
+            font-size: 0.85rem;
+            line-height: 1.58;
+            backdrop-filter: blur(10px);
         }
-
-        .panel-note:nth-child(2) {
-            background: rgba(245, 248, 255, 0.62);
-        }
-
         .panel-note i {
             margin-top: 1px;
-            width: 30px;
-            height: 30px;
-            display: grid;
-            place-items: center;
-            border-radius: 9px;
+            width: 28px; height: 28px;
+            display: grid; place-items: center;
+            border-radius: var(--r-md);
             font-size: 1rem;
-            color: var(--accent);
-            background: rgba(53, 107, 223, 0.12);
+            color: var(--accent-text);
+            background: var(--accent-dim);
             flex-shrink: 0;
         }
-
         .panel-note:nth-child(2) i {
-            color: var(--rust);
-            background: rgba(91, 132, 234, 0.12);
+            color: var(--blue);
+            background: var(--blue-dim);
         }
 
+        /* ── Sections ── */
         .section {
-            margin-top: 28px;
-            padding: 26px;
+            margin-top: 20px;
+            padding: 28px 30px 32px;
             border: 1px solid var(--line);
-            border-radius: 16px;
-            background:
-                linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(245, 249, 255, 0.58)),
-                var(--paper);
-            box-shadow: var(--shadow-soft);
-            backdrop-filter: blur(calc(var(--panel-blur) * 0.72));
-            -webkit-backdrop-filter: blur(calc(var(--panel-blur) * 0.72));
+            border-radius: var(--r-xl);
+            background: var(--surface);
+            box-shadow: var(--shadow-sm);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
         }
 
-        #features.section {
-            padding: 24px 26px 30px;
-            margin-right: clamp(0px, 0.9vw, 12px);
-        }
+        #features.section { padding: 26px 30px 32px; }
+        #tools.section { padding: 28px 30px 26px; }
+        #screenshots.section { padding: 26px 30px 36px; }
+        #stack.section { padding: 30px 30px 28px; }
 
-        #tools.section {
-            padding: 30px 26px 24px;
-            margin-left: clamp(0px, 1.6vw, 26px);
+        .section-eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 0 12px;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.72rem;
+            font-weight: 500;
+            color: var(--accent-text);
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
         }
-
-        #screenshots.section {
-            padding: 24px 26px 34px;
-            margin-right: clamp(0px, 1.2vw, 18px);
-        }
-
-        #stack.section {
-            padding: 32px 26px 24px;
-            margin-left: clamp(0px, 0.8vw, 12px);
-        }
+        .section-eyebrow i { font-size: 0.9rem; }
 
         .section h2 {
             margin: 0;
-            font-family: "Bricolage Grotesque", sans-serif;
-            font-size: clamp(1.5rem, 2.7vw, 2.4rem);
+            font-family: "Syne", sans-serif;
+            font-size: clamp(1.5rem, 2.6vw, 2.3rem);
+            font-weight: 800;
             line-height: 1;
-            letter-spacing: -0.03em;
+            letter-spacing: -0.04em;
+            color: var(--ink);
         }
-
-        .section-heading {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .section-heading i,
-        .feature-card h3 i,
-        .meta-card h3 i {
-            font-size: 1rem;
-            color: var(--accent);
-        }
-
         .section-intro {
-            margin: 12px 0 0;
-            max-width: 70ch;
+            margin: 11px 0 0;
+            max-width: 68ch;
             color: var(--muted);
-            font-size: 0.98rem;
+            font-size: 0.96rem;
             line-height: 1.7;
         }
+        #tools .section-intro { max-width: 62ch; }
+        #screenshots .section-intro { max-width: 54ch; }
 
-        #tools .section-intro {
-            max-width: 64ch;
-        }
-
-        #screenshots .section-intro {
-            max-width: 56ch;
-            margin-bottom: 2px;
-        }
-
+        /* ── Feature grid ── */
         .feature-grid {
-            margin-top: 18px;
+            margin-top: 20px;
             display: grid;
             grid-template-columns: repeat(12, minmax(0, 1fr));
-            gap: 14px;
+            gap: 12px;
         }
 
         .feature-card {
             grid-column: span 4;
-            padding: 18px 18px 18px 20px;
+            padding: 20px 20px 20px 22px;
             border: 1px solid var(--line);
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.54);
-            backdrop-filter: blur(calc(var(--panel-blur) * 0.55));
-            -webkit-backdrop-filter: blur(calc(var(--panel-blur) * 0.55));
+            border-radius: var(--r-lg);
+            background: var(--surface-2);
+            backdrop-filter: blur(10px);
+            transition: border-color 0.15s, box-shadow 0.15s;
         }
-
-        .feature-card:nth-child(1),
-        .feature-card:nth-child(4) {
-            grid-column: span 5;
+        .feature-card:hover {
+            border-color: var(--line-strong);
+            box-shadow: var(--shadow-sm);
         }
-
-        .feature-card:nth-child(2) {
-            grid-column: span 3;
-            background: rgba(242, 246, 255, 0.7);
-        }
-
-        .feature-card:nth-child(3) {
-            grid-column: span 4;
-            padding-top: 20px;
-        }
-
-        .feature-card:nth-child(5) {
-            grid-column: span 4;
-            background: rgba(248, 250, 255, 0.68);
-        }
-
+        /* Asymmetric column spans */
+        .feature-card:nth-child(1) { grid-column: span 6; }
+        .feature-card:nth-child(2) { grid-column: span 6; }
+        .feature-card:nth-child(3) { grid-column: span 4; }
+        .feature-card:nth-child(4) { grid-column: span 4; }
+        .feature-card:nth-child(5) { grid-column: span 4; }
         .feature-card:nth-child(6) {
-            grid-column: span 3;
-            background: rgba(247, 250, 255, 0.72);
+            grid-column: span 12;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            align-items: start;
+            gap: 20px;
+            background: linear-gradient(135deg, rgba(5, 153, 104, 0.06) 0%, var(--surface-2) 50%);
+            border-color: rgba(5, 153, 104, 0.22);
         }
+        .feature-card:nth-child(6) .feature-card-body { display: contents; }
 
         .feature-card h3 {
             margin: 0;
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-family: "Bricolage Grotesque", sans-serif;
-            font-size: 1.05rem;
-            letter-spacing: -0.01em;
+            gap: 9px;
+            font-family: "Syne", sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--ink);
         }
-
-        .feature-card h3 i,
-        .meta-card h3 i,
-        .tool-head i {
-            width: 32px;
-            height: 32px;
-            display: grid;
-            place-items: center;
-            border-radius: 10px;
-            background: rgba(53, 107, 223, 0.12);
+        .feature-card h3 i {
+            width: 32px; height: 32px;
+            display: grid; place-items: center;
+            border-radius: var(--r-md);
+            font-size: 1rem;
+            color: var(--accent-text);
+            background: var(--accent-dim);
         }
-
-        .feature-card:nth-child(2) h3 i,
-        .meta-card:nth-child(2) h3 i {
-            color: #5779d8;
-            background: rgba(87, 121, 216, 0.12);
-        }
-
-        .feature-card:nth-child(3) h3 i,
-        .meta-card:nth-child(3) h3 i {
-            color: #4462bf;
-            background: rgba(68, 98, 191, 0.12);
-        }
+        .feature-card:nth-child(2) h3 i { color: var(--blue); background: var(--blue-dim); }
+        .feature-card:nth-child(3) h3 i { color: #7b40d0; background: rgba(123, 64, 208, 0.1); }
+        .feature-card:nth-child(4) h3 i { color: #c05a10; background: rgba(192, 90, 16, 0.1); }
+        .feature-card:nth-child(5) h3 i { color: var(--blue); background: var(--blue-dim); }
+        .feature-card:nth-child(6) h3 i { color: var(--accent-text); background: var(--accent-dim); }
 
         .feature-card ul {
-            margin: 12px 0 0;
-            padding-left: 18px;
+            margin: 11px 0 0;
+            padding-left: 16px;
             color: var(--muted);
-            font-size: 0.92rem;
-            line-height: 1.62;
+            font-size: 0.9rem;
+            line-height: 1.68;
+        }
+        .feature-card ul li { margin-bottom: 3px; }
+        .feature-card:nth-child(6) ul { margin: 0; }
+
+        .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 10px;
+            border-radius: 999px;
+            background: var(--accent-dim);
+            border: 1px solid rgba(5, 153, 104, 0.22);
+            font-size: 0.76rem;
+            font-weight: 700;
+            color: var(--accent-text);
+            font-family: "JetBrains Mono", monospace;
+            margin-top: 10px;
+            letter-spacing: 0.03em;
         }
 
+        /* ── Tools section ── */
         .tools-controls {
             margin-top: 16px;
             display: flex;
@@ -757,135 +690,113 @@
             gap: 8px;
             align-items: center;
         }
-
         .tools-controls input,
         .tools-controls button {
             font: inherit;
-            font-size: 0.9rem;
-            border: 1px solid var(--line);
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.58);
+            font-size: 0.88rem;
+            border: 1px solid var(--line-strong);
+            border-radius: var(--r-md);
+            background: var(--surface-float);
             color: var(--ink);
-            backdrop-filter: blur(calc(var(--panel-blur) * 0.5));
-            -webkit-backdrop-filter: blur(calc(var(--panel-blur) * 0.5));
+            backdrop-filter: blur(10px);
+            transition: background 0.15s, border-color 0.15s;
         }
-
         .tools-controls input {
             flex: 1;
             min-width: 240px;
-            padding: 10px 12px;
+            padding: 10px 13px;
         }
-
+        .tools-controls input:focus {
+            outline: 2px solid var(--accent);
+            outline-offset: 1px;
+        }
         .tools-controls button {
-            padding: 10px 12px;
-            font-weight: 800;
+            padding: 10px 14px;
+            font-weight: 700;
             cursor: pointer;
         }
-
         .tools-controls button:hover {
-            background: rgba(255, 255, 255, 0.82);
+            background: var(--surface);
             border-color: var(--line-strong);
         }
 
         .tools-hint {
-            margin: 10px 1px 0;
-            color: var(--muted);
-            font-size: 0.8rem;
-            line-height: 1.45;
+            margin: 9px 1px 0;
+            color: var(--muted-2);
+            font-size: 0.78rem;
+            line-height: 1.5;
         }
 
-        .tool.is-hidden {
-            display: none;
-        }
-
+        .tool.is-hidden { display: none; }
         .tools-empty {
             display: none;
-            margin-top: 10px;
+            margin-top: 12px;
             color: var(--muted);
             font-size: 0.9rem;
         }
-
-        .tools-empty.is-visible {
-            display: block;
-        }
+        .tools-empty.is-visible { display: block; }
 
         .tools-grid {
             margin-top: 18px;
             display: grid;
             grid-template-columns: repeat(12, minmax(0, 1fr));
-            gap: 10px;
+            gap: 9px;
         }
 
         .tool {
             grid-column: span 4;
-            padding: 16px 14px 14px;
+            padding: 15px 14px 13px;
             border: 1px solid var(--line);
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.56);
-            backdrop-filter: blur(calc(var(--panel-blur) * 0.55));
-            -webkit-backdrop-filter: blur(calc(var(--panel-blur) * 0.55));
+            border-radius: var(--r-lg);
+            background: var(--surface-2);
+            backdrop-filter: blur(10px);
+            transition: border-color 0.15s, box-shadow 0.15s;
         }
-
-        .tool:nth-child(1),
-        .tool:nth-child(5),
-        .tool:nth-child(8) {
-            grid-column: span 5;
+        .tool:hover {
+            border-color: var(--line-strong);
+            box-shadow: var(--shadow-sm);
         }
-
-        .tool:nth-child(2),
-        .tool:nth-child(6),
-        .tool:nth-child(9) {
-            grid-column: span 3;
-        }
-
-        .tool:nth-child(3),
-        .tool:nth-child(7),
-        .tool:nth-child(11) {
-            background: rgba(248, 250, 255, 0.7);
-        }
-
-        .tool:nth-child(2),
-        .tool:nth-child(4),
-        .tool:nth-child(10) {
-            background: rgba(244, 247, 255, 0.72);
-        }
+        .tool:nth-child(1), .tool:nth-child(5), .tool:nth-child(8) { grid-column: span 5; }
+        .tool:nth-child(2), .tool:nth-child(6), .tool:nth-child(9) { grid-column: span 3; }
 
         .tool-head {
             display: flex;
             gap: 10px;
             align-items: flex-start;
-            margin-bottom: 6px;
+            margin-bottom: 7px;
         }
-
         .tool-head i {
-            font-size: 1rem;
-            color: var(--accent);
-            margin-top: 2px;
+            width: 30px; height: 30px;
+            display: grid; place-items: center;
+            border-radius: var(--r-md);
+            font-size: 0.95rem;
+            color: var(--accent-text);
+            background: var(--accent-dim);
+            flex-shrink: 0;
         }
-
         .tool strong {
             display: block;
-            font-size: 0.94rem;
-            letter-spacing: -0.01em;
+            font-family: "Syne", sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: -0.015em;
+            color: var(--ink);
+            line-height: 1.2;
+            margin-top: 4px;
         }
-
         .tool span {
             color: var(--muted);
-            font-size: 0.86rem;
-            line-height: 1.55;
+            font-size: 0.83rem;
+            line-height: 1.58;
         }
 
-        .screenshots-shell {
-            margin-top: 18px;
-            display: grid;
-            gap: 12px;
-        }
+        /* ── Screenshots ── */
+        .screenshots-shell { margin-top: 20px; display: grid; gap: 12px; }
 
         .carousel-wrap {
             position: relative;
-            padding: 0 42px;
+            padding: 0 44px;
         }
-
         .carousel-viewport {
             display: flex;
             gap: 12px;
@@ -893,777 +804,435 @@
             scroll-snap-type: x mandatory;
             scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
-            padding: 2px 0 8px;
+            padding: 3px 0 10px;
             scrollbar-width: none;
             touch-action: pan-x;
             cursor: grab;
             user-select: none;
         }
-
-        .carousel-viewport:active {
-            cursor: grabbing;
-        }
-
-        .carousel-viewport::-webkit-scrollbar {
-            display: none;
-        }
+        .carousel-viewport::-webkit-scrollbar { display: none; }
+        .carousel-viewport[data-dragged="1"] { cursor: grabbing; }
 
         .carousel-slide {
-            margin: 0;
-            flex: 0 0 min(100%, clamp(260px, 44vw, 560px));
-            border: 1px solid var(--line);
-            border-radius: 10px;
+            flex-shrink: 0;
+            flex-basis: min(340px, 72vw);
+            border-radius: var(--r-lg);
             overflow: hidden;
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(calc(var(--panel-blur) * 0.55));
-            -webkit-backdrop-filter: blur(calc(var(--panel-blur) * 0.55));
-            display: flex;
-            flex-direction: column;
-            align-self: start;
+            border: 1px solid var(--line-strong);
+            background: var(--surface-2);
             scroll-snap-align: start;
-            scroll-snap-stop: always;
-            min-width: 0;
         }
-
-        .gallery-card {
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-            width: 100%;
-            height: auto;
-            padding: 0;
-            border: 0;
-            background: none;
-            cursor: zoom-in;
-        }
-
         .carousel-slide img {
+            width: 100%; height: auto;
             display: block;
-            width: auto;
-            max-width: 100%;
-            height: auto;
-            max-height: min(70vh, 760px);
-            object-fit: contain;
-            filter: contrast(1.02);
-            background: rgba(219, 228, 250, 0.38);
-            aspect-ratio: auto;
+            pointer-events: none;
         }
-
         .carousel-slide figcaption {
-            padding: 10px 11px;
-            border-top: 1px solid var(--line);
+            padding: 9px 14px;
+            font-size: 0.78rem;
+            font-weight: 600;
             color: var(--muted);
-            font-size: 0.82rem;
-            font-weight: 700;
-            letter-spacing: 0.01em;
-            text-transform: none;
+            border-top: 1px solid var(--line);
+            font-family: "JetBrains Mono", monospace;
+            letter-spacing: 0.02em;
         }
-
-        .gallery-card:focus-visible {
-            outline: 2px solid var(--accent);
-            outline-offset: -2px;
+        .gallery-card {
+            display: block;
+            padding: 0; margin: 0;
+            border: none;
+            background: transparent;
+            cursor: zoom-in;
+            width: 100%;
         }
 
         .carousel-arrow {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 34px;
-            height: 34px;
-            border-radius: 10px;
+            width: 36px; height: 36px;
+            display: grid; place-items: center;
             border: 1px solid var(--line-strong);
-            background: rgba(255, 255, 255, 0.74);
+            border-radius: var(--r-md);
+            background: var(--surface);
             color: var(--ink);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
             cursor: pointer;
-            backdrop-filter: blur(calc(var(--panel-blur) * 0.65));
-            -webkit-backdrop-filter: blur(calc(var(--panel-blur) * 0.65));
-            z-index: 2;
+            backdrop-filter: blur(12px);
+            transition: background 0.15s, border-color 0.15s;
         }
-
         .carousel-arrow:hover:not(:disabled) {
-            border-color: rgba(87, 121, 216, 0.58);
-            background: rgba(255, 255, 255, 0.9);
+            background: var(--surface-2);
+            border-color: var(--accent);
+            color: var(--accent-text);
         }
-
-        .carousel-arrow:disabled {
-            opacity: 0.45;
-            cursor: not-allowed;
-        }
-
-        .carousel-arrow i {
-            font-size: 1rem;
-            line-height: 1;
-        }
-
-        .carousel-arrow.prev {
-            left: 0;
-        }
-
-        .carousel-arrow.next {
-            right: 0;
-        }
+        .carousel-arrow:disabled { opacity: 0.35; cursor: not-allowed; }
+        .carousel-arrow.prev { left: 0; }
+        .carousel-arrow.next { right: 0; }
+        .carousel-arrow i { font-size: 1rem; }
 
         .carousel-meta {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            flex-wrap: wrap;
-            padding: 0 2px;
+            justify-content: center;
+            gap: 14px;
         }
-
-        .carousel-dots {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-
+        .carousel-dots { display: flex; gap: 6px; align-items: center; }
         .carousel-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 999px;
-            border: 0;
-            background: rgba(113, 131, 172, 0.38);
-            padding: 0;
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            border: none;
+            background: var(--line-strong);
             cursor: pointer;
-            transition: transform 0.18s ease, background-color 0.18s ease;
+            padding: 0;
+            transition: background 0.15s, width 0.2s;
         }
-
-        .carousel-dot:hover {
-            background: rgba(53, 107, 223, 0.52);
-        }
-
         .carousel-dot.is-active {
             background: var(--accent);
-            transform: scale(1.25);
+            width: 20px;
+            border-radius: 999px;
         }
-
         .carousel-status {
+            font-size: 0.76rem;
+            font-weight: 600;
+            color: var(--muted-2);
+            font-family: "JetBrains Mono", monospace;
             margin: 0;
-            color: var(--muted);
-            font-size: 0.79rem;
-            font-weight: 700;
-            letter-spacing: 0.02em;
-            white-space: nowrap;
         }
 
-        .lightbox {
-            position: fixed;
-            inset: 0;
-            z-index: 80;
-            display: grid;
-            place-items: center;
-            padding: 24px;
-            background: rgba(9, 15, 29, 0.9);
-        }
-
-        .lightbox[hidden] {
-            display: none;
-        }
-
-        .lightbox-shell {
-            width: min(1100px, calc(100vw - 32px));
-            max-height: calc(100vh - 48px);
-            display: grid;
-            gap: 12px;
-            justify-items: center;
-        }
-
-        .lightbox-close {
-            justify-self: end;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 9px 12px;
-            border: 1px solid rgba(188, 209, 255, 0.18);
-            border-radius: 8px;
-            background: rgba(31, 47, 82, 0.38);
-            color: #f3f7ff;
-            font: inherit;
-            font-size: 0.8rem;
-            font-weight: 800;
-            cursor: pointer;
-        }
-
-        .lightbox-figure {
-            margin: 0;
-            width: 100%;
-            display: grid;
-            gap: 10px;
-            justify-items: center;
-        }
-
-        .lightbox-figure img {
-            width: auto;
-            height: auto;
-            max-width: 100%;
-            max-height: calc(100vh - 150px);
-            object-fit: contain;
-            border: 1px solid rgba(188, 209, 255, 0.16);
-            border-radius: 10px;
-            background: #0f1729;
-        }
-
-        .lightbox-caption {
-            color: #eef3ff;
-            text-align: center;
-            font-size: 0.9rem;
-            font-weight: 700;
-        }
-
+        /* ── Stack / tech ── */
         .table-wrap {
-            margin-top: 18px;
+            margin-top: 20px;
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 14px;
         }
 
+        .info-card {
+            border: 1px solid var(--line);
+            border-radius: var(--r-lg);
+            background: var(--surface-2);
+            overflow: hidden;
+            transition: border-color 0.15s;
+        }
+        .info-card:hover { border-color: var(--line-strong); }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 0.88rem;
+        }
+        th {
+            text-align: left;
+            padding: 11px 16px;
+            background: var(--surface-deep);
+            font-family: "Syne", sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.01em;
+            color: var(--ink-2);
+            border-bottom: 1px solid var(--line-strong);
+        }
+        td {
+            padding: 10px 16px;
+            color: var(--muted);
+            border-bottom: 1px solid var(--line);
+            line-height: 1.5;
+            vertical-align: top;
+        }
+        tr:last-child td { border-bottom: none; }
+        td:first-child { color: var(--ink); font-weight: 600; font-size: 0.84rem; }
+
         .source-link {
             display: inline-flex;
             align-items: center;
-            gap: 7px;
-            color: var(--ink);
+            gap: 5px;
+            color: var(--blue);
             text-decoration: none;
-            font-weight: 700;
+            font-weight: 600;
         }
-
-        .source-link i {
-            color: var(--accent);
-            font-size: 0.95rem;
-        }
-
-        .source-link:hover {
-            color: var(--accent);
-            text-decoration: underline;
-        }
-
+        .source-link:hover { color: var(--blue-2); text-decoration: underline; }
         .source-note {
             display: block;
-            margin-top: 4px;
-            font-size: 0.8rem;
-            color: var(--muted);
+            font-size: 0.78rem;
+            color: var(--muted-2);
+            margin-top: 3px;
             line-height: 1.45;
         }
-
-        .source-note .source-link {
-            margin-top: 4px;
-            font-size: 0.78rem;
-            font-weight: 700;
-            color: var(--muted);
-            text-decoration: underline;
-            text-underline-offset: 2px;
-        }
-
-        .source-note .source-link i {
-            font-size: 0.86rem;
-            color: inherit;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            border: 1px solid var(--line-strong);
-            background: rgba(255, 255, 255, 0.58);
-            overflow: hidden;
-        }
-
-        th,
-        td {
-            text-align: left;
-            padding: 10px 11px;
-            border-bottom: 1px solid var(--line);
-            vertical-align: top;
-            font-size: 0.88rem;
-        }
-
-        th {
-            background: rgba(228, 236, 252, 0.88);
-            color: var(--ink);
-            font-size: 0.74rem;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-        }
-
-        td {
-            color: var(--muted);
-        }
-
-        tr:last-child td {
-            border-bottom: 0;
-        }
+        .source-note .source-link { font-size: inherit; }
 
         .meta-grid {
-            margin-top: 16px;
+            margin-top: 14px;
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 12px;
         }
 
         .meta-card {
-            padding: 16px;
-            border: 1px solid var(--line);
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.56);
-            backdrop-filter: blur(calc(var(--panel-blur) * 0.55));
-            -webkit-backdrop-filter: blur(calc(var(--panel-blur) * 0.55));
+            padding: 18px 18px;
         }
-
-        .meta-card:nth-child(2) {
-            background: rgba(244, 247, 255, 0.72);
-        }
-
-        .meta-card:nth-child(3) {
-            background: rgba(248, 250, 255, 0.68);
-        }
-
         .meta-card h3 {
-            margin: 0 0 8px;
+            margin: 0;
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-family: "Bricolage Grotesque", sans-serif;
-            font-size: 1rem;
+            gap: 9px;
+            font-family: "Syne", sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--ink);
+            letter-spacing: -0.015em;
         }
+        .meta-card h3 i {
+            width: 30px; height: 30px;
+            display: grid; place-items: center;
+            border-radius: var(--r-md);
+            font-size: 0.95rem;
+            color: var(--accent-text);
+            background: var(--accent-dim);
+        }
+        .meta-card:nth-child(2) h3 i { color: var(--blue); background: var(--blue-dim); }
+        .meta-card:nth-child(3) h3 i { color: #7b40d0; background: rgba(123, 64, 208, 0.1); }
 
-        .meta-card p,
         .meta-card ul {
-            margin: 0;
+            margin: 10px 0 0;
+            padding-left: 16px;
             color: var(--muted);
-            font-size: 0.9rem;
-            line-height: 1.6;
+            font-size: 0.86rem;
+            line-height: 1.7;
         }
-
-        .meta-card ul {
-            padding-left: 18px;
-        }
-
-        .info-card {
-            transition: border-color 0.24s ease, box-shadow 0.24s ease, transform 0.2s ease;
-        }
-
-        @media (hover: hover) and (pointer: fine) {
-            .info-card:hover {
-                transform: translateY(-2px);
-                border-color: rgba(94, 132, 226, 0.58);
-                box-shadow: 0 0 0 1px rgba(94, 132, 226, 0.25), 0 16px 34px rgba(53, 107, 223, 0.2);
-            }
+        .meta-card p {
+            margin: 10px 0 0;
+            color: var(--muted);
+            font-size: 0.86rem;
+            line-height: 1.65;
         }
 
         code {
-            font-family: "IBM Plex Mono", monospace;
-            font-size: 0.83em;
-            color: #23438a;
-            background: rgba(229, 236, 255, 0.82);
-            border: 1px solid rgba(140, 162, 216, 0.45);
-            border-radius: 6px;
-            padding: 0.15em 0.38em;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.82em;
+            background: var(--surface-deep);
+            border: 1px solid var(--line-strong);
+            border-radius: var(--r-sm);
+            padding: 2px 6px;
+            color: var(--ink);
         }
 
+        /* ── Footer ── */
         .footer {
-            margin: 28px 0 8px;
-            padding: 16px 2px 0;
-            border-top: 2px solid var(--line-strong);
+            margin-top: 28px;
+            padding: 18px 0;
+            border-top: 1px solid var(--line);
             display: flex;
-            flex-wrap: wrap;
+            align-items: center;
             justify-content: space-between;
+            flex-wrap: wrap;
             gap: 10px;
-            color: var(--muted);
-            font-size: 0.84rem;
+            font-size: 0.82rem;
+            color: var(--muted-2);
+            font-weight: 500;
         }
-
         .footer a {
-            color: var(--accent);
-            font-weight: 800;
+            color: var(--accent-text);
             text-decoration: none;
+            font-weight: 600;
+        }
+        .footer a:hover { text-decoration: underline; }
+
+        /* ── Lightbox ── */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: rgba(8, 13, 25, 0.82);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .lightbox[hidden] { display: none; }
+        .lightbox-shell {
+            position: relative;
+            max-width: min(600px, 90vw);
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+        }
+        .lightbox-close {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 13px;
+            border: 1px solid rgba(120, 150, 220, 0.3);
+            border-radius: var(--r-md);
+            background: rgba(12, 20, 36, 0.85);
+            color: #c0d0f8;
+            font-size: 0.84rem;
+            font-weight: 600;
+            cursor: pointer;
+            backdrop-filter: blur(12px);
+            font-family: inherit;
+        }
+        .lightbox-close:hover { background: rgba(20, 32, 60, 0.95); }
+        .lightbox-figure { margin: 0; width: 100%; }
+        .lightbox-figure img {
+            width: 100%; height: auto;
+            display: block;
+            border-radius: var(--r-lg);
+            border: 1px solid rgba(120, 150, 220, 0.2);
+        }
+        .lightbox-caption {
+            text-align: center;
+            margin-top: 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: rgba(180, 200, 240, 0.8);
+            font-family: "JetBrains Mono", monospace;
+            letter-spacing: 0.03em;
         }
 
-        .footer a:hover {
-            text-decoration: underline;
-        }
-
-        .reveal,
-        .reveal.is-visible {
-            opacity: 1;
-            transform: none;
-        }
-
+        /* ── To-top button ── */
         .to-top {
             position: fixed;
-            right: 14px;
-            bottom: 16px;
-            z-index: 35;
-            width: 44px;
-            height: 44px;
+            bottom: 20px;
+            right: 20px;
+            z-index: 50;
+            padding: 0 14px;
+            height: 40px;
             border: 1px solid var(--line-strong);
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.64);
-            color: var(--accent);
-            font-size: 1rem;
-            font-weight: 900;
-            box-shadow: var(--shadow-soft);
+            border-radius: var(--r-md);
+            background: var(--surface);
+            color: var(--accent-text);
+            font-size: 0.82rem;
+            font-weight: 700;
+            font-family: inherit;
+            box-shadow: var(--shadow-sm);
             cursor: pointer;
             opacity: 0;
             pointer-events: none;
-            transform: translateY(10px);
+            transform: translateY(8px);
             transition: opacity 0.2s ease, transform 0.2s ease;
-            backdrop-filter: blur(calc(var(--panel-blur) * 0.6));
-            -webkit-backdrop-filter: blur(calc(var(--panel-blur) * 0.6));
+            backdrop-filter: blur(12px);
         }
+        .to-top.is-visible { opacity: 1; pointer-events: auto; transform: none; }
+        .to-top:hover { color: var(--accent-hi); border-color: var(--accent); }
 
-        .to-top.is-visible {
-            opacity: 1;
-            pointer-events: auto;
-            transform: translateY(0);
-        }
-
+        /* ── Dark mode ── */
         body[data-theme="dark"] {
-            --bg: #10182a;
-            --paper: rgba(18, 27, 46, 0.76);
-            --paper-strong: rgba(25, 35, 58, 0.9);
-            --paper-soft: rgba(21, 31, 53, 0.82);
-            --ink: #f2f6ff;
-            --muted: #99a5c0;
-            --line: rgba(111, 130, 174, 0.28);
-            --line-strong: rgba(132, 154, 211, 0.4);
-            --accent: #3d79ef;
-            --accent-soft: rgba(61, 121, 239, 0.18);
-            --accent-deep: #7ea6ff;
-            --accent-fog: rgba(61, 121, 239, 0.24);
-            --accent-dust: #8f9cbc;
-            --rust: #5f8eff;
-            --mustard: #84a6ff;
-            --shadow: 0 20px 52px rgba(0, 0, 0, 0.34);
-            --shadow-soft: 0 12px 30px rgba(0, 0, 0, 0.24);
-            background-color: var(--bg);
+            --bg: #080d18;
+            --surface: rgba(12, 18, 34, 0.94);
+            --surface-2: rgba(14, 22, 41, 0.9);
+            --surface-float: rgba(16, 24, 46, 0.82);
+            --surface-deep: rgba(10, 16, 30, 0.88);
+            --ink: #d6e4f8;
+            --ink-2: #eaf2ff;
+            --muted: #5a7098;
+            --muted-2: #7e98c0;
+            --line: rgba(55, 82, 142, 0.26);
+            --line-strong: rgba(76, 108, 186, 0.42);
+            --accent: #1edb96;
+            --accent-dim: rgba(30, 219, 150, 0.12);
+            --accent-glow: rgba(30, 219, 150, 0.22);
+            --accent-hi: #28f0a8;
+            --accent-text: #1edb96;
+            --blue: #5a8fff;
+            --blue-dim: rgba(90, 143, 255, 0.14);
+            --blue-2: #7aaaff;
+            --shadow: 0 22px 64px rgba(0, 0, 0, 0.55);
+            --shadow-sm: 0 6px 24px rgba(0, 0, 0, 0.38);
             background-image:
-                radial-gradient(circle at 18% 0%, rgba(61, 121, 239, 0.22), transparent 28%),
-                radial-gradient(circle at 100% 20%, rgba(31, 59, 126, 0.56), transparent 34%),
-                linear-gradient(180deg, #121b2f 0%, var(--bg) 100%);
+                radial-gradient(ellipse at 10% -5%, rgba(30, 219, 150, 0.08) 0%, transparent 40%),
+                radial-gradient(ellipse at 96% 12%, rgba(90, 143, 255, 0.1) 0%, transparent 36%),
+                linear-gradient(180deg, #0b1222 0%, var(--bg) 70%);
         }
 
         body[data-theme="dark"]::before {
-            background:
-                linear-gradient(rgba(129, 149, 197, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(129, 149, 197, 0.04) 1px, transparent 1px);
-            background-size: 28px 28px;
+            background-image:
+                linear-gradient(rgba(60, 88, 152, 0.06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(60, 88, 152, 0.06) 1px, transparent 1px);
+            background-size: 30px 30px;
         }
 
-        body[data-theme="dark"] .site-header,
-        body[data-theme="dark"] .utility-bar,
-        body[data-theme="dark"] .hero-main,
-        body[data-theme="dark"] .section,
-        body[data-theme="dark"] .feature-card,
-        body[data-theme="dark"] .tool,
-        body[data-theme="dark"] .meta-card,
-        body[data-theme="dark"] .carousel-slide,
-        body[data-theme="dark"] .fact,
-        body[data-theme="dark"] table {
-            background:
-                linear-gradient(180deg, rgba(24, 35, 59, 0.92), rgba(17, 25, 43, 0.68)),
-                var(--paper);
-            border-color: var(--line);
-            color: var(--ink);
+        body[data-theme="dark"] .btn-primary {
+            box-shadow: 0 6px 22px rgba(30, 219, 150, 0.28);
         }
-
-        body[data-theme="dark"] .mobile-menu-toggle {
-            background: rgba(27, 39, 66, 0.72);
-            border-color: var(--line);
-            color: var(--ink);
-        }
-
-        body[data-theme="dark"] .mobile-menu-toggle:hover {
-            background: rgba(36, 52, 88, 0.9);
-        }
-
-        body[data-theme="dark"] .pill-link,
-        body[data-theme="dark"] .theme-toggle,
-        body[data-theme="dark"] .release-chip,
-        body[data-theme="dark"] .btn-secondary,
-        body[data-theme="dark"] .tools-controls input,
-        body[data-theme="dark"] .tools-controls button {
-            background: rgba(27, 39, 66, 0.72);
-            border-color: var(--line);
-            color: var(--ink);
-        }
-
-        body[data-theme="dark"] .pill-link:hover,
-        body[data-theme="dark"] .theme-toggle:hover,
-        body[data-theme="dark"] .release-chip:hover,
-        body[data-theme="dark"] .btn-secondary:hover,
-        body[data-theme="dark"] .tools-controls button:hover,
-        body[data-theme="dark"] .section-link:hover {
-            background: rgba(36, 52, 88, 0.9);
-        }
-
-        body[data-theme="dark"] .section-link {
-            color: var(--muted);
-        }
-
-        body[data-theme="dark"] .section-link.is-active {
-            color: var(--accent);
-            background: rgba(61, 121, 239, 0.18);
-            border-color: rgba(123, 161, 255, 0.3);
-        }
-
-        body[data-theme="dark"] .brand-sub,
-        body[data-theme="dark"] .hero-lead,
-        body[data-theme="dark"] .hero-support p,
-        body[data-theme="dark"] .section-intro,
-        body[data-theme="dark"] .feature-card ul,
-        body[data-theme="dark"] .tool span,
-        body[data-theme="dark"] .carousel-slide figcaption,
-        body[data-theme="dark"] .meta-card p,
-        body[data-theme="dark"] .meta-card ul,
-        body[data-theme="dark"] .footer,
-        body[data-theme="dark"] .tools-empty,
-        body[data-theme="dark"] td {
-            color: var(--muted);
-        }
-
-        body[data-theme="dark"] .hero-lead strong,
-        body[data-theme="dark"] .tool strong,
-        body[data-theme="dark"] .feature-card h3,
-        body[data-theme="dark"] .meta-card h3,
-        body[data-theme="dark"] .fact strong,
-        body[data-theme="dark"] .section h2,
-        body[data-theme="dark"] .hero-support h2,
-        body[data-theme="dark"] th {
-            color: var(--ink);
-        }
-
-        body[data-theme="dark"] .section-heading i,
-        body[data-theme="dark"] .feature-card h3 i,
-        body[data-theme="dark"] .meta-card h3 i,
-        body[data-theme="dark"] .fact i,
-        body[data-theme="dark"] .tool-head i,
-        body[data-theme="dark"] .panel-note i {
-            color: var(--accent);
-            background: rgba(61, 121, 239, 0.16);
-        }
-
-        body[data-theme="dark"] .feature-card:nth-child(2) h3 i,
-        body[data-theme="dark"] .meta-card:nth-child(2) h3 i,
-        body[data-theme="dark"] .fact:nth-child(2) i {
-            color: #8eadff;
-            background: rgba(132, 166, 255, 0.18);
-        }
-
-        body[data-theme="dark"] .feature-card:nth-child(3) h3 i,
-        body[data-theme="dark"] .meta-card:nth-child(3) h3 i,
-        body[data-theme="dark"] .fact:nth-child(3) i,
-        body[data-theme="dark"] .panel-note:nth-child(2) i {
-            color: #9bb6ff;
-            background: rgba(95, 142, 255, 0.18);
-        }
-
-        body[data-theme="dark"] .panel-note {
-            background: rgba(27, 39, 66, 0.74);
-            border-color: var(--line);
-        }
-
-        body[data-theme="dark"] .panel-note:nth-child(2) {
-            background: rgba(22, 34, 60, 0.8);
-        }
-
-        body[data-theme="dark"] .source-link {
-            color: #dce7ff;
-        }
-
-        body[data-theme="dark"] .source-link:hover {
-            color: #9fc1ff;
-        }
-
-        body[data-theme="dark"] .source-note {
-            color: var(--muted);
-        }
-
-        body[data-theme="dark"] .source-note .source-link {
-            color: #b5c7f2;
-        }
-
-        body[data-theme="dark"] .source-note .source-link:hover {
-            color: #d6e3ff;
-        }
-
-        @media (hover: hover) and (pointer: fine) {
-            body[data-theme="dark"] .info-card:hover {
-                border-color: rgba(122, 162, 255, 0.62);
-                box-shadow: 0 0 0 1px rgba(122, 162, 255, 0.22), 0 18px 38px rgba(7, 13, 30, 0.58);
-            }
-        }
-
-        body[data-theme="dark"] th {
-            background: rgba(38, 52, 86, 0.94);
-            border-bottom-color: var(--line);
-        }
-
-        body[data-theme="dark"] td {
-            border-bottom-color: var(--line);
-        }
-
-        body[data-theme="dark"] .carousel-slide figcaption {
-            border-top-color: var(--line);
-        }
-
-        body[data-theme="dark"] .carousel-arrow {
-            background: rgba(27, 39, 66, 0.85);
-            border-color: var(--line);
-            color: var(--ink);
-        }
-
-        body[data-theme="dark"] .carousel-arrow:hover:not(:disabled) {
-            background: rgba(36, 52, 88, 0.94);
-            border-color: rgba(122, 162, 255, 0.6);
-        }
-
-        body[data-theme="dark"] .carousel-dot {
-            background: rgba(146, 165, 210, 0.45);
-        }
-
-        body[data-theme="dark"] .carousel-dot.is-active {
-            background: #89b0ff;
+        body[data-theme="dark"] .btn-primary:hover {
+            box-shadow: 0 8px 28px rgba(30, 219, 150, 0.38);
         }
 
         body[data-theme="dark"] code {
-            background: rgba(37, 54, 92, 0.88);
-            border-color: rgba(127, 153, 222, 0.36);
-            color: #dbe5ff;
+            background: rgba(30, 42, 78, 0.9);
+            border-color: rgba(80, 108, 180, 0.35);
+            color: #b8d0f5;
         }
 
-        body[data-theme="dark"] .lightbox-close,
-        body[data-theme="dark"] .lightbox-figure img {
-            border-color: rgba(188, 209, 255, 0.18);
+        body[data-theme="dark"] .lightbox {
+            background: rgba(4, 7, 15, 0.88);
         }
 
-        body[data-theme="dark"] .footer a,
-        body[data-theme="dark"] .to-top {
-            color: var(--accent);
-        }
-
-        body[data-theme="dark"] .to-top {
-            background: rgba(27, 39, 66, 0.8);
-            border-color: var(--line);
-        }
-
+        /* ── Reduced motion ── */
         @media (prefers-reduced-motion: reduce) {
-            html {
-                scroll-behavior: auto;
+            html { scroll-behavior: auto; }
+            .reveal { opacity: 1; transform: none; transition: none; }
+            .btn, .pill-link, .theme-toggle, .release-chip,
+            .feature-card, .tool, .carousel-dot, .to-top {
+                transition: none;
             }
         }
 
+        /* ── Responsive: 1120px ── */
         @media (max-width: 1120px) {
             .hero-main {
                 grid-template-columns: 1fr;
                 column-gap: 0;
             }
-
             .hero-facts {
                 grid-column: 1;
                 grid-row: auto;
-                margin-top: 24px;
+                margin-top: 22px;
             }
-
             .hero-support,
             .table-wrap,
             .meta-grid {
                 grid-template-columns: 1fr;
             }
-
-            .hero-support-copy {
-                grid-column: 1;
-            }
-
+            .hero-support-copy { grid-column: 1; }
+            .hero-support { grid-template-columns: 1fr; }
+            .hero-support h2 { max-width: none; }
             .feature-card,
-            .feature-card:nth-child(1),
-            .feature-card:nth-child(2),
-            .feature-card:nth-child(3),
-            .feature-card:nth-child(4),
-            .feature-card:nth-child(5),
-            .feature-card:nth-child(6) {
-                grid-column: span 6;
-            }
-
+            .feature-card:nth-child(1), .feature-card:nth-child(2),
+            .feature-card:nth-child(3), .feature-card:nth-child(4),
+            .feature-card:nth-child(5) { grid-column: span 6; }
+            .feature-card:nth-child(6) { grid-template-columns: 1fr; }
             .tool,
-            .tool:nth-child(1),
-            .tool:nth-child(2),
-            .tool:nth-child(5),
-            .tool:nth-child(6),
-            .tool:nth-child(8),
-            .tool:nth-child(9) {
-                grid-column: span 6;
-            }
-
-            .fact,
-            .fact:nth-child(1),
-            .fact:nth-child(2),
-            .fact:nth-child(3),
-            .fact:nth-child(4) {
-                grid-column: span 1;
-            }
-
-            #features.section,
-            #tools.section,
-            #screenshots.section,
-            #stack.section {
-                margin-left: 0;
-                margin-right: 0;
+            .tool:nth-child(1), .tool:nth-child(2),
+            .tool:nth-child(5), .tool:nth-child(6),
+            .tool:nth-child(8), .tool:nth-child(9) { grid-column: span 6; }
+            .fact, .fact:nth-child(1), .fact:nth-child(4) { grid-column: span 1; }
+            #features.section, #tools.section,
+            #screenshots.section, #stack.section {
+                margin-left: 0; margin-right: 0;
             }
         }
 
+        /* ── Responsive: 760px ── */
         @media (max-width: 760px) {
-            .wrap {
-                width: calc(100vw - 14px);
-            }
+            .wrap { width: calc(100vw - 14px); }
+            main { padding-top: 12px; }
 
-            main {
-                padding-top: 12px;
-            }
-
-            .hero {
-                gap: 12px;
-            }
-
-            .site-header,
-            .utility-bar,
-            .hero-main,
-            .section {
-                position: static;
-            }
-
+            .site-header, .utility-bar, .hero-main, .section { position: static; }
             .site-header {
+                padding: 11px 13px;
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
                 gap: 10px;
-                padding: 12px;
             }
-
-            .mobile-menu-toggle {
-                display: inline-flex;
-                flex-shrink: 0;
-            }
-
-            .site-header .brand {
-                width: auto;
-                max-width: calc(100% - 56px);
-                align-items: center;
-            }
-
-            .site-header .brand-title {
-                font-size: 0.98rem;
-            }
-
-            .site-header .brand-sub {
-                display: none;
-            }
-
-            .site-header .header-links {
-                display: none;
-            }
+            .mobile-menu-toggle { display: inline-flex; flex-shrink: 0; }
+            .site-header .brand { max-width: calc(100% - 54px); }
+            .site-header .brand-sub { display: none; }
+            .site-header .header-links { display: none; }
 
             .utility-bar {
                 position: static;
@@ -1674,16 +1243,14 @@
                 opacity: 0;
                 overflow: hidden;
                 pointer-events: none;
-                transition: max-height 0.28s ease, opacity 0.2s ease, padding 0.2s ease;
+                transition: max-height 0.28s ease, opacity 0.22s ease, padding 0.2s ease;
             }
-
             body.mobile-nav-open .utility-bar {
-                max-height: 520px;
+                max-height: 540px;
                 opacity: 1;
                 pointer-events: auto;
                 padding: 12px;
             }
-
             body:not(.mobile-nav-open) .utility-bar {
                 margin-top: 0;
                 border-color: transparent;
@@ -1699,213 +1266,89 @@
                 gap: 8px;
                 margin-bottom: 10px;
             }
-
             .mobile-action-row .pill-link {
                 min-height: 42px;
                 justify-content: center;
                 font-size: 0.86rem;
-                padding: 10px 10px;
             }
-
-            .header-links {
-                justify-content: flex-start;
-            }
-
+            .header-links { justify-content: flex-start; }
             .section-nav {
                 width: 100%;
                 display: grid;
-                grid-template-columns: repeat(2, minmax(0, 1fr));
+                grid-template-columns: repeat(2, 1fr);
                 gap: 8px;
             }
-
             .section-link {
                 min-height: 42px;
                 justify-content: flex-start;
-                font-size: 0.92rem;
+                font-size: 0.9rem;
                 padding: 10px 12px;
             }
-
             .utility-bar .header-links {
                 width: 100%;
                 display: grid;
-                grid-template-columns: repeat(2, minmax(0, 1fr));
+                grid-template-columns: repeat(2, 1fr);
                 gap: 8px;
             }
-
             .utility-bar .theme-toggle,
-            .utility-bar .release-chip {
-                min-height: 42px;
-            }
-
-            .utility-bar .theme-toggle {
-                justify-content: center;
-            }
-
+            .utility-bar .release-chip { min-height: 42px; }
+            .utility-bar .theme-toggle { justify-content: center; }
             .utility-bar .release-chip {
                 grid-column: 1 / -1;
                 width: 100%;
                 justify-content: center;
-                text-align: center;
             }
 
-            .section,
-            .hero-main {
-                padding: 18px 14px;
-            }
+            .section, .hero-main { padding: 18px 16px; }
+            .section { margin-top: 14px; }
 
-            .section {
-                margin-top: 16px;
-            }
-
-            .feature-grid,
-            .tools-grid,
-            .meta-grid,
-            .table-wrap,
-            .hero-facts,
-            .support-points {
+            .feature-grid, .tools-grid, .meta-grid,
+            .table-wrap, .hero-facts, .support-points {
                 grid-template-columns: 1fr;
             }
+            .feature-card, .feature-card:nth-child(1), .feature-card:nth-child(2),
+            .feature-card:nth-child(3), .feature-card:nth-child(4),
+            .feature-card:nth-child(5), .feature-card:nth-child(6),
+            .tool, .tool:nth-child(1), .tool:nth-child(2),
+            .tool:nth-child(5), .tool:nth-child(6),
+            .tool:nth-child(8), .tool:nth-child(9),
+            .fact, .fact:nth-child(1), .fact:nth-child(4) { grid-column: span 1; }
 
-            .feature-card,
-            .feature-card:nth-child(1),
-            .feature-card:nth-child(2),
-            .feature-card:nth-child(3),
-            .feature-card:nth-child(4),
-            .feature-card:nth-child(5),
-            .feature-card:nth-child(6),
-            .tool,
-            .tool:nth-child(1),
-            .tool:nth-child(2),
-            .tool:nth-child(5),
-            .tool:nth-child(6),
-            .tool:nth-child(8),
-            .tool:nth-child(9),
-            .fact,
-            .fact:nth-child(1),
-            .fact:nth-child(2),
-            .fact:nth-child(3),
-            .fact:nth-child(4) {
-                grid-column: span 1;
-            }
+            .feature-card:nth-child(6) { display: block; }
+            .feature-card:nth-child(6) ul { margin: 11px 0 0; }
 
-            .carousel-wrap {
-                padding: 0 34px;
-            }
+            h1 { font-size: clamp(2rem, 9.5vw, 3rem); }
+            .fact strong { font-size: 1.4rem; }
 
-            .carousel-slide {
-                flex-basis: min(100%, 82vw);
-            }
+            .carousel-wrap { padding: 0 36px; }
+            .carousel-slide { flex-basis: min(100%, 80vw); }
+            .carousel-arrow { width: 30px; height: 30px; }
 
-            .carousel-arrow {
-                width: 30px;
-                height: 30px;
-                border-radius: 9px;
-            }
-
-            h1 {
-                font-size: clamp(1.96rem, 10.8vw, 2.8rem);
-                max-width: none;
-                line-height: 0.97;
-            }
-
-            .hero-lead {
-                margin-top: 14px;
-                font-size: 1rem;
-                line-height: 1.58;
-            }
-
-            .hero-meta {
-                margin-top: 14px;
-                display: grid;
-                grid-template-columns: 1fr;
-                gap: 8px;
-            }
-
-            .hero-meta li {
-                font-size: 0.9rem;
-            }
-
-            .cta-row {
-                margin-top: 16px;
-                display: grid;
-                grid-template-columns: 1fr;
-                gap: 8px;
-            }
-
-            .btn {
-                width: 100%;
-                min-height: 44px;
-                font-size: 0.94rem;
-            }
+            .cta-row { display: grid; gap: 8px; grid-template-columns: 1fr; }
+            .btn { width: 100%; min-height: 44px; font-size: 0.92rem; }
 
             .hero-facts {
-                margin-top: 16px;
-                grid-template-columns: repeat(2, minmax(0, 1fr));
+                margin-top: 18px;
+                grid-template-columns: repeat(2, 1fr);
                 gap: 8px;
             }
+            .fact { padding: 13px 12px; }
 
-            .fact {
-                padding: 12px 10px;
-                border-radius: 10px;
-            }
+            .hero-support { margin-top: 16px; padding-top: 16px; gap: 10px; }
+            .hero-support h2 { font-size: 1.15rem; }
+            .hero-support p { font-size: 0.9rem; }
 
-            .fact i {
-                width: 28px;
-                height: 28px;
-                border-radius: 8px;
-            }
+            .panel-note { font-size: 0.83rem; }
+            .panel-note i { width: 26px; height: 26px; }
 
-            .fact strong {
-                margin-top: 8px;
-                font-size: 1.15rem;
-            }
-
-            .fact span {
-                font-size: 0.73rem;
-            }
-
-            .hero-support {
-                margin-top: 14px;
-                padding-top: 14px;
-                gap: 12px;
-            }
-
-            .hero-support h2 {
-                font-size: 1.1rem;
-                max-width: none;
-            }
-
-            .hero-support p {
-                font-size: 0.94rem;
-                line-height: 1.55;
-            }
-
-            .panel-note {
-                padding: 10px 11px;
-                font-size: 0.84rem;
-                line-height: 1.45;
-            }
-
-            .panel-note i {
-                width: 26px;
-                height: 26px;
-            }
-
-            .section h2 {
-                font-size: clamp(1.34rem, 6.8vw, 1.9rem);
-            }
-
-            .section-intro {
-                font-size: 0.94rem;
-                line-height: 1.56;
-            }
+            .section h2 { font-size: clamp(1.35rem, 7vw, 1.9rem); }
+            .section-intro { font-size: 0.9rem; }
         }
     </style>
 </head>
 
 <body>
     <a class="skip-link" href="#content">Skip to content</a>
-    <div class="ambient" aria-hidden="true"></div>
 
     <div class="wrap">
         <header class="site-header reveal">
@@ -1918,7 +1361,9 @@
             </a>
 
             <nav class="header-links" aria-label="Quick links">
-                <a class="pill-link" href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer"><i class="ph-bold ph-download-simple" aria-hidden="true"></i><span>Download APK</span></a>
+                <a class="pill-link" href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer">
+                    <i class="ph-bold ph-download-simple" aria-hidden="true"></i><span>Download APK</span>
+                </a>
             </nav>
 
             <button class="mobile-menu-toggle" id="mobileMenuToggle" type="button" aria-controls="mobileNavPanel" aria-expanded="false">
@@ -1929,7 +1374,9 @@
 
         <div class="utility-bar reveal delay-1" id="mobileNavPanel" aria-label="Page controls">
             <div class="mobile-action-row">
-                <a class="pill-link" href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer"><i class="ph-bold ph-download-simple" aria-hidden="true"></i><span>Download APK</span></a>
+                <a class="pill-link" href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer">
+                    <i class="ph-bold ph-download-simple" aria-hidden="true"></i><span>Download APK</span>
+                </a>
             </div>
             <nav class="section-nav" aria-label="Section quick links">
                 <a class="section-link" href="#features"><i class="ph-bold ph-sparkle" aria-hidden="true"></i><span>Features</span></a>
@@ -1938,158 +1385,278 @@
                 <a class="section-link" href="#stack"><i class="ph-bold ph-cpu" aria-hidden="true"></i><span>Tech</span></a>
             </nav>
             <div class="header-links">
-                <button class="pill-link theme-toggle" id="themeToggle" type="button" aria-pressed="false"><i class="ph-fill ph-moon-stars" id="themeToggleIcon" aria-hidden="true"></i><span id="themeToggleLabel">Dark Mode</span></button>
-                <a class="release-chip" id="releaseStatus" href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer" aria-live="polite" aria-busy="true"><i class="ph-fill ph-rocket-launch" aria-hidden="true"></i><span id="releaseStatusText">Checking latest release...</span></a>
+                <button class="pill-link theme-toggle" id="themeToggle" type="button" aria-pressed="false">
+                    <i class="ph-fill ph-moon-stars" id="themeToggleIcon" aria-hidden="true"></i>
+                    <span id="themeToggleLabel">Dark Mode</span>
+                </button>
+                <a class="release-chip" id="releaseStatus" href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer" aria-live="polite" aria-busy="true">
+                    <i class="ph-fill ph-rocket-launch" aria-hidden="true"></i>
+                    <span id="releaseStatusText">Checking latest release…</span>
+                </a>
             </div>
         </div>
 
         <main id="content" tabindex="-1">
+            <!-- ── Hero ── -->
             <section class="hero">
                 <article class="hero-main reveal delay-1">
-                    <h1>Fast chemistry search, built for Android.</h1>
+                    <p class="hero-eyebrow">Native Android · Open Source · MIT</p>
+
+                    <h1>Fast chemistry search, built for <em>Android</em>.</h1>
+
                     <p class="hero-lead">
-                        Find compounds by name, CAS, or CID. Check safety details, inspect structures, and open calculators without jumping between screens.
+                        Look up any compound by <strong>name, CAS, or CID</strong>. Get structure diagrams, GHS safety cards, elemental analysis, and a full suite of chemistry tools — all from one app, no browser tabs required.
                     </p>
 
                     <ul class="hero-meta" aria-label="At a glance">
-                        <li>Android 8.0+</li>
-                        <li>Search, safety, structures, calculators</li>
-                        <li>Favorites and recent history</li>
-                        <li>Optional AI summaries</li>
+                        <li>Android 8.0+ (API 26+)</li>
+                        <li>11 built-in chemistry tools</li>
+                        <li>Favorites &amp; search history</li>
+                        <li>Optional AI summaries — bring your own key</li>
                     </ul>
 
                     <div class="cta-row">
-                        <a class="btn btn-primary" href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer"><i class="ph-bold ph-download-simple" aria-hidden="true"></i><span>Download the APK</span></a>
-                        <a class="btn btn-secondary" href="#screenshots"><i class="ph-bold ph-images-square" aria-hidden="true"></i><span>View Screenshots</span></a>
-                        <a class="btn btn-secondary" href="https://github.com/FurtherSecrets24680/chemsearch-android" target="_blank" rel="noopener noreferrer"><i class="ph-bold ph-github-logo" aria-hidden="true"></i><span>GitHub</span></a>
+                        <a class="btn btn-primary" href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer">
+                            <i class="ph-bold ph-download-simple" aria-hidden="true"></i><span>Download the APK</span>
+                        </a>
+                        <a class="btn btn-secondary" href="#screenshots">
+                            <i class="ph-bold ph-images-square" aria-hidden="true"></i><span>Screenshots</span>
+                        </a>
+                        <a class="btn btn-secondary" href="https://github.com/FurtherSecrets24680/chemsearch-android" target="_blank" rel="noopener noreferrer">
+                            <i class="ph-bold ph-github-logo" aria-hidden="true"></i><span>GitHub</span>
+                        </a>
                     </div>
 
                     <div class="hero-facts" aria-label="Key metrics">
-                        <div class="fact info-card"><i class="ph-fill ph-toolbox" aria-hidden="true"></i><strong>10+</strong><span>Chemistry Tools</span></div>
-                        <div class="fact info-card"><i class="ph-fill ph-chat-centered-text" aria-hidden="true"></i><strong>3</strong><span>Info Sources</span></div>
-                        <div class="fact info-card"><i class="ph-fill ph-atom" aria-hidden="true"></i><strong>118</strong><span>Elements in CPK 3D</span></div>
-                        <div class="fact info-card"><i class="ph-fill ph-device-mobile" aria-hidden="true"></i><strong>26+</strong><span>Android API Level</span></div>
+                        <div class="fact info-card">
+                            <i class="ph-fill ph-toolbox" aria-hidden="true"></i>
+                            <strong>11</strong>
+                            <span>Chemistry Tools Built In</span>
+                        </div>
+                        <div class="fact info-card">
+                            <i class="ph-fill ph-chat-centered-text" aria-hidden="true"></i>
+                            <strong>3</strong>
+                            <span>Data Sources</span>
+                        </div>
+                        <div class="fact info-card">
+                            <i class="ph-fill ph-atom" aria-hidden="true"></i>
+                            <strong>118</strong>
+                            <span>Elements — CPK 3D Colors</span>
+                        </div>
+                        <div class="fact info-card">
+                            <i class="ph-fill ph-device-mobile" aria-hidden="true"></i>
+                            <strong>API 26+</strong>
+                            <span>Android 8.0 Oreo and newer</span>
+                        </div>
                     </div>
 
                     <div class="hero-support">
                         <h2>Good on a bus. Better at a lab bench.</h2>
                         <div class="hero-support-copy">
-                            <p>The app keeps the common stuff close: quick lookups, readable identifiers, proper safety cards, and calculators you can open without digging through a maze of tabs.</p>
+                            <p>The app keeps the common stuff close: quick compound lookups, readable identifiers with tap-to-copy, proper safety cards, and calculators you can reach in one tap. No maze of sub-menus.</p>
                             <div class="support-points">
-                                <div class="panel-note info-card"><i class="ph-fill ph-check-circle" aria-hidden="true"></i><span>Favorites, search history, zoomable structures, tap-to-copy values. The boring-but-important details are handled.</span></div>
-                                <div class="panel-note info-card"><i class="ph-fill ph-sliders-horizontal" aria-hidden="true"></i><span>If you want AI summaries, bring your own key. If you do not, ignore that part and carry on with your day.</span></div>
+                                <div class="panel-note info-card">
+                                    <i class="ph-fill ph-check-circle" aria-hidden="true"></i>
+                                    <span>Favorites, recent searches, zoomable 2D structures, one-tap 3D, downloadable SDF and PNG. The boring-but-essential details are all handled.</span>
+                                </div>
+                                <div class="panel-note info-card">
+                                    <i class="ph-fill ph-sliders-horizontal" aria-hidden="true"></i>
+                                    <span>Want AI summaries? Add a Gemini or Groq key in Settings. Don't want them? Don't. The app works perfectly either way.</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </article>
             </section>
 
+            <!-- ── Features ── -->
             <section class="section reveal delay-1" id="features">
-                <h2><span class="section-heading"><i class="ph-fill ph-sparkle" aria-hidden="true"></i><span>The useful bits</span></span></h2>
-                <p class="section-intro">Not a chemistry encyclopedia pretending to be an app. Just the things you actually reach for when you need an answer quickly.</p>
+                <p class="section-eyebrow"><i class="ph-fill ph-sparkle" aria-hidden="true"></i> What's actually in it</p>
+                <h2>The useful bits</h2>
+                <p class="section-intro">Not a chemistry encyclopedia pretending to be an app. These are the things you actually reach for when you need an answer quickly — or when your lab partner has disappeared and the Wi-Fi is flaky.</p>
 
                 <div class="feature-grid">
                     <article class="feature-card info-card">
-                        <h3><i class="ph-fill ph-magnifying-glass" aria-hidden="true"></i><span>Search without guesswork</span></h3>
+                        <h3><i class="ph-fill ph-magnifying-glass" aria-hidden="true"></i><span>Finds what you mean, not just what you typed</span></h3>
                         <ul>
-                            <li>Look up compounds by common name, IUPAC name, CAS, or CID.</li>
-                            <li>Autocomplete helps when the spelling gets ugly.</li>
-                            <li>Favorites and recent searches keep repeat lookups quick.</li>
+                            <li>Common name, IUPAC, CAS number, or PubChem CID — any of them works.</li>
+                            <li>Real-time autocomplete with a scrollable dropdown, so you don't have to nail the spelling of "acetylsalicylic" on the first try.</li>
+                            <li>Dedicated Recents and Favorites tabs. The compounds you look up twice shouldn't cost two lookups.</li>
                         </ul>
                     </article>
 
                     <article class="feature-card info-card">
-                        <h3><i class="ph-fill ph-identification-card" aria-hidden="true"></i><span>IDs where you need them</span></h3>
+                        <h3><i class="ph-fill ph-identification-card" aria-hidden="true"></i><span>Every identifier, one tap to copy</span></h3>
                         <ul>
-                            <li>Formula, molar mass, CID, and CAS show up first, not buried.</li>
-                            <li>SMILES, InChI, InChIKey, charge, and empirical formula are one tap away.</li>
-                            <li>Tap-to-copy is everywhere it ought to be.</li>
+                            <li>Name, formula, MW, CID, and CAS at the top — not buried three cards down.</li>
+                            <li>SMILES (full and connectivity), InChI, InChIKey, empirical formula, formal charge — one section further. All tap-to-copy.</li>
+                            <li>Tooltip on each field explains what it means, so you don't need to alt-tab to a wiki page.</li>
                         </ul>
                     </article>
 
                     <article class="feature-card info-card">
-                        <h3><i class="ph-fill ph-cube-transparent" aria-hidden="true"></i><span>3D that behaves itself</span></h3>
+                        <h3><i class="ph-fill ph-cube-transparent" aria-hidden="true"></i><span>3D that actually behaves</span></h3>
                         <ul>
-                            <li>View the 2D structure fast, then jump into the 3D model.</li>
-                            <li>Rotate, pinch, and inspect without the whole thing turning into soup.</li>
-                            <li>All 118 elements use proper CPK colors, so it looks like chemistry and not confetti.</li>
+                            <li>2D structure loads instantly. Tap to zoom in. Switch to 3D when you want to look at the actual geometry.</li>
+                            <li>Drag to rotate, pinch to zoom. Auto-spin with pause on touch. It doesn't turn into soup when you try to inspect a bond angle.</li>
+                            <li>CPK colors for all 118 elements. Download the SDF or PNG directly to your device.</li>
                         </ul>
                     </article>
 
                     <article class="feature-card info-card">
-                        <h3><i class="ph-fill ph-shield-checkered" aria-hidden="true"></i><span>Safety notes you can actually read</span></h3>
+                        <h3><i class="ph-fill ph-shield-checkered" aria-hidden="true"></i><span>GHS safety data that doesn't need a manual</span></h3>
                         <ul>
-                            <li>GHS signal words, pictograms, and hazard codes are laid out cleanly.</li>
-                            <li>Descriptions can come from PubChem, Wikipedia, or your own AI provider.</li>
-                            <li>Useful when you need the summary first and the paper later.</li>
+                            <li>Signal word badge (Danger / Warning), GHS pictograms 1–9, and H-codes — all fetched from PubChem directly, no paraphrasing middleware.</li>
+                            <li>Useful when you need the hazard summary before you reach the MSDS, not after.</li>
                         </ul>
                     </article>
 
                     <article class="feature-card info-card">
-                        <h3><i class="ph-fill ph-sliders-horizontal" aria-hidden="true"></i><span>Keeps your place</span></h3>
+                        <h3><i class="ph-fill ph-sliders-horizontal" aria-hidden="true"></i><span>Stays out of your way</span></h3>
                         <ul>
-                            <li>Light or dark theme, whichever hurts your eyes less.</li>
-                            <li>Pick a default description source and leave it there.</li>
-                            <li>Cached results make repeat lookups less annoying.</li>
+                            <li>Light or dark theme. Configurable default description source. Settings that actually remember what you set.</li>
+                            <li>Local compound cache speeds up repeat lookups and labels cached results in the UI so you know what you're seeing.</li>
                         </ul>
                     </article>
 
                     <article class="feature-card info-card">
-                        <h3><i class="ph-fill ph-chat-circle-dots" aria-hidden="true"></i><span>Optional AI, not a hostage situation</span></h3>
-                        <ul>
-                            <li>The app works fine without AI turned on.</li>
-                            <li>If you do want extra summaries, add your own Gemini or Groq key.</li>
-                            <li>No key farming, no fake "smart" layer glued over everything.</li>
-                        </ul>
+                        <h3><i class="ph-fill ph-chat-circle-dots" aria-hidden="true"></i><span>Optional AI — not a subscription trap</span></h3>
+                        <div class="feature-card-body">
+                            <ul>
+                                <li>Works completely offline from AI — PubChem and Wikipedia descriptions are there by default.</li>
+                                <li>Add your own Gemini or Groq key in Settings if you want AI-generated summaries with a regenerate button. Your key stays on your device.</li>
+                                <li>No fake "smart" layer bolted over the data. No key farming.</li>
+                            </ul>
+                            <div>
+                                <span class="ai-badge"><i class="ph-fill ph-key" aria-hidden="true"></i> Bring your own key</span>
+                            </div>
+                        </div>
                     </article>
                 </div>
             </section>
 
+            <!-- ── Tools ── -->
             <section class="section reveal delay-2" id="tools">
-                <h2><span class="section-heading"><i class="ph-fill ph-toolbox" aria-hidden="true"></i><span>10+ chemistry tools built in</span></span></h2>
-                <p class="section-intro">This is the drawer you open when chemistry stops being friendly. Most of the usual classroom and lab calculations are already here.</p>
+                <p class="section-eyebrow"><i class="ph-fill ph-toolbox" aria-hidden="true"></i> 11 tools built in</p>
+                <h2>The chemistry drawer</h2>
+                <p class="section-intro">The calculations you'd usually hunt down a separate app (or a pencil) for. Most of the standard classroom and lab math is already here, in the Tools tab.</p>
 
                 <div class="tools-controls">
-                    <input type="search" id="toolSearch" placeholder="Find a tool by name or by the job you need done..." aria-label="Filter tools" autocomplete="off" autocapitalize="none" spellcheck="false">
+                    <input type="search" id="toolSearch" placeholder="Find a tool by name or what you need to do…" aria-label="Filter tools" autocomplete="off" autocapitalize="none" spellcheck="false">
                     <button type="button" id="clearToolSearch">Clear</button>
                 </div>
                 <p class="tools-hint">Tip: press <code>/</code> or <code>Ctrl/Cmd + K</code> to jump to this filter.</p>
 
-                <p class="tools-empty" id="toolsEmpty">No tools matched this filter yet.</p>
+                <p class="tools-empty" id="toolsEmpty">No tools matched that filter.</p>
 
                 <div class="tools-grid" id="toolsGrid">
-                    <article class="tool info-card"><div class="tool-head"><i class="ph-fill ph-cube" aria-hidden="true"></i><strong>Custom 3D Molecule Viewer</strong></div><span>Open your own MOL or SDF file and spin it around without leaving the app.</span></article>
-                    <article class="tool info-card"><div class="tool-head"><i class="ph-fill ph-scales" aria-hidden="true"></i><strong>Molar Mass Calculator</strong></div><span>Handles brackets, hydrates, and the sort of formulas people write when coffee has failed them.</span></article>
-                    <article class="tool info-card"><div class="tool-head"><i class="ph-fill ph-lightning" aria-hidden="true"></i><strong>Oxidation State Finder</strong></div><span>Useful for the compounds that stop being obvious halfway through the line.</span></article>
-                    <article class="tool info-card"><div class="tool-head"><i class="ph-fill ph-bezier-curve" aria-hidden="true"></i><strong>SMILES Visualizer</strong></div><span>Paste SMILES, get a structure, move on.</span></article>
-                    <article class="tool info-card"><div class="tool-head"><i class="ph-fill ph-equals" aria-hidden="true"></i><strong>Reaction Balancer</strong></div><span>Balances awkward equations without the pencil-chewing stage.</span></article>
-                    <article class="tool info-card"><div class="tool-head"><i class="ph-fill ph-squares-four" aria-hidden="true"></i><strong>Isomer Finder</strong></div><span>Handy when one formula stubbornly refuses to mean one molecule.</span></article>
-                    <article class="tool info-card"><div class="tool-head"><i class="ph-fill ph-funnel" aria-hidden="true"></i><strong>Limiting Reagent</strong></div><span>Tells you what runs out first and what you can realistically make.</span></article>
-                    <article class="tool info-card"><div class="tool-head"><i class="ph-fill ph-percent" aria-hidden="true"></i><strong>Percent Yield</strong></div><span>Quick reality check between theory and whatever actually happened on the bench.</span></article>
-                    <article class="tool info-card"><div class="tool-head"><i class="ph-fill ph-arrows-out-cardinal" aria-hidden="true"></i><strong>Reaction Scaling</strong></div><span>Scale a reaction without rewriting every number by hand.</span></article>
-                    <article class="tool info-card"><div class="tool-head"><i class="ph-fill ph-drop" aria-hidden="true"></i><strong>Dilution Calculator</strong></div><span>For when <span aria-hidden="true">C1V1 = C2V2</span> vanishes from your brain the second you need it.</span></article>
-                    <article class="tool info-card"><div class="tool-head"><i class="ph-fill ph-wind" aria-hidden="true"></i><strong>Ideal Gas Law</strong></div><span>PV = nRT, minus the ritual suffering.</span></article>
+                    <article class="tool info-card">
+                        <div class="tool-head"><i class="ph-fill ph-cube" aria-hidden="true"></i><strong>Custom 3D Molecule Viewer</strong></div>
+                        <span>Load any <code>.mol</code> or <code>.sdf</code> file from your device and explore it in the same native 3D engine used for PubChem compounds.</span>
+                    </article>
+                    <article class="tool info-card">
+                        <div class="tool-head"><i class="ph-fill ph-scales" aria-hidden="true"></i><strong>Molar Mass Calculator</strong></div>
+                        <span>Handles parentheses, hydrate dot notation, and the formulas people write when focus has well and truly left the building.</span>
+                    </article>
+                    <article class="tool info-card">
+                        <div class="tool-head"><i class="ph-fill ph-lightning" aria-hidden="true"></i><strong>Oxidation State Finder</strong></div>
+                        <span>Covers peroxides, superoxides, ozonides, metal hydrides, and interhalogen compounds. Accepts overall charge for polyatomic ions.</span>
+                    </article>
+                    <article class="tool info-card">
+                        <div class="tool-head"><i class="ph-fill ph-bezier-curve" aria-hidden="true"></i><strong>SMILES Visualizer</strong></div>
+                        <span>Paste a SMILES string, get the 2D structure and 3D model from PubChem. Useful when you have the notation but not the name.</span>
+                    </article>
+                    <article class="tool info-card">
+                        <div class="tool-head"><i class="ph-fill ph-equals" aria-hidden="true"></i><strong>Reaction Balancer</strong></div>
+                        <span>Gaussian elimination with exact rational arithmetic. Quick-insert buttons for common symbols; swap-sides control included.</span>
+                    </article>
+                    <article class="tool info-card">
+                        <div class="tool-head"><i class="ph-fill ph-squares-four" aria-hidden="true"></i><strong>Isomer Finder</strong></div>
+                        <span>Enter a molecular formula and get up to 20 structural isomers back. Also accessible by tapping the formula on any compound page.</span>
+                    </article>
+                    <article class="tool info-card">
+                        <div class="tool-head"><i class="ph-fill ph-funnel" aria-hidden="true"></i><strong>Limiting Reagent</strong></div>
+                        <span>Identifies which reagent runs out first, the molar ratios, and the theoretical yield — for a balanced equation you provide.</span>
+                    </article>
+                    <article class="tool info-card">
+                        <div class="tool-head"><i class="ph-fill ph-percent" aria-hidden="true"></i><strong>Percent Yield</strong></div>
+                        <span>Quick reality check between theoretical and actual yield. For when the bench disagrees with the calculation.</span>
+                    </article>
+                    <article class="tool info-card">
+                        <div class="tool-head"><i class="ph-fill ph-arrows-out-cardinal" aria-hidden="true"></i><strong>Reaction Scaling</strong></div>
+                        <span>Scale reactant amounts for a target product quantity, without rewriting every number by hand.</span>
+                    </article>
+                    <article class="tool info-card">
+                        <div class="tool-head"><i class="ph-fill ph-drop" aria-hidden="true"></i><strong>Dilution Calculator</strong></div>
+                        <span>C₁V₁ = C₂V₂, solved for any variable. For when the formula evaporates the moment you need it most.</span>
+                    </article>
+                    <article class="tool info-card">
+                        <div class="tool-head"><i class="ph-fill ph-wind" aria-hidden="true"></i><strong>Ideal Gas Law</strong></div>
+                        <span>PV = nRT, solves for any one unknown. Covers the standard unit conversions so you don't have to.</span>
+                    </article>
                 </div>
             </section>
 
+            <!-- ── Screenshots ── -->
             <section class="section reveal delay-3" id="screenshots">
-                <h2><span class="section-heading"><i class="ph-fill ph-images-square" aria-hidden="true"></i><span>A quick look around</span></span></h2>
-                <p class="section-intro">Search, favorites, tool screens, safety cards, and the structure viewer. No mystery here.</p>
+                <p class="section-eyebrow"><i class="ph-fill ph-images-square" aria-hidden="true"></i> A quick look around</p>
+                <h2>See it in action</h2>
+                <p class="section-intro">Search, favorites, safety cards, structure viewer, and the tools tab. Drag, tap, or use the arrows.</p>
 
                 <div class="screenshots-shell">
                     <div class="carousel-wrap">
                         <button class="carousel-arrow prev" id="screenshotsPrev" type="button" aria-label="Previous screenshot" aria-controls="screenshotsCarouselTrack">
                             <i class="ph-bold ph-caret-left" aria-hidden="true"></i>
                         </button>
-                        <div class="carousel-viewport" id="screenshotsCarouselTrack" tabindex="0" aria-label="Screenshots carousel. Use left and right arrows to navigate.">
-                            <figure class="carousel-slide info-card"><button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/home_dark.jpg" data-preview-caption="Search (Dark)" aria-label="Open screenshot preview: Search dark mode"><img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/home_dark.jpg" alt="Home screen dark mode"></button><figcaption>Search (Dark)</figcaption></figure>
-                            <figure class="carousel-slide info-card"><button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/home_light.jpg" data-preview-caption="Search (Light)" aria-label="Open screenshot preview: Search light mode"><img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/home_light.jpg" alt="Home screen light mode"></button><figcaption>Search (Light)</figcaption></figure>
-                            <figure class="carousel-slide info-card"><button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/3dmolecule.jpg" data-preview-caption="3D Molecule Viewer" aria-label="Open screenshot preview: 3D molecule viewer"><img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/3dmolecule.jpg" alt="3D molecule viewer"></button><figcaption>3D Molecule Viewer</figcaption></figure>
-                            <figure class="carousel-slide info-card"><button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/favorites.jpg" data-preview-caption="Favorites" aria-label="Open screenshot preview: Favorites"><img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/favorites.jpg" alt="Favorites screen"></button><figcaption>Favorites</figcaption></figure>
-                            <figure class="carousel-slide info-card"><button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/tools_page.jpg" data-preview-caption="Tools Page" aria-label="Open screenshot preview: Tools page"><img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/tools_page.jpg" alt="Tools screen"></button><figcaption>Tools Page</figcaption></figure>
-                            <figure class="carousel-slide info-card"><button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/iden_ea.jpg" data-preview-caption="Identifiers + Elemental Analysis" aria-label="Open screenshot preview: Identifiers and elemental analysis"><img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/iden_ea.jpg" alt="Identifiers and elemental analysis"></button><figcaption>Identifiers + Elemental Analysis</figcaption></figure>
-                            <figure class="carousel-slide info-card"><button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/ghs_safety.jpg" data-preview-caption="GHS Safety Information" aria-label="Open screenshot preview: GHS safety information"><img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/ghs_safety.jpg" alt="GHS safety information"></button><figcaption>GHS Safety Information</figcaption></figure>
-                            <figure class="carousel-slide info-card"><button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/tool_mmc.jpg" data-preview-caption="Molar Mass Calculator" aria-label="Open screenshot preview: Molar mass calculator"><img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/tool_mmc.jpg" alt="Molar mass calculator"></button><figcaption>Molar Mass Calculator</figcaption></figure>
+                        <div class="carousel-viewport" id="screenshotsCarouselTrack" tabindex="0" aria-label="Screenshots carousel. Use left and right arrow keys to navigate.">
+                            <figure class="carousel-slide info-card">
+                                <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/home_dark.jpg" data-preview-caption="Search (Dark)" aria-label="Open screenshot preview: Search dark mode">
+                                    <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/home_dark.jpg" alt="Home screen — dark mode">
+                                </button>
+                                <figcaption>Search — Dark</figcaption>
+                            </figure>
+                            <figure class="carousel-slide info-card">
+                                <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/home_light.jpg" data-preview-caption="Search (Light)" aria-label="Open screenshot preview: Search light mode">
+                                    <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/home_light.jpg" alt="Home screen — light mode">
+                                </button>
+                                <figcaption>Search — Light</figcaption>
+                            </figure>
+                            <figure class="carousel-slide info-card">
+                                <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/3dmolecule.jpg" data-preview-caption="3D Molecule Viewer" aria-label="Open screenshot preview: 3D molecule viewer">
+                                    <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/3dmolecule.jpg" alt="3D molecule viewer">
+                                </button>
+                                <figcaption>3D Molecule Viewer</figcaption>
+                            </figure>
+                            <figure class="carousel-slide info-card">
+                                <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/favorites.jpg" data-preview-caption="Favorites" aria-label="Open screenshot preview: Favorites">
+                                    <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/favorites.jpg" alt="Favorites screen">
+                                </button>
+                                <figcaption>Favorites</figcaption>
+                            </figure>
+                            <figure class="carousel-slide info-card">
+                                <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/tools_page.jpg" data-preview-caption="Tools Page" aria-label="Open screenshot preview: Tools page">
+                                    <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/tools_page.jpg" alt="Tools screen">
+                                </button>
+                                <figcaption>Tools Page</figcaption>
+                            </figure>
+                            <figure class="carousel-slide info-card">
+                                <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/iden_ea.jpg" data-preview-caption="Identifiers + Elemental Analysis" aria-label="Open screenshot preview: Identifiers and elemental analysis">
+                                    <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/iden_ea.jpg" alt="Identifiers and elemental analysis">
+                                </button>
+                                <figcaption>Identifiers + Elemental Analysis</figcaption>
+                            </figure>
+                            <figure class="carousel-slide info-card">
+                                <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/ghs_safety.jpg" data-preview-caption="GHS Safety Information" aria-label="Open screenshot preview: GHS safety information">
+                                    <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/ghs_safety.jpg" alt="GHS safety information">
+                                </button>
+                                <figcaption>GHS Safety Information</figcaption>
+                            </figure>
+                            <figure class="carousel-slide info-card">
+                                <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/tool_mmc.jpg" data-preview-caption="Molar Mass Calculator" aria-label="Open screenshot preview: Molar mass calculator">
+                                    <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/tool_mmc.jpg" alt="Molar mass calculator">
+                                </button>
+                                <figcaption>Molar Mass Calculator</figcaption>
+                            </figure>
                         </div>
                         <button class="carousel-arrow next" id="screenshotsNext" type="button" aria-label="Next screenshot" aria-controls="screenshotsCarouselTrack">
                             <i class="ph-bold ph-caret-right" aria-hidden="true"></i>
@@ -2102,9 +1669,11 @@
                 </div>
             </section>
 
+            <!-- ── Tech stack ── -->
             <section class="section reveal" id="stack">
-                <h2><span class="section-heading"><i class="ph-fill ph-cpu" aria-hidden="true"></i><span>Under the hood</span></span></h2>
-                <p class="section-intro">Native Android app. Straight API calls. No mystery backend humming in the corner.</p>
+                <p class="section-eyebrow"><i class="ph-fill ph-cpu" aria-hidden="true"></i> Under the hood</p>
+                <h2>How it's built</h2>
+                <p class="section-intro">Native Android, straight API calls, no mystery backend. Everything is open source and the stack is exactly what it looks like.</p>
 
                 <div class="table-wrap">
                     <table class="info-card">
@@ -2131,44 +1700,39 @@
                             <tr>
                                 <td>
                                     <a class="source-link" href="https://pubchem.ncbi.nlm.nih.gov/docs/pug-rest-tutorial" target="_blank" rel="noopener noreferrer">
-                                        <i class="ph-fill ph-flask" aria-hidden="true"></i>
-                                        <span>PubChem PUG REST</span>
+                                        <i class="ph-fill ph-flask" aria-hidden="true"></i> PubChem PUG REST
                                     </a>
                                     <span class="source-note">Official PubChem endpoint docs.</span>
                                 </td>
-                                <td>Compound lookup, properties, autocomplete hints, synonyms, and downloadable structure files.</td>
+                                <td>Compound lookup, properties, autocomplete, synonyms, SDF and structure files.</td>
                             </tr>
                             <tr>
                                 <td>
                                     <a class="source-link" href="https://pubchem.ncbi.nlm.nih.gov/docs/pug-view" target="_blank" rel="noopener noreferrer">
-                                        <i class="ph-fill ph-warning-diamond" aria-hidden="true"></i>
-                                        <span>PubChem PUG View</span>
+                                        <i class="ph-fill ph-warning-diamond" aria-hidden="true"></i> PubChem PUG View
                                     </a>
                                     <span class="source-note">Structured safety and annotation records.</span>
                                 </td>
-                                <td>GHS hazard summaries, signal words, and safety card details.</td>
+                                <td>GHS hazard classifications, signal words, and safety card details.</td>
                             </tr>
                             <tr>
                                 <td>
                                     <a class="source-link" href="https://en.wikipedia.org/api/rest_v1/" target="_blank" rel="noopener noreferrer">
-                                        <i class="ph-fill ph-newspaper-clipping" aria-hidden="true"></i>
-                                        <span>Wikipedia REST API</span>
+                                        <i class="ph-fill ph-newspaper-clipping" aria-hidden="true"></i> Wikipedia REST API
                                     </a>
-                                    <span class="source-note">Fallback source for plain-language summaries.</span>
+                                    <span class="source-note">Fallback for plain-language summaries.</span>
                                 </td>
-                                <td>Short overview text for compounds when PubChem descriptions are sparse.</td>
+                                <td>Compound descriptions when PubChem's entries are sparse.</td>
                             </tr>
                             <tr>
                                 <td>
                                     <a class="source-link" href="https://ai.google.dev/gemini-api/docs" target="_blank" rel="noopener noreferrer">
-                                        <i class="ph-fill ph-sparkle" aria-hidden="true"></i>
-                                        <span>Gemini API</span>
+                                        <i class="ph-fill ph-sparkle" aria-hidden="true"></i> Gemini API
                                     </a>
                                     <span class="source-note">
-                                        Optional provider:
+                                        Optional — also supports
                                         <a class="source-link" href="https://console.groq.com/docs/api-reference" target="_blank" rel="noopener noreferrer">
-                                            <i class="ph-fill ph-lightning" aria-hidden="true"></i>
-                                            <span>Groq API</span>
+                                            <i class="ph-fill ph-lightning" aria-hidden="true"></i> Groq
                                         </a>
                                     </span>
                                 </td>
@@ -2177,12 +1741,11 @@
                             <tr>
                                 <td>
                                     <a class="source-link" href="https://docs.github.com/en/rest/releases/releases?apiVersion=2022-11-28#get-the-latest-release" target="_blank" rel="noopener noreferrer">
-                                        <i class="ph-fill ph-github-logo" aria-hidden="true"></i>
-                                        <span>GitHub Releases API</span>
+                                        <i class="ph-fill ph-github-logo" aria-hidden="true"></i> GitHub Releases API
                                     </a>
                                     <span class="source-note">Release metadata endpoint.</span>
                                 </td>
-                                <td>Checks the latest APK version and shows update status in the header.</td>
+                                <td>Latest APK version check and update status shown in the header.</td>
                             </tr>
                         </tbody>
                     </table>
@@ -2190,26 +1753,26 @@
 
                 <div class="meta-grid">
                     <article class="meta-card info-card">
-                        <h3><i class="ph-fill ph-check-circle" aria-hidden="true"></i><span>What you need</span></h3>
+                        <h3><i class="ph-fill ph-check-circle" aria-hidden="true"></i><span>Requirements</span></h3>
                         <ul>
-                            <li>Android 8.0+ (API 26+)</li>
-                            <li>An internet connection for lookups and descriptions</li>
-                            <li>Android Studio Hedgehog or newer if you want to build it yourself</li>
+                            <li>Android 8.0+ (API 26+), internet connection</li>
+                            <li>Android Studio Hedgehog+ to build from source</li>
+                            <li>No API keys required to use the app</li>
                         </ul>
                     </article>
 
                     <article class="meta-card info-card">
                         <h3><i class="ph-fill ph-lock-key" aria-hidden="true"></i><span>Permissions</span></h3>
                         <ul>
-                            <li><code>INTERNET</code> for compound data and release checks</li>
-                            <li><code>POST_NOTIFICATIONS</code> for optional update alerts</li>
-                            <li><code>WRITE_EXTERNAL_STORAGE</code> on Android 9 and below</li>
+                            <li><code>INTERNET</code> — compound data and release checks</li>
+                            <li><code>POST_NOTIFICATIONS</code> — optional update alerts</li>
+                            <li><code>WRITE_EXTERNAL_STORAGE</code> — Android 9 and below only</li>
                         </ul>
                     </article>
 
                     <article class="meta-card info-card">
                         <h3><i class="ph-fill ph-shield-check" aria-hidden="true"></i><span>Privacy</span></h3>
-                        <p>No analytics, no telemetry, no creepy extras. Favorites, search history, cache, and provider keys stay on the device unless you deliberately use an external API.</p>
+                        <p>No analytics, no telemetry, no creepy extras. Favorites, search history, cache, and API keys live on your device. Data goes directly to PubChem, Wikipedia, Gemini, or Groq — no intermediate servers.</p>
                     </article>
                 </div>
             </section>
@@ -2217,16 +1780,19 @@
             <footer class="footer reveal">
                 <span>MIT licensed. Built by FurtherSecrets24680. No account wall, no nonsense.</span>
                 <span>
-                    <a href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer">Releases</a> |
+                    <a href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer">Releases</a> ·
                     <a href="https://github.com/FurtherSecrets24680/chemsearch-android" target="_blank" rel="noopener noreferrer">Repository</a>
                 </span>
             </footer>
         </main>
     </div>
 
+    <!-- ── Lightbox ── -->
     <div class="lightbox" id="galleryLightbox" hidden>
         <div class="lightbox-shell" role="dialog" aria-modal="true" aria-labelledby="galleryLightboxCaption">
-            <button class="lightbox-close" id="galleryLightboxClose" type="button" aria-label="Close screenshot preview"><i class="ph-bold ph-x" aria-hidden="true"></i><span>Close</span></button>
+            <button class="lightbox-close" id="galleryLightboxClose" type="button" aria-label="Close screenshot preview">
+                <i class="ph-bold ph-x" aria-hidden="true"></i><span>Close</span>
+            </button>
             <figure class="lightbox-figure">
                 <img id="galleryLightboxImage" src="" alt="">
                 <figcaption class="lightbox-caption" id="galleryLightboxCaption"></figcaption>
@@ -2234,7 +1800,7 @@
         </div>
     </div>
 
-    <button class="to-top" id="toTopBtn" type="button" aria-label="Back to top">Top</button>
+    <button class="to-top" id="toTopBtn" type="button" aria-label="Back to top">↑ Top</button>
 
     <script>
         (function () {
@@ -2269,18 +1835,12 @@
 
             function setMobileNavState(isOpen) {
                 body.classList.toggle('mobile-nav-open', isOpen);
-                if (mobileMenuToggle) {
-                    mobileMenuToggle.setAttribute('aria-expanded', String(isOpen));
-                }
-                if (mobileMenuIcon) {
-                    mobileMenuIcon.className = isOpen ? 'ph-bold ph-x' : 'ph-bold ph-list';
-                }
+                if (mobileMenuToggle) mobileMenuToggle.setAttribute('aria-expanded', String(isOpen));
+                if (mobileMenuIcon) mobileMenuIcon.className = isOpen ? 'ph-bold ph-x' : 'ph-bold ph-list';
             }
 
             function closeMobileNavIfNeeded() {
-                if (mobileBreakpoint.matches) {
-                    setMobileNavState(false);
-                }
+                if (mobileBreakpoint.matches) setMobileNavState(false);
             }
 
             function setTheme(theme, persist) {
@@ -2288,17 +1848,11 @@
                 body.setAttribute('data-theme', finalTheme);
                 if (themeToggle) {
                     const isDark = finalTheme === 'dark';
-                    if (themeToggleLabel) {
-                        themeToggleLabel.textContent = isDark ? 'Light Mode' : 'Dark Mode';
-                    }
-                    if (themeToggleIcon) {
-                        themeToggleIcon.className = isDark ? 'ph-fill ph-sun-dim' : 'ph-fill ph-moon-stars';
-                    }
+                    if (themeToggleLabel) themeToggleLabel.textContent = isDark ? 'Light Mode' : 'Dark Mode';
+                    if (themeToggleIcon) themeToggleIcon.className = isDark ? 'ph-fill ph-sun-dim' : 'ph-fill ph-moon-stars';
                     themeToggle.setAttribute('aria-pressed', String(isDark));
                 }
-                if (persist) {
-                    localStorage.setItem(themeKey, finalTheme);
-                }
+                if (persist) localStorage.setItem(themeKey, finalTheme);
             }
 
             const savedTheme = localStorage.getItem(themeKey);
@@ -2318,180 +1872,141 @@
 
             if (mobileMenuToggle && mobileNavPanel) {
                 mobileMenuToggle.addEventListener('click', () => {
-                    const isOpen = body.classList.contains('mobile-nav-open');
-                    setMobileNavState(!isOpen);
+                    setMobileNavState(!body.classList.contains('mobile-nav-open'));
                 });
             }
 
             const mobileCloseTriggers = Array.from(document.querySelectorAll('.section-link, .mobile-action-row .pill-link'));
-            mobileCloseTriggers.forEach((link) => {
-                link.addEventListener('click', () => {
-                    closeMobileNavIfNeeded();
-                });
-            });
+            mobileCloseTriggers.forEach((link) => link.addEventListener('click', closeMobileNavIfNeeded));
 
             document.addEventListener('click', (event) => {
                 if (!body.classList.contains('mobile-nav-open') || !mobileBreakpoint.matches) return;
                 const target = event.target;
                 if (!(target instanceof Node)) return;
-                if (
-                    (mobileNavPanel && mobileNavPanel.contains(target)) ||
-                    (mobileMenuToggle && mobileMenuToggle.contains(target))
-                ) return;
+                if ((mobileNavPanel && mobileNavPanel.contains(target)) || (mobileMenuToggle && mobileMenuToggle.contains(target))) return;
                 setMobileNavState(false);
             });
 
-            if (typeof mobileBreakpoint.addEventListener === 'function') {
-                mobileBreakpoint.addEventListener('change', (event) => {
-                    if (!event.matches) {
-                        setMobileNavState(false);
-                    }
-                });
-            } else if (typeof mobileBreakpoint.addListener === 'function') {
-                mobileBreakpoint.addListener((event) => {
-                    if (!event.matches) {
-                        setMobileNavState(false);
-                    }
-                });
+            // Reveal on scroll
+            const revealEls = Array.from(document.querySelectorAll('.reveal'));
+            if ('IntersectionObserver' in window) {
+                const io = new IntersectionObserver((entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-visible');
+                            io.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+                revealEls.forEach((el) => io.observe(el));
+            } else {
+                revealEls.forEach((el) => el.classList.add('is-visible'));
             }
 
-            if (sectionLinks[0]) {
-                sectionLinks[0].classList.add('is-active');
-            }
-
-            if (sections.length > 0 && sectionLinks.length > 0) {
+            // Active section nav
+            if (sections.length && sectionLinks.length) {
                 const sectionObserver = new IntersectionObserver((entries) => {
                     entries.forEach((entry) => {
-                        if (!entry.isIntersecting) return;
-                        const activeId = entry.target.id;
-                        sectionLinks.forEach((link) => {
-                            const isActive = link.getAttribute('href') === `#${activeId}`;
-                            link.classList.toggle('is-active', isActive);
-                        });
+                        const id = entry.target.id;
+                        const link = sectionLinks.find((l) => l.getAttribute('href') === '#' + id);
+                        if (link) link.classList.toggle('is-active', entry.isIntersecting);
                     });
-                }, {
-                    rootMargin: '-38% 0px -52% 0px',
-                    threshold: 0
-                });
-                sections.forEach((section) => sectionObserver.observe(section));
+                }, { threshold: 0.22 });
+                sections.forEach((s) => sectionObserver.observe(s));
             }
 
-            const toolsGrid = document.getElementById('toolsGrid');
+            // Tool search filter
             const toolSearch = document.getElementById('toolSearch');
             const clearToolSearch = document.getElementById('clearToolSearch');
             const toolsEmpty = document.getElementById('toolsEmpty');
-            const tools = toolsGrid ? Array.from(toolsGrid.querySelectorAll('.tool')) : [];
+            const toolEls = Array.from(document.querySelectorAll('#toolsGrid .tool'));
+
+            function isTextEntryTarget(el) {
+                if (!el) return false;
+                const tag = el.tagName.toLowerCase();
+                return tag === 'input' || tag === 'textarea' || tag === 'select' || el.isContentEditable;
+            }
 
             function filterTools() {
-                if (!tools.length || !toolSearch) return;
-                const query = toolSearch.value.trim().toLowerCase();
-                let visibleCount = 0;
-                tools.forEach((tool) => {
+                const q = toolSearch ? toolSearch.value.trim().toLowerCase() : '';
+                let visible = 0;
+                toolEls.forEach((tool) => {
                     const text = tool.textContent.toLowerCase();
-                    const matched = !query || text.includes(query);
-                    tool.classList.toggle('is-hidden', !matched);
-                    if (matched) visibleCount += 1;
+                    const match = !q || text.includes(q);
+                    tool.classList.toggle('is-hidden', !match);
+                    if (match) visible++;
                 });
-                if (toolsEmpty) {
-                    toolsEmpty.classList.toggle('is-visible', visibleCount === 0);
-                }
+                if (toolsEmpty) toolsEmpty.classList.toggle('is-visible', visible === 0 && !!q);
             }
 
             if (toolSearch) {
                 toolSearch.addEventListener('input', filterTools);
+                toolSearch.addEventListener('search', filterTools);
             }
-            if (clearToolSearch && toolSearch) {
+            if (clearToolSearch) {
                 clearToolSearch.addEventListener('click', () => {
-                    toolSearch.value = '';
+                    if (toolSearch) { toolSearch.value = ''; toolSearch.focus(); }
                     filterTools();
-                    toolSearch.focus();
                 });
             }
 
-            function isTextEntryTarget(target) {
-                if (!(target instanceof HTMLElement)) return false;
-                const tag = target.tagName.toLowerCase();
-                return tag === 'input' || tag === 'textarea' || target.isContentEditable;
+            // Gallery lightbox
+            function openGalleryLightbox(src, caption) {
+                if (!galleryLightbox || !galleryLightboxImage) return;
+                galleryLightboxImage.src = src;
+                galleryLightboxImage.alt = caption || '';
+                if (galleryLightboxCaption) galleryLightboxCaption.textContent = caption || '';
+                galleryLightbox.hidden = false;
+                galleryLightbox.removeAttribute('hidden');
+                document.body.style.overflow = 'hidden';
+                if (galleryLightboxClose) galleryLightboxClose.focus();
             }
 
             function closeGalleryLightbox() {
                 if (!galleryLightbox) return;
                 galleryLightbox.hidden = true;
-                body.style.overflow = '';
-                if (galleryReturnFocus) {
-                    galleryReturnFocus.focus();
-                    galleryReturnFocus = null;
-                }
-            }
-
-            function openGalleryLightbox(src, caption, alt) {
-                if (!galleryLightbox || !galleryLightboxImage || !galleryLightboxCaption || !src) return;
-                galleryReturnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-                galleryLightboxImage.src = src;
-                galleryLightboxImage.alt = alt || caption || 'ChemSearch screenshot preview';
-                galleryLightboxCaption.textContent = caption || '';
-                galleryLightbox.hidden = false;
-                body.style.overflow = 'hidden';
-                if (galleryLightboxClose) {
-                    galleryLightboxClose.focus();
-                }
+                document.body.style.overflow = '';
+                if (galleryReturnFocus) { galleryReturnFocus.focus(); galleryReturnFocus = null; }
             }
 
             galleryCards.forEach((card) => {
                 card.addEventListener('click', () => {
-                    if (screenshotsCarouselTrack && screenshotsCarouselTrack.dataset.dragged === '1') {
-                        return;
-                    }
-                    const image = card.querySelector('img');
-                    openGalleryLightbox(
-                        card.getAttribute('data-preview-src'),
-                        card.getAttribute('data-preview-caption'),
-                        image ? image.alt : ''
-                    );
+                    galleryReturnFocus = card;
+                    openGalleryLightbox(card.dataset.previewSrc || '', card.dataset.previewCaption || '');
                 });
             });
 
-            if (screenshotsCarouselTrack && screenshotSlides.length > 0) {
+            // Carousel
+            if (screenshotsCarouselTrack && screenshotSlides.length) {
                 let carouselIndex = 0;
+                let isDragging = false, didDrag = false, dragStartX = 0, dragStartLeft = 0;
                 let isTicking = false;
-                let isDragging = false;
-                let dragStartX = 0;
-                let dragStartLeft = 0;
-                let didDrag = false;
                 const dotButtons = [];
 
-                function getSlideStep() {
-                    const firstSlide = screenshotSlides[0];
-                    if (!firstSlide) return 0;
-                    const style = window.getComputedStyle(screenshotsCarouselTrack);
-                    const gap = Number.parseFloat(style.gap || style.columnGap || '0');
-                    return firstSlide.getBoundingClientRect().width + gap;
-                }
+                function clampIndex(i) { return Math.max(0, Math.min(screenshotSlides.length - 1, i)); }
 
-                function clampIndex(value) {
-                    return Math.max(0, Math.min(screenshotSlides.length - 1, value));
-                }
-
-                function setCarouselState(index, syncScroll) {
-                    carouselIndex = clampIndex(index);
-                    if (screenshotsPrev) screenshotsPrev.disabled = carouselIndex <= 0;
-                    if (screenshotsNext) screenshotsNext.disabled = carouselIndex >= screenshotSlides.length - 1;
-                    if (screenshotsStatus) screenshotsStatus.textContent = `${carouselIndex + 1} / ${screenshotSlides.length}`;
-                    dotButtons.forEach((dot, dotIndex) => {
-                        const isActive = dotIndex === carouselIndex;
-                        dot.classList.toggle('is-active', isActive);
-                        dot.setAttribute('aria-selected', String(isActive));
-                        dot.tabIndex = isActive ? 0 : -1;
+                function setCarouselState(nextIndex, scroll) {
+                    carouselIndex = clampIndex(nextIndex);
+                    dotButtons.forEach((dot, i) => {
+                        const active = i === carouselIndex;
+                        dot.classList.toggle('is-active', active);
+                        dot.setAttribute('aria-selected', String(active));
+                        dot.tabIndex = active ? 0 : -1;
                     });
-                    if (syncScroll) {
+                    if (screenshotsStatus) screenshotsStatus.textContent = `${carouselIndex + 1} / ${screenshotSlides.length}`;
+                    if (screenshotsPrev) screenshotsPrev.disabled = carouselIndex === 0;
+                    if (screenshotsNext) screenshotsNext.disabled = carouselIndex === screenshotSlides.length - 1;
+                    if (scroll) {
                         const step = getSlideStep();
-                        if (step > 0) {
-                            screenshotsCarouselTrack.scrollTo({
-                                left: step * carouselIndex,
-                                behavior: prefersReducedMotion ? 'auto' : 'smooth'
-                            });
-                        }
+                        if (step > 0) screenshotsCarouselTrack.scrollTo({ left: step * carouselIndex, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
                     }
+                }
+
+                function getSlideStep() {
+                    if (screenshotSlides.length < 2) return 0;
+                    const first = screenshotSlides[0].getBoundingClientRect();
+                    const second = screenshotSlides[1].getBoundingClientRect();
+                    return second.left - first.left;
                 }
 
                 screenshotSlides.forEach((slide, index) => {
@@ -2504,9 +2019,7 @@
                     dot.setAttribute('aria-label', `Go to screenshot ${index + 1}`);
                     dot.setAttribute('aria-selected', 'false');
                     dot.tabIndex = -1;
-                    dot.addEventListener('click', () => {
-                        setCarouselState(index, true);
-                    });
+                    dot.addEventListener('click', () => setCarouselState(index, true));
                     screenshotsDots.appendChild(dot);
                     dotButtons.push(dot);
                 });
@@ -2515,36 +2028,20 @@
                     const step = getSlideStep();
                     if (step <= 0) return;
                     const nextIndex = clampIndex(Math.round(screenshotsCarouselTrack.scrollLeft / step));
-                    if (nextIndex !== carouselIndex) {
-                        setCarouselState(nextIndex, false);
-                    } else {
-                        setCarouselState(carouselIndex, false);
-                    }
+                    setCarouselState(nextIndex, false);
                 }
 
                 screenshotsCarouselTrack.addEventListener('scroll', () => {
                     if (isTicking) return;
                     isTicking = true;
-                    requestAnimationFrame(() => {
-                        syncIndexFromScroll();
-                        isTicking = false;
-                    });
+                    requestAnimationFrame(() => { syncIndexFromScroll(); isTicking = false; });
                 }, { passive: true });
 
                 screenshotsCarouselTrack.addEventListener('keydown', (event) => {
-                    if (event.key === 'ArrowRight') {
-                        event.preventDefault();
-                        setCarouselState(carouselIndex + 1, true);
-                    } else if (event.key === 'ArrowLeft') {
-                        event.preventDefault();
-                        setCarouselState(carouselIndex - 1, true);
-                    } else if (event.key === 'Home') {
-                        event.preventDefault();
-                        setCarouselState(0, true);
-                    } else if (event.key === 'End') {
-                        event.preventDefault();
-                        setCarouselState(screenshotSlides.length - 1, true);
-                    }
+                    if (event.key === 'ArrowRight') { event.preventDefault(); setCarouselState(carouselIndex + 1, true); }
+                    else if (event.key === 'ArrowLeft') { event.preventDefault(); setCarouselState(carouselIndex - 1, true); }
+                    else if (event.key === 'Home') { event.preventDefault(); setCarouselState(0, true); }
+                    else if (event.key === 'End') { event.preventDefault(); setCarouselState(screenshotSlides.length - 1, true); }
                 });
 
                 screenshotsCarouselTrack.addEventListener('wheel', (event) => {
@@ -2555,19 +2052,14 @@
 
                 screenshotsCarouselTrack.addEventListener('pointerdown', (event) => {
                     if (event.pointerType === 'mouse' && event.button !== 0) return;
-                    isDragging = true;
-                    didDrag = false;
-                    dragStartX = event.clientX;
-                    dragStartLeft = screenshotsCarouselTrack.scrollLeft;
+                    isDragging = true; didDrag = false;
+                    dragStartX = event.clientX; dragStartLeft = screenshotsCarouselTrack.scrollLeft;
                     screenshotsCarouselTrack.setPointerCapture(event.pointerId);
                 });
-
                 screenshotsCarouselTrack.addEventListener('pointermove', (event) => {
                     if (!isDragging) return;
                     const deltaX = event.clientX - dragStartX;
-                    if (Math.abs(deltaX) > 6) {
-                        didDrag = true;
-                    }
+                    if (Math.abs(deltaX) > 6) didDrag = true;
                     screenshotsCarouselTrack.scrollLeft = dragStartLeft - deltaX;
                 });
 
@@ -2576,72 +2068,41 @@
                     isDragging = false;
                     if (didDrag) {
                         screenshotsCarouselTrack.dataset.dragged = '1';
-                        requestAnimationFrame(() => {
-                            screenshotsCarouselTrack.dataset.dragged = '0';
-                        });
+                        requestAnimationFrame(() => { screenshotsCarouselTrack.dataset.dragged = '0'; });
                     }
                     if (event && screenshotsCarouselTrack.hasPointerCapture(event.pointerId)) {
                         screenshotsCarouselTrack.releasePointerCapture(event.pointerId);
                     }
                 }
-
                 screenshotsCarouselTrack.addEventListener('pointerup', stopDrag);
                 screenshotsCarouselTrack.addEventListener('pointercancel', stopDrag);
                 screenshotsCarouselTrack.addEventListener('pointerleave', stopDrag);
 
-                if (screenshotsPrev) {
-                    screenshotsPrev.addEventListener('click', () => {
-                        setCarouselState(carouselIndex - 1, true);
-                    });
-                }
-
-                if (screenshotsNext) {
-                    screenshotsNext.addEventListener('click', () => {
-                        setCarouselState(carouselIndex + 1, true);
-                    });
-                }
-
-                window.addEventListener('resize', () => {
-                    setCarouselState(carouselIndex, true);
-                });
-
+                if (screenshotsPrev) screenshotsPrev.addEventListener('click', () => setCarouselState(carouselIndex - 1, true));
+                if (screenshotsNext) screenshotsNext.addEventListener('click', () => setCarouselState(carouselIndex + 1, true));
+                window.addEventListener('resize', () => setCarouselState(carouselIndex, true));
                 setCarouselState(0, false);
             }
 
-            if (galleryLightboxClose) {
-                galleryLightboxClose.addEventListener('click', closeGalleryLightbox);
-            }
-
+            if (galleryLightboxClose) galleryLightboxClose.addEventListener('click', closeGalleryLightbox);
             if (galleryLightbox) {
                 galleryLightbox.addEventListener('click', (event) => {
-                    if (event.target === galleryLightbox) {
-                        closeGalleryLightbox();
-                    }
+                    if (event.target === galleryLightbox) closeGalleryLightbox();
                 });
             }
 
             document.addEventListener('keydown', (event) => {
                 const key = event.key.toLowerCase();
                 const targetIsTextEntry = isTextEntryTarget(event.target);
-
                 if ((event.key === '/' || ((event.metaKey || event.ctrlKey) && key === 'k')) && toolSearch && !targetIsTextEntry) {
-                    event.preventDefault();
-                    toolSearch.focus();
-                    toolSearch.select();
-                    return;
+                    event.preventDefault(); toolSearch.focus(); toolSearch.select(); return;
                 }
-
                 if (event.key === 'Escape' && galleryLightbox && !galleryLightbox.hidden) {
-                    closeGalleryLightbox();
-                    return;
+                    closeGalleryLightbox(); return;
                 }
-
                 if (event.key === 'Escape' && toolSearch && document.activeElement === toolSearch && toolSearch.value.trim().length > 0) {
-                    toolSearch.value = '';
-                    filterTools();
-                    return;
+                    toolSearch.value = ''; filterTools(); return;
                 }
-
                 if (event.key === 'Escape' && body.classList.contains('mobile-nav-open')) {
                     setMobileNavState(false);
                 }
@@ -2649,17 +2110,10 @@
 
             const toTopBtn = document.getElementById('toTopBtn');
             if (toTopBtn) {
-                const handleScroll = () => {
-                    const shouldShow = window.scrollY > 420;
-                    toTopBtn.classList.toggle('is-visible', shouldShow);
-                };
-
+                const handleScroll = () => toTopBtn.classList.toggle('is-visible', window.scrollY > 420);
                 window.addEventListener('scroll', handleScroll, { passive: true });
                 handleScroll();
-
-                toTopBtn.addEventListener('click', () => {
-                    window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
-                });
+                toTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' }));
             }
 
             async function loadLatestRelease() {
@@ -2673,9 +2127,7 @@
                     const release = await response.json();
                     const tag = release.tag_name || 'latest';
                     const date = release.published_at ? new Date(release.published_at).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric'
+                        year: 'numeric', month: 'short', day: 'numeric'
                     }) : '';
                     releaseStatus.href = release.html_url || releaseStatus.href;
                     if (releaseStatusText) {
@@ -2684,11 +2136,8 @@
                         releaseStatus.textContent = date ? `Latest: ${tag} (${date})` : `Latest: ${tag}`;
                     }
                 } catch (err) {
-                    if (releaseStatusText) {
-                        releaseStatusText.textContent = 'Latest release: open on GitHub';
-                    } else {
-                        releaseStatus.textContent = 'Latest release: open on GitHub';
-                    }
+                    if (releaseStatusText) releaseStatusText.textContent = 'Latest release: open on GitHub';
+                    else releaseStatus.textContent = 'Latest release: open on GitHub';
                 } finally {
                     releaseStatus.setAttribute('aria-busy', 'false');
                 }
