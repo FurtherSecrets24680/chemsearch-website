@@ -4,18 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChemSearch — Chemistry Search for Android</title>
+    <title>ChemSearch - Chemistry Search for Android</title>
     <meta name="description" content="ChemSearch: search any compound by name, CAS or CID. Get 3D structure models, GHS safety data, elemental analysis and 11 chemistry tools. Native Kotlin app for Android.">
     <link rel="icon" href="favicon.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://api.fontshare.com">
-    <!-- Clash Display from Fontshare (not available on Google Fonts) -->
     <link href="https://api.fontshare.com/v2/css?f[]=clash-display@600,700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
-        /* ── Variables ── */
         :root {
             --bg: #f0f2f8;
             --surface: rgba(255, 255, 255, 0.9);
@@ -819,7 +817,7 @@
             gap: 12px;
             overflow-x: auto;
             scroll-snap-type: x mandatory;
-            /* No scroll-behavior here — JS controls it explicitly to avoid double-smooth conflicts */
+            /* No scroll-behavior here - JS controls it explicitly to avoid double-smooth conflicts */
             -webkit-overflow-scrolling: touch;
             padding: 4px 0 12px;
             scrollbar-width: none;
@@ -1469,7 +1467,6 @@
         </div>
 
         <main id="content" tabindex="-1">
-            <!-- ── Hero ── -->
             <section class="hero">
                 <article class="hero-main reveal delay-1">
                     <p class="hero-eyebrow">Native Android · Open Source · MIT</p>
@@ -1477,14 +1474,14 @@
                     <h1>Fast chemistry search, built for <em>Android</em>.</h1>
 
                     <p class="hero-lead">
-                        Look up any compound by <strong>name, CAS, or CID</strong>. Get structure diagrams, GHS safety cards, elemental analysis, and a full suite of chemistry tools — all from one app, no browser tabs required.
+                        Look up any compound by <strong>name, CAS, or CID</strong>. Get structure diagrams, GHS safety cards, elemental analysis, and a full suite of chemistry tools - all from one app, no browser tabs required.
                     </p>
 
                     <ul class="hero-meta" aria-label="At a glance">
                         <li>Android 8.0+ (API 26+)</li>
                         <li>11 built-in chemistry tools</li>
                         <li>Favorites &amp; search history</li>
-                        <li>Optional AI summaries — bring your own key</li>
+                        <li>Optional AI summaries - bring your own key</li>
                     </ul>
 
                     <div class="cta-row">
@@ -1513,7 +1510,7 @@
                         <div class="fact info-card">
                             <i class="ph-fill ph-atom" aria-hidden="true"></i>
                             <strong>118</strong>
-                            <span>Elements — CPK 3D Colors</span>
+                            <span>Elements - CPK 3D Colors</span>
                         </div>
                         <div class="fact info-card">
                             <i class="ph-fill ph-device-mobile" aria-hidden="true"></i>
@@ -1540,18 +1537,16 @@
                     </div>
                 </article>
             </section>
-
-            <!-- ── Features ── -->
             <section class="section reveal delay-1" id="features">
                 <p class="section-eyebrow"><i class="ph-fill ph-sparkle" aria-hidden="true"></i> What's actually in it</p>
                 <h2>The useful bits</h2>
-                <p class="section-intro">Not a chemistry encyclopedia pretending to be an app. These are the things you actually reach for when you need an answer quickly — or when your lab partner has disappeared and the Wi-Fi is flaky.</p>
+                <p class="section-intro">Not a chemistry encyclopedia pretending to be an app. These are the things you actually reach for when you need an answer quickly - or when your lab partner has disappeared and the Wi-Fi is flaky.</p>
 
                 <div class="feature-grid">
                     <article class="feature-card info-card">
                         <h3><i class="ph-fill ph-magnifying-glass" aria-hidden="true"></i><span>Finds what you mean, not just what you typed</span></h3>
                         <ul>
-                            <li>Common name, IUPAC, CAS number, or PubChem CID — any of them works.</li>
+                            <li>Common name, IUPAC, CAS number, or PubChem CID - any of them works.</li>
                             <li>Real-time autocomplete with a scrollable dropdown, so you don't have to nail the spelling of "acetylsalicylic" on the first try.</li>
                             <li>Dedicated Recents and Favorites tabs. The compounds you look up twice shouldn't cost two lookups.</li>
                         </ul>
@@ -1560,8 +1555,8 @@
                     <article class="feature-card info-card">
                         <h3><i class="ph-fill ph-identification-card" aria-hidden="true"></i><span>Every identifier, one tap to copy</span></h3>
                         <ul>
-                            <li>Name, formula, MW, CID, and CAS at the top — not buried three cards down.</li>
-                            <li>SMILES (full and connectivity), InChI, InChIKey, empirical formula, formal charge — one section further. All tap-to-copy.</li>
+                            <li>Name, formula, MW, CID, and CAS at the top - not buried three cards down.</li>
+                            <li>SMILES (full and connectivity), InChI, InChIKey, empirical formula, formal charge - one section further. All tap-to-copy.</li>
                             <li>Tooltip on each field explains what it means, so you don't need to alt-tab to a wiki page.</li>
                         </ul>
                     </article>
@@ -1578,7 +1573,7 @@
                     <article class="feature-card info-card">
                         <h3><i class="ph-fill ph-shield-checkered" aria-hidden="true"></i><span>GHS safety data that doesn't need a manual</span></h3>
                         <ul>
-                            <li>Signal word badge (Danger / Warning), GHS pictograms 1–9, and H-codes — all fetched from PubChem directly, no paraphrasing middleware.</li>
+                            <li>Signal word badge (Danger / Warning), GHS pictograms 1–9, and H-codes - all fetched from PubChem directly, no paraphrasing middleware.</li>
                             <li>Useful when you need the hazard summary before you reach the MSDS, not after.</li>
                         </ul>
                     </article>
@@ -1592,10 +1587,10 @@
                     </article>
 
                     <article class="feature-card info-card">
-                        <h3><i class="ph-fill ph-chat-circle-dots" aria-hidden="true"></i><span>Optional AI — not a subscription trap</span></h3>
+                        <h3><i class="ph-fill ph-chat-circle-dots" aria-hidden="true"></i><span>Optional AI - not a subscription trap</span></h3>
                         <div class="feature-card-body">
                             <ul>
-                                <li>Works completely offline from AI — PubChem and Wikipedia descriptions are there by default.</li>
+                                <li>Works completely offline from AI - PubChem and Wikipedia descriptions are there by default.</li>
                                 <li>Add your own Gemini or Groq key in Settings if you want AI-generated summaries with a regenerate button. Your key stays on your device.</li>
                                 <li>No fake "smart" layer bolted over the data. No key farming.</li>
                             </ul>
@@ -1606,8 +1601,6 @@
                     </article>
                 </div>
             </section>
-
-            <!-- ── Tools ── -->
             <section class="section reveal delay-2" id="tools">
                 <p class="section-eyebrow"><i class="ph-fill ph-toolbox" aria-hidden="true"></i> 11 tools built in</p>
                 <h2>The chemistry drawer</h2>
@@ -1634,14 +1627,13 @@
                         <div class="tool-head"><i class="ph-fill ph-bezier-curve" aria-hidden="true"></i><strong>SMILES Visualizer</strong></div>
                         <span>Paste a SMILES string, get the 2D structure and 3D model from PubChem. Useful when you have the notation but not the name.</span>
                     </article>
-                    <!-- extra tools — hidden until "Show more" -->
                     <article class="tool info-card tool-extra">
                         <div class="tool-head"><i class="ph-fill ph-squares-four" aria-hidden="true"></i><strong>Isomer Finder</strong></div>
                         <span>Enter a molecular formula and get up to 20 structural isomers back. Also accessible by tapping the formula on any compound page.</span>
                     </article>
                     <article class="tool info-card tool-extra">
                         <div class="tool-head"><i class="ph-fill ph-funnel" aria-hidden="true"></i><strong>Limiting Reagent</strong></div>
-                        <span>Identifies which reagent runs out first, the molar ratios, and the theoretical yield — for a balanced equation you provide.</span>
+                        <span>Identifies which reagent runs out first, the molar ratios, and the theoretical yield - for a balanced equation you provide.</span>
                     </article>
                     <article class="tool info-card tool-extra">
                         <div class="tool-head"><i class="ph-fill ph-percent" aria-hidden="true"></i><strong>Percent Yield</strong></div>
@@ -1665,8 +1657,6 @@
                     <span id="toolsMoreLabel">Show 6 more tools</span>
                 </button>
             </section>
-
-            <!-- ── Screenshots ── -->
             <section class="section reveal delay-3" id="screenshots">
                 <p class="section-eyebrow"><i class="ph-fill ph-images-square" aria-hidden="true"></i> A quick look around</p>
                 <h2>See it in action</h2>
@@ -1680,15 +1670,15 @@
                         <div class="carousel-viewport" id="screenshotsCarouselTrack" tabindex="0" aria-label="Screenshots carousel. Use left and right arrow keys to navigate.">
                             <figure class="carousel-slide info-card">
                                 <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/home_dark.jpg" data-preview-caption="Search (Dark)" aria-label="Open screenshot preview: Search dark mode">
-                                    <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/home_dark.jpg" alt="Home screen — dark mode">
+                                    <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/home_dark.jpg" alt="Home screen - dark mode">
                                 </button>
-                                <figcaption>Search — Dark</figcaption>
+                                <figcaption>Search - Dark</figcaption>
                             </figure>
                             <figure class="carousel-slide info-card">
                                 <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/home_light.jpg" data-preview-caption="Search (Light)" aria-label="Open screenshot preview: Search light mode">
-                                    <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/home_light.jpg" alt="Home screen — light mode">
+                                    <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/home_light.jpg" alt="Home screen - light mode">
                                 </button>
-                                <figcaption>Search — Light</figcaption>
+                                <figcaption>Search - Light</figcaption>
                             </figure>
                             <figure class="carousel-slide info-card">
                                 <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/3dmolecule.jpg" data-preview-caption="3D Molecule Viewer" aria-label="Open screenshot preview: 3D molecule viewer">
@@ -1737,8 +1727,6 @@
                     </div>
                 </div>
             </section>
-
-            <!-- ── Tech stack ── -->
             <section class="section reveal" id="stack">
                 <p class="section-eyebrow"><i class="ph-fill ph-cpu" aria-hidden="true"></i> Under the hood</p>
                 <h2>How it's built</h2>
@@ -1799,7 +1787,7 @@
                                         <i class="ph-fill ph-sparkle" aria-hidden="true"></i> Gemini API
                                     </a>
                                     <span class="source-note">
-                                        Optional — also supports
+                                        Optional - also supports
                                         <a class="source-link" href="https://console.groq.com/docs/api-reference" target="_blank" rel="noopener noreferrer">
                                             <i class="ph-fill ph-lightning" aria-hidden="true"></i> Groq
                                         </a>
@@ -1833,15 +1821,15 @@
                     <article class="meta-card info-card">
                         <h3><i class="ph-fill ph-lock-key" aria-hidden="true"></i><span>Permissions</span></h3>
                         <ul>
-                            <li><code>INTERNET</code> — compound data and release checks</li>
-                            <li><code>POST_NOTIFICATIONS</code> — optional update alerts</li>
-                            <li><code>WRITE_EXTERNAL_STORAGE</code> — Android 9 and below only</li>
+                            <li><code>INTERNET</code> - compound data and release checks</li>
+                            <li><code>POST_NOTIFICATIONS</code> - optional update alerts</li>
+                            <li><code>WRITE_EXTERNAL_STORAGE</code> - Android 9 and below only</li>
                         </ul>
                     </article>
 
                     <article class="meta-card info-card">
                         <h3><i class="ph-fill ph-shield-check" aria-hidden="true"></i><span>Privacy</span></h3>
-                        <p>No analytics, no telemetry, no creepy extras. Favorites, search history, cache, and API keys live on your device. Data goes directly to PubChem, Wikipedia, Gemini, or Groq — no intermediate servers.</p>
+                        <p>No analytics, no telemetry, no creepy extras. Favorites, search history, cache, and API keys live on your device. Data goes directly to PubChem, Wikipedia, Gemini, or Groq - no intermediate servers.</p>
                     </article>
                 </div>
             </section>
@@ -1855,8 +1843,6 @@
             </footer>
         </main>
     </div>
-
-    <!-- ── Lightbox ── -->
     <div class="lightbox" id="galleryLightbox" hidden>
         <div class="lightbox-shell" role="dialog" aria-modal="true" aria-labelledby="galleryLightboxCaption">
             <button class="lightbox-close" id="galleryLightboxClose" type="button" aria-label="Close screenshot preview">
@@ -1960,7 +1946,6 @@
                 setMobileNavState(false);
             });
 
-            // Reveal on scroll
             const revealEls = Array.from(document.querySelectorAll('.reveal'));
             if ('IntersectionObserver' in window) {
                 const io = new IntersectionObserver((entries) => {
@@ -1976,7 +1961,6 @@
                 revealEls.forEach((el) => el.classList.add('is-visible'));
             }
 
-            // Active section nav
             if (sections.length && sectionLinks.length) {
                 let lastActiveLink = null;
                 const sectionObserver = new IntersectionObserver((entries) => {
@@ -1995,7 +1979,6 @@
                 sections.forEach((s) => sectionObserver.observe(s));
             }
 
-            // Tools show more / collapse
             const toolsMoreBtn = document.getElementById('toolsMoreBtn');
             const toolsMoreLabel = document.getElementById('toolsMoreLabel');
             const extraTools = Array.from(document.querySelectorAll('.tool-extra'));
@@ -2011,7 +1994,6 @@
                 });
             }
 
-            // Gallery lightbox
             function openGalleryLightbox(src, caption) {
                 if (!galleryLightbox || !galleryLightboxImage) return;
                 galleryLightboxImage.src = src;
@@ -2029,7 +2011,6 @@
                 if (galleryReturnFocus) { galleryReturnFocus.focus(); galleryReturnFocus = null; }
             }
 
-            // Focus trap for lightbox
             if (galleryLightbox) {
                 galleryLightbox.addEventListener('keydown', (event) => {
                     if (galleryLightbox.hidden) return;
@@ -2055,7 +2036,6 @@
                 });
             });
 
-            // Carousel
             if (screenshotsCarouselTrack && screenshotSlides.length) {
                 let carouselIndex = 0;
                 let isDragging = false, didDrag = false, dragStartX = 0, dragStartLeft = 0;
@@ -2068,7 +2048,6 @@
 
                 function getSlideStep() {
                     if (screenshotSlides.length < 2) return 0;
-                    // Each slide is 100% of the viewport width; measure actual scroll distance between adjacent slides
                     const rect0 = screenshotSlides[0].getBoundingClientRect();
                     const rect1 = screenshotSlides[1].getBoundingClientRect();
                     const step = rect1.left - rect0.left;
