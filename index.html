@@ -9,7 +9,10 @@
     <link rel="icon" href="favicon.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://api.fontshare.com">
+    <!-- Clash Display from Fontshare (not available on Google Fonts) -->
+    <link href="https://api.fontshare.com/v2/css?f[]=clash-display@600,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
         /* ── Variables ── */
@@ -40,17 +43,18 @@
             --r-lg: 12px;
             --r-md: 8px;
             --r-sm: 5px;
+            --header-h: 72px;
             --max: 1720px;
         }
 
         /* ── Reset ── */
         *, *::before, *::after { box-sizing: border-box; }
-        html, body { margin: 0; padding: 0; }
+        html, body { margin: 0; padding: 0; overflow-x: hidden; }
         html { scroll-behavior: smooth; }
 
         /* ── Base ── */
         body {
-            font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+            font-family: "Inter", system-ui, sans-serif;
             color: var(--ink);
             background-color: var(--bg);
             background-image:
@@ -72,6 +76,27 @@
                 linear-gradient(rgba(90, 120, 180, 0.048) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(90, 120, 180, 0.048) 1px, transparent 1px);
             background-size: 30px 30px;
+        }
+
+        /* ── Focus visible ── */
+        :focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+        .btn:focus-visible,
+        .pill-link:focus-visible,
+        .theme-toggle:focus-visible,
+        .release-chip:focus-visible,
+        .carousel-arrow:focus-visible,
+        .carousel-dot:focus-visible,
+        .section-link:focus-visible,
+        .gallery-card:focus-visible,
+        .lightbox-close:focus-visible,
+        .mobile-menu-toggle:focus-visible,
+        .to-top:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+            border-radius: var(--r-md);
         }
 
         /* ── Accessibility ── */
@@ -145,7 +170,7 @@
         .brand-text { min-width: 0; }
         .brand-title {
             display: block;
-            font-family: "Syne", sans-serif;
+            font-family: "Clash Display", sans-serif;
             font-size: 1.05rem;
             font-weight: 700;
             letter-spacing: -0.015em;
@@ -168,8 +193,7 @@
             align-items: center;
         }
 
-        .pill-link, .theme-toggle, .release-chip {
-            appearance: none;
+        .pill-link, .release-chip {
             text-decoration: none;
             color: var(--ink);
             border: 1px solid var(--line-strong);
@@ -186,6 +210,25 @@
             transition: background 0.15s, border-color 0.15s, color 0.15s;
             cursor: pointer;
             backdrop-filter: blur(12px);
+        }
+        .theme-toggle {
+            text-decoration: none;
+            color: var(--ink);
+            border: 1px solid var(--line-strong);
+            background: var(--surface-float);
+            border-radius: var(--r-sm);
+            padding: 8px 12px;
+            font: inherit;
+            font-size: 0.82rem;
+            font-weight: 600;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            transition: background 0.15s, border-color 0.15s, color 0.15s;
+            cursor: pointer;
+            backdrop-filter: blur(12px);
+            appearance: none;
         }
         .pill-link:hover, .theme-toggle:hover, .release-chip:hover {
             background: var(--surface);
@@ -212,7 +255,7 @@
         /* ── Utility bar ── */
         .utility-bar {
             position: sticky;
-            top: 84px;
+            top: calc(var(--header-h) + 16px);
             z-index: 30;
             margin-top: 8px;
             padding: 9px 12px;
@@ -308,7 +351,7 @@
             align-items: center;
             gap: 9px;
             margin: 0 0 18px;
-            font-family: "JetBrains Mono", monospace;
+            font-family: "Fira Code", monospace;
             font-size: 0.75rem;
             font-weight: 500;
             color: var(--accent-text);
@@ -325,9 +368,9 @@
 
         h1 {
             margin: 0;
-            font-family: "Syne", sans-serif;
+            font-family: "Clash Display", sans-serif;
             font-size: clamp(2.4rem, 4.8vw, 4.6rem);
-            font-weight: 800;
+            font-weight: 700;
             line-height: 0.95;
             letter-spacing: -0.045em;
             max-width: 14ch;
@@ -463,9 +506,9 @@
         .fact strong {
             display: block;
             margin-top: 10px;
-            font-family: "Syne", sans-serif;
+            font-family: "Clash Display", sans-serif;
             font-size: 1.65rem;
-            font-weight: 800;
+            font-weight: 700;
             line-height: 1;
             letter-spacing: -0.04em;
             color: var(--ink);
@@ -493,7 +536,7 @@
         }
         .hero-support h2 {
             margin: 0;
-            font-family: "Syne", sans-serif;
+            font-family: "Clash Display", sans-serif;
             font-size: 1.35rem;
             font-weight: 700;
             line-height: 1.05;
@@ -565,7 +608,7 @@
             align-items: center;
             gap: 8px;
             margin: 0 0 12px;
-            font-family: "JetBrains Mono", monospace;
+            font-family: "Fira Code", monospace;
             font-size: 0.72rem;
             font-weight: 500;
             color: var(--accent-text);
@@ -576,9 +619,9 @@
 
         .section h2 {
             margin: 0;
-            font-family: "Syne", sans-serif;
+            font-family: "Clash Display", sans-serif;
             font-size: clamp(1.5rem, 2.6vw, 2.3rem);
-            font-weight: 800;
+            font-weight: 700;
             line-height: 1;
             letter-spacing: -0.04em;
             color: var(--ink);
@@ -636,7 +679,7 @@
             display: flex;
             align-items: center;
             gap: 9px;
-            font-family: "Syne", sans-serif;
+            font-family: "Clash Display", sans-serif;
             font-size: 1rem;
             font-weight: 700;
             letter-spacing: -0.02em;
@@ -677,64 +720,39 @@
             font-size: 0.76rem;
             font-weight: 700;
             color: var(--accent-text);
-            font-family: "JetBrains Mono", monospace;
+            font-family: "Fira Code", monospace;
             margin-top: 10px;
             letter-spacing: 0.03em;
         }
 
         /* ── Tools section ── */
-        .tools-controls {
-            margin-top: 16px;
+        .tool.tool-extra { display: none; }
+        .tool.tool-extra.is-visible { display: block; }
+
+        .tools-more-btn {
+            margin-top: 14px;
             display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
             align-items: center;
-        }
-        .tools-controls input,
-        .tools-controls button {
-            font: inherit;
-            font-size: 0.88rem;
+            gap: 8px;
+            padding: 10px 16px;
             border: 1px solid var(--line-strong);
             border-radius: var(--r-md);
             background: var(--surface-float);
-            color: var(--ink);
-            backdrop-filter: blur(10px);
-            transition: background 0.15s, border-color 0.15s;
-        }
-        .tools-controls input {
-            flex: 1;
-            min-width: 240px;
-            padding: 10px 13px;
-        }
-        .tools-controls input:focus {
-            outline: 2px solid var(--accent);
-            outline-offset: 1px;
-        }
-        .tools-controls button {
-            padding: 10px 14px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-        .tools-controls button:hover {
-            background: var(--surface);
-            border-color: var(--line-strong);
-        }
-
-        .tools-hint {
-            margin: 9px 1px 0;
-            color: var(--muted-2);
-            font-size: 0.78rem;
-            line-height: 1.5;
-        }
-
-        .tool.is-hidden { display: none; }
-        .tools-empty {
-            display: none;
-            margin-top: 12px;
             color: var(--muted);
-            font-size: 0.9rem;
+            font: inherit;
+            font-size: 0.86rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s, color 0.15s;
+            backdrop-filter: blur(10px);
         }
-        .tools-empty.is-visible { display: block; }
+        .tools-more-btn:hover {
+            background: var(--surface);
+            border-color: var(--accent);
+            color: var(--accent-text);
+        }
+        .tools-more-btn i { font-size: 1rem; transition: transform 0.2s; }
+        .tools-more-btn.is-open i { transform: rotate(180deg); }
 
         .tools-grid {
             margin-top: 18px;
@@ -776,7 +794,7 @@
         }
         .tool strong {
             display: block;
-            font-family: "Syne", sans-serif;
+            font-family: "Clash Display", sans-serif;
             font-size: 0.9rem;
             font-weight: 700;
             letter-spacing: -0.015em;
@@ -795,16 +813,15 @@
 
         .carousel-wrap {
             position: relative;
-            padding: 0 44px;
         }
         .carousel-viewport {
             display: flex;
             gap: 12px;
             overflow-x: auto;
             scroll-snap-type: x mandatory;
-            scroll-behavior: smooth;
+            /* No scroll-behavior here — JS controls it explicitly to avoid double-smooth conflicts */
             -webkit-overflow-scrolling: touch;
-            padding: 3px 0 10px;
+            padding: 4px 0 12px;
             scrollbar-width: none;
             touch-action: pan-x;
             cursor: grab;
@@ -814,27 +831,12 @@
         .carousel-viewport[data-dragged="1"] { cursor: grabbing; }
 
         .carousel-slide {
-            flex-shrink: 0;
-            flex-basis: min(340px, 72vw);
+            flex: 0 0 clamp(200px, 26vw, 280px);
             border-radius: var(--r-lg);
             overflow: hidden;
             border: 1px solid var(--line-strong);
             background: var(--surface-2);
             scroll-snap-align: start;
-        }
-        .carousel-slide img {
-            width: 100%; height: auto;
-            display: block;
-            pointer-events: none;
-        }
-        .carousel-slide figcaption {
-            padding: 9px 14px;
-            font-size: 0.78rem;
-            font-weight: 600;
-            color: var(--muted);
-            border-top: 1px solid var(--line);
-            font-family: "JetBrains Mono", monospace;
-            letter-spacing: 0.02em;
         }
         .gallery-card {
             display: block;
@@ -843,12 +845,32 @@
             background: transparent;
             cursor: zoom-in;
             width: 100%;
+            aspect-ratio: 9 / 19;
+            overflow: hidden;
+        }
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            pointer-events: none;
+            object-fit: cover;
+        }
+        .carousel-slide figcaption {
+            padding: 9px 14px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--muted);
+            border-top: 1px solid var(--line);
+            font-family: "Fira Code", monospace;
+            letter-spacing: 0.02em;
         }
 
         .carousel-arrow {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
+            /* Offset by half the figcaption height (~19px) so arrow centres on the image, not the whole card */
+            margin-top: -16px;
             width: 36px; height: 36px;
             display: grid; place-items: center;
             border: 1px solid var(--line-strong);
@@ -858,6 +880,7 @@
             cursor: pointer;
             backdrop-filter: blur(12px);
             transition: background 0.15s, border-color 0.15s;
+            z-index: 2;
         }
         .carousel-arrow:hover:not(:disabled) {
             background: var(--surface-2);
@@ -865,8 +888,8 @@
             color: var(--accent-text);
         }
         .carousel-arrow:disabled { opacity: 0.35; cursor: not-allowed; }
-        .carousel-arrow.prev { left: 0; }
-        .carousel-arrow.next { right: 0; }
+        .carousel-arrow.prev { left: 8px; }
+        .carousel-arrow.next { right: 8px; }
         .carousel-arrow i { font-size: 1rem; }
 
         .carousel-meta {
@@ -894,7 +917,7 @@
             font-size: 0.76rem;
             font-weight: 600;
             color: var(--muted-2);
-            font-family: "JetBrains Mono", monospace;
+            font-family: "Fira Code", monospace;
             margin: 0;
         }
 
@@ -924,7 +947,7 @@
             text-align: left;
             padding: 11px 16px;
             background: var(--surface-deep);
-            font-family: "Syne", sans-serif;
+            font-family: "Clash Display", sans-serif;
             font-size: 0.8rem;
             font-weight: 700;
             letter-spacing: 0.01em;
@@ -967,14 +990,14 @@
         }
 
         .meta-card {
-            padding: 18px 18px;
+            padding: 18px;
         }
         .meta-card h3 {
             margin: 0;
             display: flex;
             align-items: center;
             gap: 9px;
-            font-family: "Syne", sans-serif;
+            font-family: "Clash Display", sans-serif;
             font-size: 0.95rem;
             font-weight: 700;
             color: var(--ink);
@@ -1006,7 +1029,7 @@
         }
 
         code {
-            font-family: "JetBrains Mono", monospace;
+            font-family: "Fira Code", monospace;
             font-size: 0.82em;
             background: var(--surface-deep);
             border: 1px solid var(--line-strong);
@@ -1088,8 +1111,16 @@
             font-size: 0.8rem;
             font-weight: 500;
             color: rgba(180, 200, 240, 0.8);
-            font-family: "JetBrains Mono", monospace;
+            font-family: "Fira Code", monospace;
             letter-spacing: 0.03em;
+        }
+
+        @keyframes pulse-opacity {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.45; }
+        }
+        .release-chip[aria-busy="true"] {
+            animation: pulse-opacity 1.4s ease-in-out infinite;
         }
 
         /* ── To-top button ── */
@@ -1191,6 +1222,7 @@
                 grid-column: 1;
                 grid-row: auto;
                 margin-top: 22px;
+                grid-template-columns: repeat(2, 1fr);
             }
             .hero-support,
             .table-wrap,
@@ -1204,7 +1236,11 @@
             .feature-card:nth-child(1), .feature-card:nth-child(2),
             .feature-card:nth-child(3), .feature-card:nth-child(4),
             .feature-card:nth-child(5) { grid-column: span 6; }
-            .feature-card:nth-child(6) { grid-template-columns: 1fr; }
+            .feature-card:nth-child(6) {
+                grid-template-columns: 1fr;
+                display: block;
+            }
+            .feature-card:nth-child(6) ul { margin: 11px 0 0; }
             .tool,
             .tool:nth-child(1), .tool:nth-child(2),
             .tool:nth-child(5), .tool:nth-child(6),
@@ -1218,7 +1254,7 @@
 
         /* ── Responsive: 760px ── */
         @media (max-width: 760px) {
-            .wrap { width: calc(100vw - 14px); }
+            .wrap { width: calc(100vw - 32px); margin-bottom: 40px; }
             main { padding-top: 12px; }
 
             .site-header, .utility-bar, .hero-main, .section { position: static; }
@@ -1320,9 +1356,9 @@
             h1 { font-size: clamp(2rem, 9.5vw, 3rem); }
             .fact strong { font-size: 1.4rem; }
 
-            .carousel-wrap { padding: 0 36px; }
-            .carousel-slide { flex-basis: min(100%, 80vw); }
-            .carousel-arrow { width: 30px; height: 30px; }
+            .carousel-arrow { width: 32px; height: 32px; }
+            .carousel-arrow.prev { left: 4px; }
+            .carousel-arrow.next { right: 4px; }
 
             .cta-row { display: grid; gap: 8px; grid-template-columns: 1fr; }
             .btn { width: 100%; min-height: 44px; font-size: 0.92rem; }
@@ -1341,8 +1377,44 @@
             .panel-note { font-size: 0.83rem; }
             .panel-note i { width: 26px; height: 26px; }
 
+            /* Hero lead: prevent text from overflowing on narrow screens */
+            .hero-lead { max-width: 100%; word-break: break-word; }
+
+            /* Tables: allow horizontal scroll instead of breaking layout */
+            .info-card table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
             .section h2 { font-size: clamp(1.35rem, 7vw, 1.9rem); }
             .section-intro { font-size: 0.9rem; }
+        }
+        /* ── Responsive: 480px (small phones) ── */
+        @media (max-width: 480px) {
+            .wrap { width: calc(100vw - 24px); }
+            .section, .hero-main { padding: 14px 12px; }
+
+            /* Hero facts: single column on tiny screens */
+            .hero-facts { grid-template-columns: 1fr; }
+            .fact, .fact:nth-child(1), .fact:nth-child(4) { grid-column: span 1; }
+
+            /* Section nav: single column */
+            .section-nav { grid-template-columns: 1fr; }
+            .utility-bar .header-links { grid-template-columns: 1fr; }
+            .utility-bar .release-chip { grid-column: span 1; }
+
+            /* Buttons: always full width */
+            .btn { font-size: 0.88rem; padding: 10px 14px; }
+
+            /* Feature cards: simpler padding */
+            .feature-card { padding: 14px; }
+
+            /* Tool cards */
+            .tool { padding: 12px 11px 10px; }
+
+            /* Carousel arrows: smaller, tighter */
+            .carousel-arrow { width: 28px; height: 28px; }
+            .carousel-arrow i { font-size: 0.85rem; }
+
+            h1 { font-size: clamp(1.8rem, 10vw, 2.5rem); }
+            .fact strong { font-size: 1.25rem; }
         }
     </style>
 </head>
@@ -1541,14 +1613,6 @@
                 <h2>The chemistry drawer</h2>
                 <p class="section-intro">The calculations you'd usually hunt down a separate app (or a pencil) for. Most of the standard classroom and lab math is already here, in the Tools tab.</p>
 
-                <div class="tools-controls">
-                    <input type="search" id="toolSearch" placeholder="Find a tool by name or what you need to do…" aria-label="Filter tools" autocomplete="off" autocapitalize="none" spellcheck="false">
-                    <button type="button" id="clearToolSearch">Clear</button>
-                </div>
-                <p class="tools-hint">Tip: press <code>/</code> or <code>Ctrl/Cmd + K</code> to jump to this filter.</p>
-
-                <p class="tools-empty" id="toolsEmpty">No tools matched that filter.</p>
-
                 <div class="tools-grid" id="toolsGrid">
                     <article class="tool info-card">
                         <div class="tool-head"><i class="ph-fill ph-cube" aria-hidden="true"></i><strong>Custom 3D Molecule Viewer</strong></div>
@@ -1559,6 +1623,10 @@
                         <span>Handles parentheses, hydrate dot notation, and the formulas people write when focus has well and truly left the building.</span>
                     </article>
                     <article class="tool info-card">
+                        <div class="tool-head"><i class="ph-fill ph-equals" aria-hidden="true"></i><strong>Reaction Balancer</strong></div>
+                        <span>Gaussian elimination with exact rational arithmetic. Quick-insert buttons for common symbols; swap-sides control included.</span>
+                    </article>
+                    <article class="tool info-card">
                         <div class="tool-head"><i class="ph-fill ph-lightning" aria-hidden="true"></i><strong>Oxidation State Finder</strong></div>
                         <span>Covers peroxides, superoxides, ozonides, metal hydrides, and interhalogen compounds. Accepts overall charge for polyatomic ions.</span>
                     </article>
@@ -1566,35 +1634,36 @@
                         <div class="tool-head"><i class="ph-fill ph-bezier-curve" aria-hidden="true"></i><strong>SMILES Visualizer</strong></div>
                         <span>Paste a SMILES string, get the 2D structure and 3D model from PubChem. Useful when you have the notation but not the name.</span>
                     </article>
-                    <article class="tool info-card">
-                        <div class="tool-head"><i class="ph-fill ph-equals" aria-hidden="true"></i><strong>Reaction Balancer</strong></div>
-                        <span>Gaussian elimination with exact rational arithmetic. Quick-insert buttons for common symbols; swap-sides control included.</span>
-                    </article>
-                    <article class="tool info-card">
+                    <!-- extra tools — hidden until "Show more" -->
+                    <article class="tool info-card tool-extra">
                         <div class="tool-head"><i class="ph-fill ph-squares-four" aria-hidden="true"></i><strong>Isomer Finder</strong></div>
                         <span>Enter a molecular formula and get up to 20 structural isomers back. Also accessible by tapping the formula on any compound page.</span>
                     </article>
-                    <article class="tool info-card">
+                    <article class="tool info-card tool-extra">
                         <div class="tool-head"><i class="ph-fill ph-funnel" aria-hidden="true"></i><strong>Limiting Reagent</strong></div>
                         <span>Identifies which reagent runs out first, the molar ratios, and the theoretical yield — for a balanced equation you provide.</span>
                     </article>
-                    <article class="tool info-card">
+                    <article class="tool info-card tool-extra">
                         <div class="tool-head"><i class="ph-fill ph-percent" aria-hidden="true"></i><strong>Percent Yield</strong></div>
                         <span>Quick reality check between theoretical and actual yield. For when the bench disagrees with the calculation.</span>
                     </article>
-                    <article class="tool info-card">
+                    <article class="tool info-card tool-extra">
                         <div class="tool-head"><i class="ph-fill ph-arrows-out-cardinal" aria-hidden="true"></i><strong>Reaction Scaling</strong></div>
                         <span>Scale reactant amounts for a target product quantity, without rewriting every number by hand.</span>
                     </article>
-                    <article class="tool info-card">
+                    <article class="tool info-card tool-extra">
                         <div class="tool-head"><i class="ph-fill ph-drop" aria-hidden="true"></i><strong>Dilution Calculator</strong></div>
                         <span>C₁V₁ = C₂V₂, solved for any variable. For when the formula evaporates the moment you need it most.</span>
                     </article>
-                    <article class="tool info-card">
+                    <article class="tool info-card tool-extra">
                         <div class="tool-head"><i class="ph-fill ph-wind" aria-hidden="true"></i><strong>Ideal Gas Law</strong></div>
                         <span>PV = nRT, solves for any one unknown. Covers the standard unit conversions so you don't have to.</span>
                     </article>
                 </div>
+                <button class="tools-more-btn" id="toolsMoreBtn" type="button" aria-expanded="false">
+                    <i class="ph-bold ph-caret-down" aria-hidden="true"></i>
+                    <span id="toolsMoreLabel">Show 6 more tools</span>
+                </button>
             </section>
 
             <!-- ── Screenshots ── -->
@@ -1876,6 +1945,10 @@
                 });
             }
 
+            mobileBreakpoint.addEventListener('change', (e) => {
+                if (!e.matches) setMobileNavState(false);
+            });
+
             const mobileCloseTriggers = Array.from(document.querySelectorAll('.section-link, .mobile-action-row .pill-link'));
             mobileCloseTriggers.forEach((link) => link.addEventListener('click', closeMobileNavIfNeeded));
 
@@ -1905,48 +1978,36 @@
 
             // Active section nav
             if (sections.length && sectionLinks.length) {
+                let lastActiveLink = null;
                 const sectionObserver = new IntersectionObserver((entries) => {
                     entries.forEach((entry) => {
+                        if (!entry.isIntersecting) return;
                         const id = entry.target.id;
                         const link = sectionLinks.find((l) => l.getAttribute('href') === '#' + id);
-                        if (link) link.classList.toggle('is-active', entry.isIntersecting);
+                        if (!link) return;
+                        if (lastActiveLink && lastActiveLink !== link) {
+                            lastActiveLink.classList.remove('is-active');
+                        }
+                        link.classList.add('is-active');
+                        lastActiveLink = link;
                     });
-                }, { threshold: 0.22 });
+                }, { threshold: 0.3, rootMargin: '0px 0px -40% 0px' });
                 sections.forEach((s) => sectionObserver.observe(s));
             }
 
-            // Tool search filter
-            const toolSearch = document.getElementById('toolSearch');
-            const clearToolSearch = document.getElementById('clearToolSearch');
-            const toolsEmpty = document.getElementById('toolsEmpty');
-            const toolEls = Array.from(document.querySelectorAll('#toolsGrid .tool'));
+            // Tools show more / collapse
+            const toolsMoreBtn = document.getElementById('toolsMoreBtn');
+            const toolsMoreLabel = document.getElementById('toolsMoreLabel');
+            const extraTools = Array.from(document.querySelectorAll('.tool-extra'));
 
-            function isTextEntryTarget(el) {
-                if (!el) return false;
-                const tag = el.tagName.toLowerCase();
-                return tag === 'input' || tag === 'textarea' || tag === 'select' || el.isContentEditable;
-            }
-
-            function filterTools() {
-                const q = toolSearch ? toolSearch.value.trim().toLowerCase() : '';
-                let visible = 0;
-                toolEls.forEach((tool) => {
-                    const text = tool.textContent.toLowerCase();
-                    const match = !q || text.includes(q);
-                    tool.classList.toggle('is-hidden', !match);
-                    if (match) visible++;
-                });
-                if (toolsEmpty) toolsEmpty.classList.toggle('is-visible', visible === 0 && !!q);
-            }
-
-            if (toolSearch) {
-                toolSearch.addEventListener('input', filterTools);
-                toolSearch.addEventListener('search', filterTools);
-            }
-            if (clearToolSearch) {
-                clearToolSearch.addEventListener('click', () => {
-                    if (toolSearch) { toolSearch.value = ''; toolSearch.focus(); }
-                    filterTools();
+            if (toolsMoreBtn) {
+                toolsMoreBtn.addEventListener('click', () => {
+                    const isOpen = toolsMoreBtn.classList.toggle('is-open');
+                    toolsMoreBtn.setAttribute('aria-expanded', String(isOpen));
+                    extraTools.forEach((t) => t.classList.toggle('is-visible', isOpen));
+                    if (toolsMoreLabel) {
+                        toolsMoreLabel.textContent = isOpen ? 'Show fewer tools' : 'Show 6 more tools';
+                    }
                 });
             }
 
@@ -1957,7 +2018,6 @@
                 galleryLightboxImage.alt = caption || '';
                 if (galleryLightboxCaption) galleryLightboxCaption.textContent = caption || '';
                 galleryLightbox.hidden = false;
-                galleryLightbox.removeAttribute('hidden');
                 document.body.style.overflow = 'hidden';
                 if (galleryLightboxClose) galleryLightboxClose.focus();
             }
@@ -1967,6 +2027,25 @@
                 galleryLightbox.hidden = true;
                 document.body.style.overflow = '';
                 if (galleryReturnFocus) { galleryReturnFocus.focus(); galleryReturnFocus = null; }
+            }
+
+            // Focus trap for lightbox
+            if (galleryLightbox) {
+                galleryLightbox.addEventListener('keydown', (event) => {
+                    if (galleryLightbox.hidden) return;
+                    if (event.key !== 'Tab') return;
+                    const focusable = Array.from(galleryLightbox.querySelectorAll(
+                        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+                    )).filter((el) => !el.hasAttribute('disabled') && el.offsetParent !== null);
+                    if (focusable.length === 0) { event.preventDefault(); return; }
+                    const first = focusable[0];
+                    const last = focusable[focusable.length - 1];
+                    if (event.shiftKey) {
+                        if (document.activeElement === first) { event.preventDefault(); last.focus(); }
+                    } else {
+                        if (document.activeElement === last) { event.preventDefault(); first.focus(); }
+                    }
+                });
             }
 
             galleryCards.forEach((card) => {
@@ -1981,9 +2060,20 @@
                 let carouselIndex = 0;
                 let isDragging = false, didDrag = false, dragStartX = 0, dragStartLeft = 0;
                 let isTicking = false;
+                let isSnapping = false;
+                let resizeTimeout = null;
                 const dotButtons = [];
 
                 function clampIndex(i) { return Math.max(0, Math.min(screenshotSlides.length - 1, i)); }
+
+                function getSlideStep() {
+                    if (screenshotSlides.length < 2) return 0;
+                    // Each slide is 100% of the viewport width; measure actual scroll distance between adjacent slides
+                    const rect0 = screenshotSlides[0].getBoundingClientRect();
+                    const rect1 = screenshotSlides[1].getBoundingClientRect();
+                    const step = rect1.left - rect0.left;
+                    return step > 0 ? step : screenshotsCarouselTrack.scrollWidth / screenshotSlides.length;
+                }
 
                 function setCarouselState(nextIndex, scroll) {
                     carouselIndex = clampIndex(nextIndex);
@@ -1998,15 +2088,12 @@
                     if (screenshotsNext) screenshotsNext.disabled = carouselIndex === screenshotSlides.length - 1;
                     if (scroll) {
                         const step = getSlideStep();
-                        if (step > 0) screenshotsCarouselTrack.scrollTo({ left: step * carouselIndex, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+                        if (step > 0) {
+                            isSnapping = true;
+                            screenshotsCarouselTrack.scrollTo({ left: step * carouselIndex, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+                            setTimeout(() => { isSnapping = false; }, 500);
+                        }
                     }
-                }
-
-                function getSlideStep() {
-                    if (screenshotSlides.length < 2) return 0;
-                    const first = screenshotSlides[0].getBoundingClientRect();
-                    const second = screenshotSlides[1].getBoundingClientRect();
-                    return second.left - first.left;
                 }
 
                 screenshotSlides.forEach((slide, index) => {
@@ -2025,10 +2112,20 @@
                 });
 
                 function syncIndexFromScroll() {
+                    if (isSnapping || isDragging) return;
                     const step = getSlideStep();
                     if (step <= 0) return;
                     const nextIndex = clampIndex(Math.round(screenshotsCarouselTrack.scrollLeft / step));
-                    setCarouselState(nextIndex, false);
+                    if (nextIndex !== carouselIndex) {
+                        setCarouselState(nextIndex, false);
+                    }
+                }
+
+                function snapToNearestSlide() {
+                    const step = getSlideStep();
+                    if (step <= 0) return;
+                    const nearestIndex = clampIndex(Math.round(screenshotsCarouselTrack.scrollLeft / step));
+                    setCarouselState(nearestIndex, true);
                 }
 
                 screenshotsCarouselTrack.addEventListener('scroll', () => {
@@ -2045,21 +2142,26 @@
                 });
 
                 screenshotsCarouselTrack.addEventListener('wheel', (event) => {
-                    if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+                    if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
                     event.preventDefault();
-                    screenshotsCarouselTrack.scrollLeft += event.deltaY;
+                    screenshotsCarouselTrack.scrollLeft += event.deltaY * 0.8;
                 }, { passive: false });
 
                 screenshotsCarouselTrack.addEventListener('pointerdown', (event) => {
                     if (event.pointerType === 'mouse' && event.button !== 0) return;
-                    isDragging = true; didDrag = false;
-                    dragStartX = event.clientX; dragStartLeft = screenshotsCarouselTrack.scrollLeft;
+                    isDragging = true;
+                    didDrag = false;
+                    dragStartX = event.clientX;
+                    dragStartLeft = screenshotsCarouselTrack.scrollLeft;
                     screenshotsCarouselTrack.setPointerCapture(event.pointerId);
                 });
+
                 screenshotsCarouselTrack.addEventListener('pointermove', (event) => {
                     if (!isDragging) return;
                     const deltaX = event.clientX - dragStartX;
-                    if (Math.abs(deltaX) > 6) didDrag = true;
+                    if (Math.abs(deltaX) > 8) {
+                        didDrag = true;
+                    }
                     screenshotsCarouselTrack.scrollLeft = dragStartLeft - deltaX;
                 });
 
@@ -2069,18 +2171,23 @@
                     if (didDrag) {
                         screenshotsCarouselTrack.dataset.dragged = '1';
                         requestAnimationFrame(() => { screenshotsCarouselTrack.dataset.dragged = '0'; });
+                        snapToNearestSlide();
                     }
-                    if (event && screenshotsCarouselTrack.hasPointerCapture(event.pointerId)) {
+                    if (event && event.pointerId !== undefined && screenshotsCarouselTrack.hasPointerCapture(event.pointerId)) {
                         screenshotsCarouselTrack.releasePointerCapture(event.pointerId);
                     }
                 }
                 screenshotsCarouselTrack.addEventListener('pointerup', stopDrag);
                 screenshotsCarouselTrack.addEventListener('pointercancel', stopDrag);
-                screenshotsCarouselTrack.addEventListener('pointerleave', stopDrag);
 
                 if (screenshotsPrev) screenshotsPrev.addEventListener('click', () => setCarouselState(carouselIndex - 1, true));
                 if (screenshotsNext) screenshotsNext.addEventListener('click', () => setCarouselState(carouselIndex + 1, true));
-                window.addEventListener('resize', () => setCarouselState(carouselIndex, true));
+                
+                window.addEventListener('resize', () => {
+                    clearTimeout(resizeTimeout);
+                    resizeTimeout = setTimeout(() => setCarouselState(carouselIndex, true), 150);
+                });
+                
                 setCarouselState(0, false);
             }
 
@@ -2093,15 +2200,8 @@
 
             document.addEventListener('keydown', (event) => {
                 const key = event.key.toLowerCase();
-                const targetIsTextEntry = isTextEntryTarget(event.target);
-                if ((event.key === '/' || ((event.metaKey || event.ctrlKey) && key === 'k')) && toolSearch && !targetIsTextEntry) {
-                    event.preventDefault(); toolSearch.focus(); toolSearch.select(); return;
-                }
                 if (event.key === 'Escape' && galleryLightbox && !galleryLightbox.hidden) {
                     closeGalleryLightbox(); return;
-                }
-                if (event.key === 'Escape' && toolSearch && document.activeElement === toolSearch && toolSearch.value.trim().length > 0) {
-                    toolSearch.value = ''; filterTools(); return;
                 }
                 if (event.key === 'Escape' && body.classList.contains('mobile-nav-open')) {
                     setMobileNavState(false);
