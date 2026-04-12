@@ -7,10 +7,9 @@ Landing page for the [**ChemSearch Android app**](https://github.com/FurtherSecr
 
 ```text
 chemsearch/
-├── index.html          # Main landing page (all styles + JS in one file)
-├── chemsearch-logo.png # Brand logo used in header
-├── favicon.png         # Browser icon
-├── screenshots/        # App screenshots used in gallery/carousel
+├── index.html
+├── chemsearch-logo.png
+├── favicon.png
 ├── LICENSE
 └── README.md
 ```
