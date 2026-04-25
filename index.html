@@ -1,1929 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ChemSearch - Chemistry Simplified</title>
-    <meta name="description" content="ChemSearch: search any compound by name, CAS or CID. Get 3D structure models, GHS safety data, elemental analysis and 11 chemistry tools. Native Kotlin app for Android.">
+    <meta name="description" content="ChemSearch is a native Android app for compound search, structure viewing, GHS safety data, elemental analysis, and built-in chemistry tools.">
     <link rel="icon" href="favicon.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://api.fontshare.com">
     <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@500,700,800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <style>
-        :root {
-            --font-ui: "Manrope", system-ui, sans-serif;
-            --font-display: "Cabinet Grotesk", "Manrope", system-ui, sans-serif;
-            --font-mono: "IBM Plex Mono", monospace;
-            --brand-1: #0D7BE0;
-            --brand-2: #0064DA;
-            --bg: #eef6ff;
-            --surface: rgba(255, 255, 255, 0.72);
-            --surface-2: rgba(250, 252, 255, 0.9);
-            --surface-float: rgba(255, 255, 255, 0.62);
-            --surface-deep: rgba(234, 244, 255, 0.88);
-            --ink: #0c1c36;
-            --ink-2: #16335e;
-            --muted: #547198;
-            --muted-2: #7d94b7;
-            --line: rgba(13, 123, 224, 0.14);
-            --line-strong: rgba(13, 123, 224, 0.24);
-            --accent: var(--brand-1);
-            --accent-strong: var(--brand-2);
-            --accent-gradient: linear-gradient(135deg, var(--brand-1) 0%, var(--brand-2) 100%);
-            --accent-dim: rgba(13, 123, 224, 0.12);
-            --accent-glow: rgba(13, 123, 224, 0.22);
-            --accent-hi: #2f96f6;
-            --accent-text: #0a6fd0;
-            --shadow: 0 28px 70px rgba(4, 50, 118, 0.12);
-            --shadow-sm: 0 16px 38px rgba(8, 54, 122, 0.1);
-            --glass-edge: inset 0 1px 0 rgba(255, 255, 255, 0.36);
-            --blur: 22px;
-            --r-xl: 28px;
-            --r-lg: 20px;
-            --r-md: 14px;
-            --r-sm: 10px;
-            --header-h: 74px;
-            --max: 1440px;
-        }
-
-        *, *::before, *::after { box-sizing: border-box; }
-        html, body { margin: 0; padding: 0; overflow-x: hidden; }
-        html {
-            scroll-behavior: smooth;
-            scroll-padding-top: calc(var(--header-h) + 28px);
-            -webkit-text-size-adjust: 100%;
-        }
-
-        body {
-            font-family: var(--font-ui);
-            font-size: 16px;
-            color: var(--ink);
-            background-color: var(--bg);
-            background-image:
-                radial-gradient(circle at 12% -10%, rgba(13, 123, 224, 0.18) 0%, transparent 34%),
-                radial-gradient(circle at 92% 8%, rgba(0, 100, 218, 0.14) 0%, transparent 28%),
-                linear-gradient(180deg, #f8fbff 0%, #f1f7ff 32%, var(--bg) 100%);
-            line-height: 1.65;
-            min-height: 100vh;
-            -webkit-font-smoothing: antialiased;
-            text-rendering: optimizeLegibility;
-            font-feature-settings: "liga" 1, "calt" 1;
-            -webkit-tap-highlight-color: rgba(13, 123, 224, 0.16);
-        }
-
-        h1,
-        .brand-title,
-        .hero-signal strong,
-        .hero-support h2,
-        .section h2,
-        .feature-card h3,
-        .tool strong,
-        .meta-card h3 {
-            text-wrap: balance;
-        }
-
-        .hero-lead,
-        .section-intro,
-        .hero-support p,
-        .hero-signal p,
-        .feature-card p,
-        .tool span,
-        .panel-note,
-        td,
-        .source-note,
-        .meta-card p {
-            text-wrap: pretty;
-        }
-
-        body::before,
-        body::after {
-            content: "";
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        body::before {
-            background-image:
-                linear-gradient(rgba(13, 123, 224, 0.045) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(13, 123, 224, 0.045) 1px, transparent 1px);
-            background-size: 38px 38px;
-            mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.85), transparent 82%);
-        }
-
-        body::after {
-            inset: auto -10vw -28vh auto;
-            width: 48vw;
-            height: 48vw;
-            border-radius: 50%;
-            background:
-                radial-gradient(circle at 30% 30%, rgba(13, 123, 224, 0.2), transparent 56%),
-                radial-gradient(circle at 65% 55%, rgba(0, 100, 218, 0.15), transparent 62%);
-            filter: blur(34px);
-            opacity: 0.8;
-        }
-
-        :focus-visible {
-            outline: 2px solid var(--accent);
-            outline-offset: 3px;
-        }
-
-        .btn:focus-visible,
-        .pill-link:focus-visible,
-        .theme-toggle:focus-visible,
-        .release-chip:focus-visible,
-        .carousel-arrow:focus-visible,
-        .carousel-dot:focus-visible,
-        .section-link:focus-visible,
-        .gallery-card:focus-visible,
-        .lightbox-close:focus-visible,
-        .mobile-menu-toggle:focus-visible,
-        .to-top:focus-visible,
-        .tools-more-btn:focus-visible {
-            outline: 2px solid var(--accent);
-            outline-offset: 2px;
-            border-radius: var(--r-md);
-        }
-
-        .skip-link {
-            position: absolute;
-            left: 14px;
-            top: -64px;
-            z-index: 200;
-            background: var(--accent-gradient);
-            color: #f7fbff;
-            border-radius: var(--r-md);
-            padding: 10px 15px;
-            font-size: 0.84rem;
-            font-weight: 700;
-            text-decoration: none;
-            box-shadow: var(--shadow-sm);
-            transition: top 0.2s ease;
-        }
-        .skip-link:focus { top: 12px; }
-
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border: 0;
-        }
-
-        .wrap {
-            width: min(var(--max), calc(100vw - clamp(24px, 4vw, 72px)));
-            margin: 0 auto 64px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .site-header,
-        .utility-bar,
-        .hero-main,
-        .section {
-            box-shadow: var(--glass-edge), var(--shadow);
-            backdrop-filter: blur(var(--blur));
-            -webkit-backdrop-filter: blur(var(--blur));
-        }
-
-        .site-header {
-            position: sticky;
-            top: 16px;
-            z-index: 40;
-            margin-top: 18px;
-            padding: 14px 18px;
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.76), rgba(241, 247, 255, 0.62));
-            border: 1px solid var(--line-strong);
-            border-radius: var(--r-lg);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-        }
-
-        .brand {
-            display: inline-flex;
-            align-items: center;
-            gap: 13px;
-            text-decoration: none;
-            color: var(--ink);
-            min-width: 0;
-            flex-shrink: 1;
-        }
-
-        .brand img {
-            width: 44px;
-            height: 44px;
-            border-radius: var(--r-md);
-            object-fit: cover;
-            flex-shrink: 0;
-            box-shadow: 0 10px 18px rgba(13, 123, 224, 0.18);
-        }
-
-        .brand-text { min-width: 0; }
-
-        .brand-title {
-            display: block;
-            font-family: var(--font-display);
-            font-size: 1.1rem;
-            font-weight: 800;
-            letter-spacing: -0.05em;
-            line-height: 0.96;
-        }
-
-        .brand-sub {
-            display: block;
-            margin-top: 4px;
-            color: var(--accent-text);
-            font-family: var(--font-mono);
-            font-size: 0.68rem;
-            font-weight: 500;
-            letter-spacing: 0.12em;
-        }
-
-        .header-actions,
-        .header-links {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .header-actions { flex-shrink: 0; }
-
-        .pill-link,
-        .release-chip,
-        .theme-toggle,
-        .mobile-menu-toggle,
-        .tools-more-btn,
-        .to-top {
-            transition:
-                transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                background 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .pill-link,
-        .release-chip {
-            text-decoration: none;
-            color: var(--ink);
-            border: 1px solid var(--line-strong);
-            background: var(--surface-float);
-            border-radius: 999px;
-            padding: 10px 14px;
-            font: inherit;
-            font-size: 0.84rem;
-            font-weight: 700;
-            letter-spacing: -0.01em;
-            line-height: 1;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .release-chip {
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(239, 246, 255, 0.7));
-            box-shadow: var(--glass-edge);
-        }
-
-        .theme-toggle,
-        .mobile-menu-toggle {
-            color: var(--ink);
-            border: 1px solid var(--line-strong);
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(240, 247, 255, 0.68));
-            border-radius: var(--r-md);
-            width: 44px;
-            height: 44px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-            cursor: pointer;
-            appearance: none;
-            box-shadow: var(--glass-edge);
-            flex-shrink: 0;
-        }
-
-        .pill-link:hover,
-        .release-chip:hover,
-        .theme-toggle:hover,
-        .mobile-menu-toggle:hover,
-        .tools-more-btn:hover,
-        .to-top:hover {
-            transform: translateY(-1px);
-            border-color: rgba(13, 123, 224, 0.34);
-            color: var(--accent-text);
-            box-shadow: var(--glass-edge), 0 16px 36px rgba(13, 123, 224, 0.12);
-        }
-
-        .pill-link:active,
-        .release-chip:active,
-        .theme-toggle:active,
-        .mobile-menu-toggle:active,
-        .tools-more-btn:active,
-        .to-top:active,
-        .btn:active,
-        .section-link:active {
-            transform: translateY(1px) scale(0.985);
-        }
-
-        .pill-link i,
-        .release-chip i,
-        .theme-toggle i,
-        .btn i,
-        .section-link i,
-        .lightbox-close i {
-            font-size: 1rem;
-            flex-shrink: 0;
-        }
-
-        .theme-toggle i { font-size: 1.14rem; }
-        .mobile-menu-toggle { display: none; }
-
-        .utility-bar {
-            position: sticky;
-            top: calc(var(--header-h) + 20px);
-            z-index: 30;
-            margin-top: 10px;
-            padding: 10px 14px;
-            border: 1px solid var(--line);
-            border-radius: var(--r-lg);
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(240, 246, 255, 0.62));
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-        }
-
-        .section-nav {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .section-link {
-            text-decoration: none;
-            color: var(--muted);
-            border: 1px solid transparent;
-            border-radius: 999px;
-            background: transparent;
-            padding: 9px 13px;
-            font-size: 0.84rem;
-            font-weight: 700;
-            letter-spacing: -0.01em;
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            transition:
-                color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                background 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .section-link:hover {
-            color: var(--ink);
-            background: rgba(255, 255, 255, 0.64);
-            border-color: var(--line-strong);
-            transform: translateY(-1px);
-        }
-
-        .section-link.is-active {
-            color: #f5fbff;
-            background: var(--accent-gradient);
-            border-color: transparent;
-            box-shadow: 0 14px 30px rgba(13, 123, 224, 0.18);
-        }
-
-        .reveal {
-            opacity: 0;
-            transform: translateY(16px);
-            transition:
-                opacity 0.56s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.56s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .reveal.is-visible { opacity: 1; transform: none; }
-        .reveal.delay-1 { transition-delay: 0.08s; }
-        .reveal.delay-2 { transition-delay: 0.16s; }
-        .reveal.delay-3 { transition-delay: 0.24s; }
-
-        main { padding-top: 24px; }
-        .hero { display: grid; gap: 0; }
-
-        .hero-main {
-            position: relative;
-            overflow: hidden;
-            padding: clamp(28px, 4vw, 44px);
-            border: 1px solid var(--line-strong);
-            background:
-                radial-gradient(circle at 88% 12%, rgba(13, 123, 224, 0.12), transparent 24%),
-                linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(239, 246, 255, 0.68));
-            border-radius: var(--r-xl);
-            display: grid;
-            grid-template-columns: minmax(0, 1.02fr) minmax(320px, 0.98fr);
-            gap: clamp(24px, 3vw, 40px);
-            align-items: start;
-        }
-
-        .hero-main::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background:
-                linear-gradient(120deg, transparent 0 54%, rgba(13, 123, 224, 0.08) 100%),
-                radial-gradient(circle at 18% 0%, rgba(13, 123, 224, 0.1), transparent 34%);
-            pointer-events: none;
-        }
-
-        .hero-main > * {
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero-copy {
-            grid-column: 1;
-            display: grid;
-            align-content: start;
-        }
-
-        .hero-eyebrow {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 0 0 18px;
-            font-family: var(--font-mono);
-            font-size: 0.76rem;
-            font-weight: 500;
-            color: var(--accent-text);
-            letter-spacing: 0.09em;
-            text-transform: uppercase;
-        }
-
-        .hero-eyebrow::before {
-            content: "";
-            display: block;
-            width: 34px;
-            height: 2px;
-            background: var(--accent-gradient);
-            border-radius: 999px;
-        }
-
-        h1 {
-            margin: 0;
-            max-width: 12ch;
-            color: var(--ink);
-            font-family: var(--font-display);
-            font-size: clamp(3rem, 4.8vw, 5rem);
-            font-weight: 800;
-            line-height: 0.95;
-            letter-spacing: -0.055em;
-        }
-
-        h1 em {
-            font-style: normal;
-            color: var(--accent-text);
-        }
-
-        .hero-lead {
-            margin: 22px 0 0;
-            max-width: 57ch;
-            color: var(--muted);
-            font-size: 1.02rem;
-            line-height: 1.76;
-        }
-
-        .hero-lead strong { color: var(--ink); font-weight: 700; }
-
-        .hero-meta {
-            margin: 18px 0 0;
-            padding: 0;
-            list-style: none;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px 18px;
-            color: var(--muted);
-            font-size: 0.82rem;
-            font-weight: 700;
-        }
-
-        .hero-meta li {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .hero-meta li::before {
-            content: "";
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--accent);
-            box-shadow: 0 0 0 5px rgba(13, 123, 224, 0.08);
-        }
-
-        .cta-row {
-            margin-top: 28px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .btn {
-            text-decoration: none;
-            border-radius: 999px;
-            padding: 12px 18px;
-            font-size: 0.94rem;
-            font-weight: 700;
-            letter-spacing: -0.01em;
-            border: 1px solid transparent;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            cursor: pointer;
-            transition:
-                transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                background 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                color 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .btn-primary {
-            color: #f8fbff;
-            background: var(--accent-gradient);
-            box-shadow: 0 18px 34px rgba(13, 123, 224, 0.22);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 22px 40px rgba(13, 123, 224, 0.28);
-        }
-
-        .btn-secondary {
-            color: var(--ink);
-            background: rgba(255, 255, 255, 0.58);
-            border-color: var(--line-strong);
-            box-shadow: var(--glass-edge);
-        }
-
-        .btn-secondary:hover {
-            transform: translateY(-2px);
-            background: rgba(255, 255, 255, 0.78);
-            border-color: rgba(13, 123, 224, 0.34);
-        }
-
-        .hero-stage {
-            grid-column: 2;
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) 208px;
-            gap: 14px;
-            align-self: stretch;
-            align-items: start;
-        }
-
-        .hero-device,
-        .hero-signal,
-        .hero-quickstats,
-        .feature-card,
-        .tool,
-        .info-card,
-        .panel-note {
-            border: 1px solid var(--line);
-            border-radius: var(--r-lg);
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(239, 246, 255, 0.66));
-            box-shadow: var(--glass-edge);
-            transition:
-                transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.28s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1),
-                background 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .hero-device,
-        .hero-signal,
-        .hero-quickstats {
-            background:
-                linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(230, 241, 255, 0.84));
-            box-shadow:
-                0 24px 56px rgba(13, 69, 129, 0.12),
-                inset 0 1px 0 rgba(255, 255, 255, 0.74);
-        }
-
-        .hero-device:hover,
-        .hero-signal:hover,
-        .hero-quickstats:hover,
-        .feature-card:hover,
-        .tool:hover,
-        .info-card:hover,
-        .panel-note:hover {
-            transform: translateY(-2px);
-            border-color: var(--line-strong);
-            box-shadow: var(--glass-edge), var(--shadow-sm);
-        }
-
-        .hero-device {
-            position: relative;
-            grid-column: 1;
-            grid-row: 1 / span 2;
-            padding: 16px;
-            overflow: hidden;
-            isolation: isolate;
-        }
-
-        .hero-device::before {
-            content: "";
-            position: absolute;
-            inset: auto -18% -18% auto;
-            width: 70%;
-            height: 42%;
-            border-radius: 999px;
-            background: radial-gradient(circle, rgba(13, 123, 224, 0.26) 0%, transparent 72%);
-            filter: blur(24px);
-            opacity: 0.95;
-            z-index: -1;
-            animation: drift-glow 7s ease-in-out infinite;
-        }
-
-        .hero-device-head {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            margin-bottom: 14px;
-        }
-
-        .hero-preview-chip {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 7px 10px;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.72);
-            border: 1px solid rgba(13, 123, 224, 0.16);
-            color: var(--accent-text);
-            font-size: 0.74rem;
-            font-weight: 700;
-        }
-
-        .hero-preview-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--accent);
-            box-shadow: 0 0 0 6px rgba(13, 123, 224, 0.12);
-            animation: pulse-opacity 1.8s ease-in-out infinite;
-        }
-
-        .hero-preview-caption {
-            color: var(--muted);
-            font-family: var(--font-mono);
-            font-size: 0.72rem;
-            letter-spacing: 0.02em;
-        }
-
-        .hero-device-shell {
-            position: relative;
-            min-height: 100%;
-            padding: 12px;
-            border-radius: 28px;
-            background: var(--accent-gradient);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
-            overflow: hidden;
-            animation: float-device 6s ease-in-out infinite;
-        }
-
-        .hero-device-shell::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), transparent 44%);
-            pointer-events: none;
-        }
-
-        #heroPreviewImage {
-            display: block;
-            width: 100%;
-            aspect-ratio: 9 / 18.7;
-            object-fit: cover;
-            object-position: top center;
-            border-radius: 18px;
-            border: 1px solid rgba(255, 255, 255, 0.14);
-            background: #051121;
-            box-shadow: 0 24px 42px rgba(0, 0, 0, 0.24);
-        }
-
-        .hero-stage-aside {
-            display: grid;
-            gap: 14px;
-            align-content: start;
-        }
-
-        .hero-signal,
-        .hero-quickstats {
-            padding: 18px;
-        }
-
-        .hero-signal-label {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            color: var(--accent-text);
-            font-family: var(--font-mono);
-            font-size: 0.72rem;
-            font-weight: 500;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-        }
-
-        .hero-signal-label::before {
-            content: "";
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: var(--accent);
-            box-shadow: 0 0 0 5px rgba(13, 123, 224, 0.1);
-        }
-
-        .hero-signal strong {
-            display: block;
-            margin-top: 14px;
-            color: var(--ink);
-            font-family: var(--font-display);
-            font-size: 1.15rem;
-            font-weight: 700;
-            line-height: 1.1;
-            letter-spacing: -0.03em;
-        }
-
-        .hero-signal p {
-            margin: 12px 0 0;
-            color: var(--muted);
-            font-size: 0.88rem;
-            line-height: 1.7;
-        }
-
-        .hero-quickstats {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 10px;
-            align-content: start;
-        }
-
-        .quickstat {
-            padding: 12px;
-            border-radius: 18px;
-            border: 1px solid rgba(13, 123, 224, 0.12);
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.76), rgba(240, 246, 255, 0.88));
-        }
-
-        .quickstat strong {
-            display: block;
-            color: var(--ink);
-            font-family: var(--font-display);
-            font-size: 1.5rem;
-            font-weight: 700;
-            line-height: 1;
-            letter-spacing: -0.04em;
-        }
-
-        .quickstat span {
-            display: block;
-            margin-top: 7px;
-            color: var(--muted);
-            font-size: 0.74rem;
-            font-weight: 700;
-            letter-spacing: 0.02em;
-        }
-
-        .hero-support {
-            grid-column: 1 / -1;
-            margin-top: 32px;
-            padding-top: 24px;
-            border-top: 1px solid rgba(13, 123, 224, 0.16);
-            display: grid;
-            grid-template-columns: minmax(220px, 0.7fr) 1fr;
-            gap: 16px 28px;
-            align-items: start;
-        }
-
-        .hero-support h2 {
-            margin: 0;
-            font-family: var(--font-display);
-            font-size: 1.48rem;
-            font-weight: 700;
-            line-height: 1.02;
-            letter-spacing: -0.04em;
-            color: var(--ink);
-            max-width: 12ch;
-        }
-
-        .hero-support-copy {
-            display: grid;
-            gap: 12px;
-            align-items: start;
-        }
-
-        .hero-support p {
-            margin: 0;
-            color: var(--muted);
-            font-size: 0.95rem;
-            line-height: 1.72;
-        }
-
-        .support-points {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 12px;
-        }
-
-        .panel-note {
-            padding: 14px;
-            display: flex;
-            gap: 12px;
-            align-items: flex-start;
-            font-size: 0.84rem;
-            line-height: 1.62;
-            color: var(--muted);
-        }
-
-        .panel-note i {
-            margin-top: 1px;
-            width: 30px;
-            height: 30px;
-            display: grid;
-            place-items: center;
-            border-radius: 12px;
-            font-size: 1rem;
-            color: var(--accent-text);
-            background: var(--accent-dim);
-            flex-shrink: 0;
-        }
-
-        .panel-note:nth-child(2) i {
-            color: var(--accent);
-            background: rgba(0, 100, 218, 0.12);
-        }
-
-        .section {
-            position: relative;
-            overflow: hidden;
-            margin-top: 24px;
-            padding: clamp(26px, 3vw, 36px);
-            border: 1px solid var(--line);
-            border-radius: var(--r-xl);
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(240, 246, 255, 0.66));
-        }
-
-        .section::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 28px;
-            right: 28px;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(13, 123, 224, 0.5), transparent);
-        }
-
-        .section-eyebrow {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin: 0 0 14px;
-            color: var(--accent-text);
-            font-family: var(--font-mono);
-            font-size: 0.73rem;
-            font-weight: 500;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-        }
-
-        .section-eyebrow i { font-size: 0.9rem; }
-
-        .section h2 {
-            margin: 0;
-            color: var(--ink);
-            font-family: var(--font-display);
-            font-size: clamp(1.78rem, 2.7vw, 2.42rem);
-            font-weight: 800;
-            line-height: 1.01;
-            letter-spacing: -0.045em;
-        }
-
-        .section-intro {
-            margin: 12px 0 0;
-            max-width: 62ch;
-            color: var(--muted);
-            font-size: 0.98rem;
-            line-height: 1.72;
-        }
-
-        .feature-grid,
-        .tools-grid,
-        .meta-grid,
-        .table-wrap {
-            margin-top: 22px;
-            display: grid;
-            grid-template-columns: repeat(12, minmax(0, 1fr));
-            gap: 14px;
-        }
-
-        .feature-card {
-            grid-column: span 4;
-            padding: 20px 20px 20px 22px;
-            position: relative;
-        }
-
-        .feature-card::after,
-        .tool::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            border-radius: inherit;
-            background: linear-gradient(140deg, rgba(13, 123, 224, 0.08), transparent 42%);
-            pointer-events: none;
-        }
-
-        .feature-card:nth-child(1) { grid-column: span 7; }
-        .feature-card:nth-child(2) { grid-column: span 5; }
-        .feature-card:nth-child(3),
-        .feature-card:nth-child(4),
-        .feature-card:nth-child(5) { grid-column: span 4; }
-
-        .feature-card:nth-child(6) {
-            grid-column: span 12;
-            display: grid;
-            grid-template-columns: auto 1fr;
-            align-items: start;
-            gap: 20px;
-            background: linear-gradient(135deg, rgba(13, 123, 224, 0.12) 0%, rgba(238, 246, 255, 0.72) 60%);
-            border-color: rgba(13, 123, 224, 0.22);
-        }
-
-        .feature-card:nth-child(6) .feature-card-body { display: contents; }
-
-        .feature-card h3,
-        .tool strong,
-        .meta-card h3,
-        th {
-            font-family: var(--font-display);
-        }
-
-        .feature-card h3 {
-            margin: 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--ink);
-            font-size: 1.06rem;
-            font-weight: 700;
-            line-height: 1.2;
-            letter-spacing: -0.03em;
-        }
-
-        .feature-card h3 i,
-        .tool-head i,
-        .meta-card h3 i {
-            width: 34px;
-            height: 34px;
-            display: grid;
-            place-items: center;
-            border-radius: 12px;
-            font-size: 1rem;
-            color: var(--accent-text);
-            background: rgba(13, 123, 224, 0.1);
-            flex-shrink: 0;
-        }
-
-        .feature-card:nth-child(2) h3 i,
-        .feature-card:nth-child(4) h3 i,
-        .tool:nth-child(2) .tool-head i,
-        .meta-card:nth-child(2) h3 i {
-            background: rgba(0, 100, 218, 0.12);
-            color: var(--accent);
-        }
-
-        .feature-card ul,
-        .meta-card ul {
-            margin: 12px 0 0;
-            padding-left: 18px;
-            color: var(--muted);
-            font-size: 0.9rem;
-            line-height: 1.72;
-        }
-
-        .feature-card ul li,
-        .meta-card ul li { margin-bottom: 4px; }
-        .feature-card:nth-child(6) ul { margin: 0; }
-
-        .ai-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            margin-top: 12px;
-            padding: 7px 11px;
-            border-radius: 999px;
-            border: 1px solid rgba(13, 123, 224, 0.16);
-            background: rgba(255, 255, 255, 0.72);
-            color: var(--accent-text);
-            font-family: var(--font-mono);
-            font-size: 0.72rem;
-            font-weight: 600;
-            letter-spacing: 0.02em;
-        }
-
-        .tool.tool-extra { display: none; }
-        .tool.tool-extra.is-visible { display: block; }
-
-        .tool {
-            position: relative;
-            grid-column: span 4;
-            padding: 16px 15px 14px;
-        }
-
-        .tool:nth-child(1) { grid-column: span 5; }
-        .tool:nth-child(2) { grid-column: span 3; }
-        .tool:nth-child(3) { grid-column: span 4; }
-        .tool:nth-child(4) { grid-column: span 4; }
-        .tool:nth-child(5) { grid-column: span 4; }
-        .tool:nth-child(6) { grid-column: span 4; }
-        .tool:nth-child(7) { grid-column: span 5; }
-        .tool:nth-child(8) { grid-column: span 3; }
-        .tool:nth-child(9),
-        .tool:nth-child(10),
-        .tool:nth-child(11) { grid-column: span 4; }
-
-        .tool-head {
-            display: flex;
-            gap: 10px;
-            align-items: flex-start;
-            margin-bottom: 8px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .tool strong {
-            display: block;
-            color: var(--ink);
-            font-size: 0.96rem;
-            font-weight: 700;
-            line-height: 1.24;
-            letter-spacing: -0.02em;
-            margin-top: 4px;
-        }
-
-        .tool span {
-            position: relative;
-            z-index: 1;
-            color: var(--muted);
-            font-size: 0.83rem;
-            line-height: 1.62;
-        }
-
-        .tools-more-btn {
-            margin-top: 16px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 11px 16px;
-            border: 1px solid var(--line-strong);
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.58);
-            color: var(--muted);
-            font: inherit;
-            font-size: 0.85rem;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: var(--glass-edge);
-        }
-
-        .tools-more-btn i { font-size: 1rem; transition: transform 0.24s ease; }
-        .tools-more-btn.is-open i { transform: rotate(180deg); }
-
-        .screenshots-shell { margin-top: 22px; }
-
-        .carousel-outer {
-            position: relative;
-            padding: 0 56px;
-        }
-
-        .carousel-viewport {
-            display: flex;
-            gap: 14px;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch;
-            padding: 6px 2px 18px;
-            scrollbar-width: none;
-            touch-action: pan-x;
-            cursor: grab;
-            user-select: none;
-        }
-
-        .carousel-viewport::-webkit-scrollbar { display: none; }
-        .carousel-viewport[data-dragged="1"] { cursor: grabbing; }
-
-        .carousel-slide {
-            flex: 0 0 clamp(184px, 23vw, 258px);
-            border-radius: 22px;
-            overflow: hidden;
-            border: 1px solid var(--line-strong);
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(239, 246, 255, 0.64));
-            scroll-snap-align: start;
-            scroll-snap-stop: always;
-        }
-
-        .gallery-card {
-            display: block;
-            width: 100%;
-            height: clamp(350px, 48vw, 520px);
-            padding: 10px;
-            margin: 0;
-            border: none;
-            background: linear-gradient(180deg, #0c1d3f 0%, #0D7BE0 100%);
-            cursor: zoom-in;
-            overflow: hidden;
-        }
-
-        .carousel-slide img {
-            width: 100%;
-            height: 100%;
-            display: block;
-            object-fit: cover;
-            object-position: top center;
-            border-radius: 18px;
-            box-shadow: 0 20px 34px rgba(0, 0, 0, 0.22);
-            will-change: transform;
-            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            pointer-events: none;
-        }
-
-        .gallery-card:hover img { transform: scale(1.018); }
-
-        .carousel-slide figcaption {
-            padding: 10px 14px 12px;
-            color: var(--ink-2);
-            font-family: var(--font-mono);
-            font-size: 0.77rem;
-            font-weight: 500;
-            letter-spacing: 0.02em;
-            border-top: 1px solid var(--line);
-            background: rgba(255, 255, 255, 0.52);
-        }
-
-        .carousel-arrow {
-            position: absolute;
-            top: calc(50% - 18px);
-            transform: translateY(-50%);
-            z-index: 10;
-            width: 42px;
-            height: 42px;
-            display: grid;
-            place-items: center;
-            border-radius: 999px;
-            border: 1px solid var(--line-strong);
-            background: rgba(255, 255, 255, 0.84);
-            color: var(--ink);
-            box-shadow: var(--glass-edge), var(--shadow-sm);
-            cursor: pointer;
-            transition:
-                transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                background 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                color 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .carousel-arrow:hover:not(:disabled) {
-            transform: translateY(calc(-50% - 1px));
-            border-color: rgba(13, 123, 224, 0.34);
-            color: var(--accent-text);
-        }
-
-        .carousel-arrow:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-
-        .carousel-arrow.prev { left: 4px; }
-        .carousel-arrow.next { right: 4px; }
-        .carousel-arrow i { font-size: 1.1rem; }
-
-        .carousel-meta {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 14px;
-            margin-top: 4px;
-        }
-
-        .carousel-dots {
-            display: flex;
-            gap: 6px;
-            align-items: center;
-        }
-
-        .carousel-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 999px;
-            border: none;
-            background: rgba(13, 123, 224, 0.2);
-            cursor: pointer;
-            padding: 0;
-            transition:
-                width 0.2s ease,
-                background 0.2s ease;
-        }
-
-        .carousel-dot.is-active {
-            width: 24px;
-            background: var(--accent-gradient);
-        }
-
-        .carousel-status {
-            margin: 0;
-            color: var(--muted-2);
-            font-family: var(--font-mono);
-            font-size: 0.76rem;
-            font-weight: 500;
-        }
-
-        .table-wrap {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 16px;
-        }
-
-        .info-card {
-            overflow: hidden;
-        }
-
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            font-size: 0.88rem;
-        }
-
-        th {
-            text-align: left;
-            padding: 12px 16px;
-            background: rgba(13, 123, 224, 0.08);
-            font-size: 0.8rem;
-            font-weight: 700;
-            letter-spacing: -0.01em;
-            color: var(--ink-2);
-            border-bottom: 1px solid var(--line-strong);
-        }
-
-        td {
-            padding: 11px 16px;
-            color: var(--muted);
-            border-bottom: 1px solid rgba(13, 123, 224, 0.08);
-            line-height: 1.56;
-            vertical-align: top;
-        }
-
-        tr:last-child td { border-bottom: none; }
-        td:first-child { color: var(--ink); font-weight: 700; font-size: 0.84rem; }
-
-        .source-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            color: var(--accent-text);
-            text-decoration: none;
-            font-weight: 700;
-        }
-
-        .source-link:hover { color: var(--accent); text-decoration: underline; }
-
-        .source-note {
-            display: block;
-            margin-top: 4px;
-            color: var(--muted-2);
-            font-size: 0.78rem;
-            line-height: 1.45;
-        }
-
-        .source-note .source-link { font-size: inherit; }
-
-        .meta-grid {
-            margin-top: 16px;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-        }
-
-        .meta-card { padding: 18px; }
-
-        .meta-card h3 {
-            margin: 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--ink);
-            font-size: 1.04rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-        }
-
-        .meta-card p {
-            margin: 10px 0 0;
-            color: var(--muted);
-            font-size: 0.86rem;
-            line-height: 1.68;
-        }
-
-        code {
-            font-family: var(--font-mono);
-            font-size: 0.8em;
-            background: rgba(13, 123, 224, 0.08);
-            border: 1px solid rgba(13, 123, 224, 0.14);
-            border-radius: 8px;
-            padding: 2px 6px;
-            color: var(--ink);
-        }
-
-        .footer {
-            margin-top: 30px;
-            padding: 20px 2px 0;
-            border-top: 1px solid rgba(13, 123, 224, 0.14);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 12px;
-            color: var(--muted-2);
-            font-size: 0.84rem;
-            font-weight: 600;
-        }
-
-        .footer a {
-            color: var(--accent-text);
-            text-decoration: none;
-            font-weight: 700;
-        }
-
-        .footer a:hover { text-decoration: underline; }
-
-        .lightbox {
-            position: fixed;
-            inset: 0;
-            z-index: 100;
-            background: rgba(8, 16, 34, 0.82);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-        }
-
-        .lightbox[hidden] { display: none; }
-
-        .lightbox-shell {
-            position: relative;
-            max-width: min(520px, 92vw);
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 10px;
-        }
-
-        .lightbox-close {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 13px;
-            border: 1px solid rgba(255, 255, 255, 0.14);
-            border-radius: 999px;
-            background: rgba(10, 30, 68, 0.7);
-            color: #cfe7ff;
-            font: inherit;
-            font-size: 0.84rem;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .lightbox-close:hover { background: rgba(11, 43, 96, 0.86); }
-
-        .lightbox-figure {
-            margin: 0;
-            width: 100%;
-        }
-
-        .lightbox-figure img {
-            width: 100%;
-            height: auto;
-            max-height: 80vh;
-            object-fit: contain;
-            display: block;
-            border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            background: rgba(4, 18, 42, 0.72);
-        }
-
-        .lightbox-caption {
-            text-align: center;
-            margin-top: 8px;
-            color: rgba(214, 233, 255, 0.84);
-            font-family: var(--font-mono);
-            font-size: 0.8rem;
-            font-weight: 500;
-            letter-spacing: 0.03em;
-        }
-
-        .release-chip[aria-busy="true"] {
-            animation: pulse-opacity 1.4s ease-in-out infinite;
-        }
-
-        .to-top {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 50;
-            padding: 0 15px;
-            height: 42px;
-            border: 1px solid var(--line-strong);
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.74);
-            color: var(--accent-text);
-            font-size: 0.8rem;
-            font-weight: 800;
-            font-family: inherit;
-            box-shadow: var(--glass-edge), var(--shadow-sm);
-            cursor: pointer;
-            opacity: 0;
-            pointer-events: none;
-            transform: translateY(8px);
-        }
-
-        .to-top.is-visible {
-            opacity: 1;
-            pointer-events: auto;
-            transform: none;
-        }
-
-        @keyframes pulse-opacity {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.45; }
-        }
-
-        @keyframes float-device {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-6px); }
-        }
-
-        @keyframes drift-glow {
-            0%, 100% { transform: translate3d(0, 0, 0); }
-            50% { transform: translate3d(-10px, 8px, 0); }
-        }
-
-        body[data-theme="dark"] {
-            --bg: #051225;
-            --surface: rgba(7, 19, 41, 0.78);
-            --surface-2: rgba(10, 27, 58, 0.9);
-            --surface-float: rgba(10, 24, 50, 0.72);
-            --surface-deep: rgba(8, 22, 47, 0.92);
-            --ink: #e7f2ff;
-            --ink-2: #f3f8ff;
-            --muted: #94acd0;
-            --muted-2: #bed0ec;
-            --line: rgba(48, 119, 213, 0.22);
-            --line-strong: rgba(48, 119, 213, 0.34);
-            --accent: var(--brand-1);
-            --accent-strong: var(--brand-2);
-            --accent-dim: rgba(13, 123, 224, 0.18);
-            --accent-glow: rgba(13, 123, 224, 0.28);
-            --accent-hi: #46a7ff;
-            --accent-text: #6dc0ff;
-            --shadow: 0 30px 70px rgba(0, 0, 0, 0.32);
-            --shadow-sm: 0 18px 38px rgba(0, 0, 0, 0.22);
-            --glass-edge: inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            background-image:
-                radial-gradient(circle at 12% -10%, rgba(13, 123, 224, 0.24) 0%, transparent 34%),
-                radial-gradient(circle at 92% 8%, rgba(0, 100, 218, 0.2) 0%, transparent 28%),
-                linear-gradient(180deg, #081a35 0%, #061428 34%, var(--bg) 100%);
-        }
-
-        body[data-theme="dark"]::before {
-            background-image:
-                linear-gradient(rgba(13, 123, 224, 0.06) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(13, 123, 224, 0.06) 1px, transparent 1px);
-        }
-
-        body[data-theme="dark"] .site-header,
-        body[data-theme="dark"] .utility-bar,
-        body[data-theme="dark"] .section,
-        body[data-theme="dark"] .hero-main,
-        body[data-theme="dark"] .feature-card,
-        body[data-theme="dark"] .tool,
-        body[data-theme="dark"] .info-card,
-        body[data-theme="dark"] .panel-note {
-            background: linear-gradient(180deg, rgba(8, 22, 47, 0.82), rgba(7, 18, 38, 0.92));
-        }
-
-        body[data-theme="dark"] .hero-device,
-        body[data-theme="dark"] .hero-signal,
-        body[data-theme="dark"] .hero-quickstats {
-            background: linear-gradient(180deg, rgba(10, 24, 50, 0.94), rgba(7, 18, 38, 0.98));
-            box-shadow:
-                0 24px 56px rgba(0, 0, 0, 0.26),
-                inset 0 1px 0 rgba(255, 255, 255, 0.08);
-        }
-
-        body[data-theme="dark"] .theme-toggle,
-        body[data-theme="dark"] .mobile-menu-toggle,
-        body[data-theme="dark"] .release-chip,
-        body[data-theme="dark"] .tools-more-btn,
-        body[data-theme="dark"] .btn-secondary,
-        body[data-theme="dark"] .to-top {
-            background: linear-gradient(180deg, rgba(11, 29, 61, 0.9), rgba(8, 20, 44, 0.9));
-        }
-
-        body[data-theme="dark"] .hero-main::before {
-            background:
-                linear-gradient(120deg, transparent 0 54%, rgba(13, 123, 224, 0.12) 100%),
-                radial-gradient(circle at 18% 0%, rgba(13, 123, 224, 0.16), transparent 34%);
-        }
-
-        body[data-theme="dark"] .hero-preview-chip,
-        body[data-theme="dark"] .quickstat {
-            background: rgba(10, 31, 67, 0.72);
-            border-color: rgba(48, 119, 213, 0.22);
-        }
-
-        body[data-theme="dark"] th {
-            background: rgba(13, 123, 224, 0.14);
-        }
-
-        body[data-theme="dark"] code {
-            background: rgba(11, 37, 81, 0.9);
-            border-color: rgba(48, 119, 213, 0.26);
-            color: #d6e9ff;
-        }
-
-        body[data-theme="dark"] .lightbox {
-            background: rgba(2, 8, 18, 0.86);
-        }
-
-        body[data-theme="dark"] .lightbox-close {
-            background: rgba(8, 28, 63, 0.8);
-        }
-
-        body[data-theme="dark"] .gallery-card {
-            background: linear-gradient(180deg, #061327 0%, #0D7BE0 100%);
-        }
-
-        body[data-theme="dark"] #heroPreviewImage {
-            filter: saturate(1.02) brightness(1.02);
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            html { scroll-behavior: auto; }
-            .reveal,
-            .hero-device-shell,
-            .hero-device::before,
-            .hero-preview-dot,
-            .release-chip[aria-busy="true"] {
-                animation: none;
-                opacity: 1;
-                transform: none;
-                transition: none;
-            }
-            .btn,
-            .pill-link,
-            .theme-toggle,
-            .release-chip,
-            .feature-card,
-            .tool,
-            .carousel-dot,
-            .to-top,
-            .tools-more-btn,
-            .section-link,
-            .carousel-slide img {
-                transition: none;
-            }
-        }
-
-        @media (max-width: 1120px) {
-            .hero-main {
-                grid-template-columns: 1fr;
-            }
-
-            .hero-stage {
-                grid-column: 1;
-                grid-template-columns: minmax(0, 1fr) 220px;
-            }
-
-            .hero-support,
-            .table-wrap,
-            .meta-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .hero-support h2 {
-                max-width: none;
-            }
-
-            .feature-card:nth-child(1),
-            .feature-card:nth-child(2),
-            .feature-card:nth-child(3),
-            .feature-card:nth-child(4),
-            .feature-card:nth-child(5),
-            .tool,
-            .tool:nth-child(1),
-            .tool:nth-child(2),
-            .tool:nth-child(3),
-            .tool:nth-child(4),
-            .tool:nth-child(5),
-            .tool:nth-child(6),
-            .tool:nth-child(7),
-            .tool:nth-child(8),
-            .tool:nth-child(9),
-            .tool:nth-child(10),
-            .tool:nth-child(11) {
-                grid-column: span 6;
-            }
-        }
-
-        @media (max-width: 760px) {
-            .wrap {
-                width: calc(100vw - 28px);
-                margin-bottom: 42px;
-            }
-
-            main { padding-top: 14px; }
-
-            .site-header,
-            .utility-bar {
-                position: static;
-            }
-
-            .site-header {
-                padding: 12px;
-                gap: 10px;
-                border-radius: 18px;
-            }
-
-            .brand { gap: 10px; }
-            .brand img {
-                width: 40px;
-                height: 40px;
-            }
-            .brand-title { font-size: 1rem; }
-            .mobile-menu-toggle { display: inline-flex; }
-            .header-actions { gap: 6px; }
-            .brand-sub { display: none; }
-
-            .utility-bar {
-                position: static;
-                display: block;
-                margin-top: 8px;
-                padding: 0 12px;
-                max-height: 0;
-                opacity: 0;
-                overflow: hidden;
-                pointer-events: none;
-                transition:
-                    max-height 0.3s ease,
-                    opacity 0.22s ease,
-                    padding 0.22s ease,
-                    margin-top 0.22s ease;
-            }
-
-            body.mobile-nav-open .utility-bar {
-                max-height: 560px;
-                opacity: 1;
-                pointer-events: auto;
-                padding: 12px;
-            }
-
-            body:not(.mobile-nav-open) .utility-bar {
-                margin-top: 0;
-                border-color: transparent;
-                background: transparent;
-                box-shadow: none;
-                backdrop-filter: none;
-                -webkit-backdrop-filter: none;
-            }
-
-            .section-nav,
-            .utility-bar .header-links {
-                width: 100%;
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 8px;
-            }
-
-            .section-link,
-            .utility-bar .release-chip {
-                min-height: 46px;
-                justify-content: flex-start;
-                border-radius: var(--r-md);
-            }
-
-            .utility-bar .release-chip {
-                grid-column: 1 / -1;
-                justify-content: center;
-            }
-
-            .hero-main,
-            .section {
-                padding: 20px 16px;
-            }
-
-            .section { margin-top: 16px; }
-
-            .hero-main {
-                gap: 20px;
-            }
-
-            h1 {
-                max-width: 11ch;
-                font-size: clamp(2.35rem, 12vw, 3.4rem);
-                line-height: 0.98;
-            }
-
-            .hero-stage,
-            .feature-grid,
-            .tools-grid,
-            .meta-grid,
-            .table-wrap,
-            .support-points {
-                grid-template-columns: 1fr;
-            }
-
-            .hero-device {
-                grid-column: auto;
-                grid-row: auto;
-                width: min(100%, 340px);
-                margin: 0 auto;
-            }
-
-            .hero-stage-aside {
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
-
-            .feature-card,
-            .feature-card:nth-child(1),
-            .feature-card:nth-child(2),
-            .feature-card:nth-child(3),
-            .feature-card:nth-child(4),
-            .feature-card:nth-child(5),
-            .feature-card:nth-child(6),
-            .tool,
-            .tool:nth-child(1),
-            .tool:nth-child(2),
-            .tool:nth-child(3),
-            .tool:nth-child(4),
-            .tool:nth-child(5),
-            .tool:nth-child(6),
-            .tool:nth-child(7),
-            .tool:nth-child(8),
-            .tool:nth-child(9),
-            .tool:nth-child(10),
-            .tool:nth-child(11) {
-                grid-column: span 1;
-            }
-
-            .feature-card:nth-child(6) {
-                grid-template-columns: 1fr;
-                display: block;
-            }
-
-            .cta-row {
-                display: grid;
-                grid-template-columns: 1fr;
-                gap: 8px;
-            }
-
-            .btn {
-                width: 100%;
-                min-height: 52px;
-                padding-inline: 16px;
-            }
-
-            .hero-lead {
-                margin-top: 18px;
-                font-size: 0.98rem;
-                line-height: 1.72;
-            }
-
-            .hero-meta {
-                display: grid;
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-                gap: 10px 12px;
-            }
-
-            .hero-meta li {
-                align-items: flex-start;
-            }
-
-            .hero-device-head {
-                align-items: flex-start;
-                flex-direction: column;
-            }
-
-            .hero-signal,
-            .hero-quickstats {
-                padding: 16px;
-            }
-
-            .hero-support {
-                margin-top: 20px;
-                padding-top: 18px;
-                grid-template-columns: 1fr;
-            }
-
-            .hero-support h2 { font-size: 1.24rem; }
-            .hero-support p,
-            .section-intro { font-size: 0.9rem; }
-
-            .hero-preview-caption {
-                display: block;
-                font-size: 0.72rem;
-            }
-            .panel-note { font-size: 0.83rem; }
-
-            table { font-size: 0.84rem; }
-            th,
-            td {
-                padding-left: 12px;
-                padding-right: 12px;
-            }
-
-            .footer {
-                align-items: flex-start;
-                flex-direction: column;
-            }
-
-            .carousel-outer { padding: 0 44px; }
-            .carousel-slide { flex: 0 0 clamp(146px, 54vw, 210px); }
-            .gallery-card { height: clamp(304px, 115vw, 430px); }
-
-            .to-top {
-                bottom: 16px;
-                right: 12px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .wrap { width: calc(100vw - 22px); }
-            .site-header,
-            .hero-main,
-            .section {
-                padding-left: 14px;
-                padding-right: 14px;
-            }
-
-            .section-nav,
-            .utility-bar .header-links {
-                grid-template-columns: 1fr;
-            }
-
-            h1 {
-                font-size: clamp(2.1rem, 14vw, 2.9rem);
-            }
-
-            .hero-meta {
-                grid-template-columns: 1fr;
-            }
-
-            .quickstat strong { font-size: 1.3rem; }
-            .feature-card,
-            .tool,
-            .meta-card { padding: 14px; }
-
-            .carousel-outer { padding: 0 38px; }
-            .carousel-arrow { width: 34px; height: 34px; }
-            .carousel-slide { flex: 0 0 clamp(134px, 64vw, 188px); }
-            .gallery-card { height: clamp(282px, 132vw, 388px); }
-        }
-    </style>
-    <!-- Cloudflare Web Analytics -->
-    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3b94c4e5a57741089b10b6317b61f907"}'></script>
-    <!-- End Cloudflare Web Analytics -->
+    <script defer src="script.js"></script>
 </head>
-
-<body>
+<body class="page-home">
     <a class="skip-link" href="#content">Skip to content</a>
 
-    <div class="wrap">
-        <header class="site-header reveal">
+    <div class="page-shell">
+        <header class="masthead reveal">
             <a href="index.html" class="brand" aria-label="ChemSearch Home">
                 <img src="chemsearch-logo.png" alt="ChemSearch logo">
                 <span class="brand-text">
@@ -1932,8 +28,20 @@
                 </span>
             </a>
 
-            
+            <nav class="primary-nav" aria-label="Primary navigation">
+                <a class="nav-link is-current" href="index.html">Overview</a>
+                <a class="nav-link" href="#features" data-section-link>Features</a>
+                <a class="nav-link" href="#tools" data-section-link>Tools</a>
+                <a class="nav-link" href="#screenshots" data-section-link>Screenshots</a>
+                <a class="nav-link" href="faq.html">FAQ</a>
+                <a class="nav-link" href="#stack" data-section-link>Tech</a>
+            </nav>
+
             <div class="header-actions">
+                <a class="release-chip" id="releaseStatus" href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer" aria-live="polite" aria-busy="true">
+                    <i class="ph-fill ph-rocket-launch" aria-hidden="true"></i>
+                    <span id="releaseStatusText">Checking latest release…</span>
+                </a>
                 <button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false" aria-label="Toggle dark mode">
                     <i class="ph-fill ph-moon-stars" id="themeToggleIcon" aria-hidden="true"></i>
                 </button>
@@ -1944,429 +52,617 @@
             </div>
         </header>
 
-        <div class="utility-bar reveal delay-1" id="mobileNavPanel" aria-label="Page controls">
-            <nav class="section-nav" aria-label="Section quick links">
-                <a class="section-link" href="#features"><i class="ph-bold ph-sparkle" aria-hidden="true"></i><span>Features</span></a>
-                <a class="section-link" href="#tools"><i class="ph-bold ph-toolbox" aria-hidden="true"></i><span>Tools</span></a>
-                <a class="section-link" href="#screenshots"><i class="ph-bold ph-images-square" aria-hidden="true"></i><span>Screenshots</span></a>
-                <a class="section-link" href="#stack"><i class="ph-bold ph-cpu" aria-hidden="true"></i><span>Tech</span></a>
+        <div class="mobile-drawer" id="mobileNavPanel" aria-label="Mobile navigation">
+            <nav class="mobile-nav">
+                <a class="nav-link is-current" href="index.html">Overview</a>
+                <a class="nav-link" href="#features">Features</a>
+                <a class="nav-link" href="#tools">Tools</a>
+                <a class="nav-link" href="#screenshots">Screenshots</a>
+                <a class="nav-link" href="faq.html">FAQ</a>
+                <a class="nav-link" href="#stack">Tech</a>
+                <a class="nav-link" href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer">Latest release</a>
             </nav>
-            <div class="header-links">
-                <a class="release-chip" id="releaseStatus" href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer" aria-live="polite" aria-busy="true">
-                    <i class="ph-fill ph-rocket-launch" aria-hidden="true"></i>
-                    <span id="releaseStatusText">Checking latest release…</span>
-                </a>
-            </div>
         </div>
 
-        <main id="content" tabindex="-1">
-            <section class="hero">
-                <article class="hero-main reveal delay-1">
+        <main class="page-main" id="content" tabindex="-1">
+            <section class="section-slab hero-slab reveal">
+                <div class="hero-grid">
                     <div class="hero-copy">
-                        <p class="hero-eyebrow">Native Android · Open Source · MIT</p>
+                        <div class="section-head">
+                            <div>
+                                <p class="section-kicker">Native Android · Open Source · MIT</p>
+                                <h1>Chemistry search that feels like one <em>connected surface</em>.</h1>
+                            </div>
+                            <p class="section-lead">ChemSearch brings compound lookup, structures, GHS safety information, identifiers, and built-in chemistry tools into one Android flow that stays fast and readable.</p>
+                        </div>
 
-                        <h1>Fast chemistry search, built for <em>Android</em>.</h1>
-
-                        <p class="hero-lead">
-                            Look up any compound by <strong>name, CAS, or CID</strong>. Get structure diagrams, GHS safety cards, elemental analysis, and a full suite of chemistry tools - all from one app, no browser tabs required.
-                        </p>
-
-                        <ul class="hero-meta" aria-label="At a glance">
-                            <li>Android 8.0+ (API 26+)</li>
-                            <li>11 built-in chemistry tools</li>
-                            <li>Favorites &amp; search history</li>
-                            <li>Optional AI summaries - bring your own key</li>
-                        </ul>
-
-                        <div class="cta-row">
+                        <div class="hero-actions">
                             <a class="btn btn-primary" href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer">
-                                <i class="ph-bold ph-download-simple" aria-hidden="true"></i><span>Download the APK</span>
+                                <i class="ph-bold ph-download-simple" aria-hidden="true"></i><span>Download latest APK</span>
                             </a>
-                            <a class="btn btn-secondary" href="#screenshots">
-                                <i class="ph-bold ph-images-square" aria-hidden="true"></i><span>Screenshots</span>
+                            <a class="btn btn-secondary" href="#screenshots" data-section-link>
+                                <i class="ph-bold ph-images-square" aria-hidden="true"></i><span>See the interface</span>
                             </a>
-                            <a class="btn btn-secondary" href="https://github.com/FurtherSecrets24680/chemsearch-android" target="_blank" rel="noopener noreferrer">
-                                <i class="ph-bold ph-github-logo" aria-hidden="true"></i><span>GitHub</span>
+                            <a class="btn btn-secondary" href="faq.html">
+                                <i class="ph-bold ph-question" aria-hidden="true"></i><span>Read the FAQ</span>
                             </a>
+                        </div>
+
+                        <div class="hero-points" aria-label="What ChemSearch covers">
+                            <div class="hero-point">
+                                <strong>Search by name, CAS, or CID</strong>
+                                <span>Use the identifier you already have instead of translating it into another workflow.</span>
+                            </div>
+                            <div class="hero-point">
+                                <strong>Move through structure and safety fast</strong>
+                                <span>2D, 3D, identifiers, elemental analysis, and GHS stay close together on the result page.</span>
+                            </div>
+                            <div class="hero-point">
+                                <strong>Keep repeat work local</strong>
+                                <span>Favorites, recents, and cache help you reopen compounds without starting over.</span>
+                            </div>
+                            <div class="hero-point">
+                                <strong>Use AI only if you want it</strong>
+                                <span>Optional summaries support your own Gemini or Groq key while the core app remains fully usable without AI.</span>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="hero-stage" aria-label="ChemSearch app preview">
-                        <article class="hero-device info-card">
-                            <div class="hero-device-head">
+                    <div class="hero-display" aria-label="ChemSearch preview and highlights">
+                        <article class="hero-preview-shell">
+                            <div class="hero-preview-head">
                                 <span class="hero-preview-chip">
                                     <span class="hero-preview-dot" aria-hidden="true"></span>
                                     Live app preview
                                 </span>
                                 <span class="hero-preview-caption" id="heroPreviewCaption">Search workspace · light mode</span>
                             </div>
-                            <div class="hero-device-shell">
-                                <img
-                                    id="heroPreviewImage"
-                                    loading="eager"
-                                    src="hero-home-light.jpg"
-                                    alt="ChemSearch home screen preview in light mode"
-                                >
+                            <div class="hero-preview-frame">
+                                <img id="heroPreviewImage" src="hero-home-light.jpg" alt="ChemSearch home screen preview in light mode" loading="eager">
                             </div>
                         </article>
 
-                        <div class="hero-stage-aside">
-                            <article class="hero-signal info-card">
-                                <span class="hero-signal-label">Pocket workflow</span>
-                                <strong>Lookup, safety, and structure in one tight loop.</strong>
-                                <p>Search by name, CAS, or CID, then jump into identifiers, 3D, and GHS without losing your place.</p>
-                            </article>
+                        <div class="hero-rail">
+                            <div class="rail-row">
+                                <p class="surface-kicker">Fast lookup flow</p>
+                                <h3>Search once, then move through structure, safety, and identifiers without losing context.</h3>
+                                <p>The result screen keeps the pieces that matter together, so you can inspect a compound the way you actually work through it.</p>
+                            </div>
 
-                            <article class="hero-quickstats info-card" aria-label="Key metrics">
-                                <div class="quickstat">
+                            <div class="rail-row metric-band" aria-label="Key stats">
+                                <div class="metric-item">
                                     <strong>11</strong>
-                                    <span>native tools</span>
+                                    <span>built-in tools</span>
                                 </div>
-                                <div class="quickstat">
+                                <div class="metric-item">
                                     <strong>3</strong>
-                                    <span>data sources</span>
+                                    <span>live data sources</span>
                                 </div>
-                                <div class="quickstat">
+                                <div class="metric-item">
                                     <strong>118</strong>
-                                    <span>CPK colors</span>
+                                    <span>CPK elements covered</span>
                                 </div>
-                                <div class="quickstat">
+                                <div class="metric-item">
                                     <strong>API 26+</strong>
-                                    <span>Android floor</span>
+                                    <span>Android baseline</span>
                                 </div>
-                            </article>
-                        </div>
-                    </div>
+                            </div>
 
-                    <div class="hero-support">
-                        <h2>Good on a bus. Better at a lab bench.</h2>
-                        <div class="hero-support-copy">
-                            <p>The app keeps the common stuff close: quick compound lookups, readable identifiers with tap-to-copy, proper safety cards, and calculators you can reach in one tap. No maze of sub-menus.</p>
-                            <div class="support-points">
-                                <div class="panel-note info-card">
-                                    <i class="ph-fill ph-check-circle" aria-hidden="true"></i>
-                                    <span>Favorites, recent searches, zoomable 2D structures, one-tap 3D, downloadable SDF and PNG. The boring-but-essential details are all handled.</span>
-                                </div>
-                                <div class="panel-note info-card">
-                                    <i class="ph-fill ph-sliders-horizontal" aria-hidden="true"></i>
-                                    <span>Want AI summaries? Add a Gemini or Groq key in Settings. Don't want them? Don't. The app works perfectly either way.</span>
-                                </div>
+                            <div class="rail-row">
+                                <p class="surface-kicker">What makes it usable</p>
+                                <ul class="inline-list">
+                                    <li>Tap-to-copy identifiers and formula details.</li>
+                                    <li>2D and 3D views in the same compound workspace.</li>
+                                    <li>Safety summaries that are quick to scan on-device.</li>
+                                    <li>Exports and tools close to the search flow instead of hidden behind extra screens.</li>
+                                </ul>
                             </div>
                         </div>
                     </div>
-                </article>
+                </div>
             </section>
 
-            <section class="section reveal delay-1" id="features">
-                <p class="section-eyebrow"><i class="ph-fill ph-sparkle" aria-hidden="true"></i> What's actually in it</p>
-                <h2>The useful bits</h2>
-                <p class="section-intro">Not a chemistry encyclopedia pretending to be an app. These are the things you actually reach for when you need an answer quickly - or when your lab partner has disappeared and the Wi-Fi is flaky.</p>
+            <section class="section-slab reveal" id="features">
+                <div class="section-head">
+                    <div>
+                        <p class="section-kicker">Core workflow</p>
+                        <h2>A merged chemistry workspace, not a stack of isolated widgets.</h2>
+                    </div>
+                    <p class="section-lead">The homepage now leans into bigger connected surfaces: fewer repeated cards, more split panels that group related tasks the way product sites like Apple, Google, and Microsoft often do.</p>
+                </div>
 
-                <div class="feature-grid">
-                    <article class="feature-card info-card">
-                        <h3><i class="ph-fill ph-magnifying-glass" aria-hidden="true"></i><span>Finds what you mean, not just what you typed</span></h3>
-                        <ul>
-                            <li>Common name, IUPAC, CAS number, or PubChem CID - any of them works.</li>
-                            <li>Real-time autocomplete with a scrollable dropdown, so you don't have to nail the spelling of "acetylsalicylic" on the first try.</li>
-                            <li>Dedicated Recents and Favorites tabs. The compounds you look up twice shouldn't cost two lookups.</li>
-                        </ul>
+                <div class="merge-grid">
+                    <article class="merge-surface span-7">
+                        <p class="surface-kicker">Compound workflow</p>
+                        <div class="surface-split">
+                            <div class="surface-copy">
+                                <h3 class="surface-title">Everything useful stays within a couple of taps.</h3>
+                                <p>Search is only the entry point. The real win is that identifiers, structures, elemental breakdowns, and safety details stay tied together once you land on a compound.</p>
+                            </div>
+                            <div class="surface-list">
+                                <div class="surface-row">
+                                    <span class="row-icon"><i class="ph-fill ph-magnifying-glass" aria-hidden="true"></i></span>
+                                    <div>
+                                        <strong>Search with the identifier you already have</strong>
+                                        <p>Use a common name, IUPAC name, CAS number, or PubChem CID without switching modes or tools.</p>
+                                    </div>
+                                </div>
+                                <div class="surface-row">
+                                    <span class="row-icon"><i class="ph-fill ph-identification-card" aria-hidden="true"></i></span>
+                                    <div>
+                                        <strong>Copy identifiers without digging</strong>
+                                        <p>SMILES, InChI, InChIKey, formula details, and other values stay near the top of the result flow.</p>
+                                    </div>
+                                </div>
+                                <div class="surface-row">
+                                    <span class="row-icon"><i class="ph-fill ph-shield-checkered" aria-hidden="true"></i></span>
+                                    <div>
+                                        <strong>See safety details early</strong>
+                                        <p>Signal words, pictograms, and hazard context are visible before you need to open a longer source document.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </article>
 
-                    <article class="feature-card info-card">
-                        <h3><i class="ph-fill ph-identification-card" aria-hidden="true"></i><span>Every identifier, one tap to copy</span></h3>
-                        <ul>
-                            <li>Name, formula, MW, CID, and CAS at the top - not buried three cards down.</li>
-                            <li>SMILES (full and connectivity), InChI, InChIKey, empirical formula, formal charge - one section further. All tap-to-copy.</li>
-                            <li>Tooltip on each field explains what it means, so you don't need to alt-tab to a wiki page.</li>
-                        </ul>
+                    <figure class="merge-surface span-5 feature-visual">
+                        <img src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/iden_ea.jpg" alt="ChemSearch identifiers and elemental analysis screen" loading="lazy">
+                        <figcaption class="visual-label">Identifiers and elemental analysis stay readable on a phone-sized layout without feeling cramped or buried.</figcaption>
+                    </figure>
+
+                    <article class="merge-surface span-4">
+                        <p class="surface-kicker">Structures</p>
+                        <h3 class="surface-title">2D first, 3D when it matters.</h3>
+                        <p>The structure workflow stays touch-friendly. Use 2D for quick reading, then switch into the interactive 3D view when geometry matters more than speed.</p>
+                        <div class="surface-tags">
+                            <span class="surface-tag">Zoomable 2D</span>
+                            <span class="surface-tag">Native 3D viewer</span>
+                            <span class="surface-tag">SDF export</span>
+                            <span class="surface-tag">PNG export</span>
+                        </div>
                     </article>
 
-                    <article class="feature-card info-card">
-                        <h3><i class="ph-fill ph-cube-transparent" aria-hidden="true"></i><span>3D that actually behaves</span></h3>
-                        <ul>
-                            <li>2D structure loads instantly. Tap to zoom in. Switch to 3D when you want to look at the actual geometry.</li>
-                            <li>Drag to rotate, pinch to zoom. Auto-spin with pause on touch. It doesn't turn into soup when you try to inspect a bond angle.</li>
-                            <li>CPK colors for all 118 elements. Download the SDF or PNG directly to your device.</li>
-                        </ul>
+                    <article class="merge-surface span-4">
+                        <p class="surface-kicker">Safety</p>
+                        <h3 class="surface-title">Useful hazard context without extra hunting.</h3>
+                        <p>PubChem safety data, signal words, and GHS pictograms sit close to the rest of the compound record so you do not need a second app just to stay oriented.</p>
+                        <div class="surface-tags">
+                            <span class="surface-tag">Signal words</span>
+                            <span class="surface-tag">GHS pictograms</span>
+                            <span class="surface-tag">Hazard statements</span>
+                        </div>
                     </article>
 
-                    <article class="feature-card info-card">
-                        <h3><i class="ph-fill ph-shield-checkered" aria-hidden="true"></i><span>GHS safety data that doesn't need a manual</span></h3>
-                        <ul>
-                            <li>Signal word badge (Danger / Warning), GHS pictograms 1–9, and H-codes - all fetched from PubChem directly, no paraphrasing middleware.</li>
-                            <li>Useful when you need the hazard summary before you reach the MSDS, not after.</li>
-                        </ul>
+                    <article class="merge-surface span-4">
+                        <p class="surface-kicker">Optional AI</p>
+                        <h3 class="surface-title">Layer in summaries only when you want them.</h3>
+                        <p>Core use stays reference-first. If you want generated summaries, plug in your own Gemini or Groq key and keep the rest of the app exactly as it is.</p>
+                        <div class="surface-tags">
+                            <span class="surface-tag">Your own API key</span>
+                            <span class="surface-tag">Local preferences</span>
+                            <span class="surface-tag">No account wall</span>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="section-slab reveal" id="tools">
+                <div class="section-head">
+                    <div>
+                        <p class="section-kicker">Built-in toolset</p>
+                        <h2>A toolkit arranged as connected lanes instead of 11 separate boxes.</h2>
+                    </div>
+                    <p class="section-lead">The tools are grouped into larger merged panels so the section reads like a system: model viewing and reference on one side, calculation workflows on the other.</p>
+                </div>
+
+                <div class="merge-grid">
+                    <article class="merge-surface span-7">
+                        <p class="surface-kicker">Reference and model tools</p>
+                        <h3 class="surface-title">The part you reach for when you need to inspect or translate a compound quickly.</h3>
+                        <div class="tool-rows">
+                            <div class="tool-row">
+                                <div class="tool-title">
+                                    <span class="row-icon"><i class="ph-fill ph-cube" aria-hidden="true"></i></span>
+                                    <strong>Custom 3D Molecule Viewer</strong>
+                                </div>
+                                <p>Open any <code>.mol</code> or <code>.sdf</code> file from your device and inspect it in the same native viewer used for PubChem compounds.</p>
+                            </div>
+                            <div class="tool-row">
+                                <div class="tool-title">
+                                    <span class="row-icon"><i class="ph-fill ph-bezier-curve" aria-hidden="true"></i></span>
+                                    <strong>SMILES Visualizer</strong>
+                                </div>
+                                <p>Paste a SMILES string and jump to a rendered 2D structure plus a 3D model when PubChem has a matching record.</p>
+                            </div>
+                            <div class="tool-row">
+                                <div class="tool-title">
+                                    <span class="row-icon"><i class="ph-fill ph-squares-four" aria-hidden="true"></i></span>
+                                    <strong>Isomer Finder</strong>
+                                </div>
+                                <p>Enter a molecular formula to retrieve structural isomers, or jump in directly from a compound formula on the result page.</p>
+                            </div>
+                            <div class="tool-row">
+                                <div class="tool-title">
+                                    <span class="row-icon"><i class="ph-fill ph-lightning" aria-hidden="true"></i></span>
+                                    <strong>Oxidation State Finder</strong>
+                                </div>
+                                <p>Handle common oxidation-state edge cases including peroxides, superoxides, interhalogens, and charged species.</p>
+                            </div>
+                            <div class="tool-row">
+                                <div class="tool-title">
+                                    <span class="row-icon"><i class="ph-fill ph-scales" aria-hidden="true"></i></span>
+                                    <strong>Molar Mass Calculator</strong>
+                                </div>
+                                <p>Work through nested formulas, hydrates, and formula syntax without simplifying them by hand first.</p>
+                            </div>
+                        </div>
                     </article>
 
-                    <article class="feature-card info-card">
-                        <h3><i class="ph-fill ph-sliders-horizontal" aria-hidden="true"></i><span>Stays out of your way</span></h3>
-                        <ul>
-                            <li>Light or dark theme. Configurable default description source. Settings that actually remember what you set.</li>
-                            <li>Local compound cache speeds up repeat lookups and labels cached results in the UI so you know what you're seeing.</li>
-                        </ul>
-                    </article>
-
-                    <article class="feature-card info-card">
-                        <h3><i class="ph-fill ph-chat-circle-dots" aria-hidden="true"></i><span>Optional AI - not a subscription trap</span></h3>
-                        <div class="feature-card-body">
-                            <ul>
-                                <li>Works completely offline from AI - PubChem and Wikipedia descriptions are there by default.</li>
-                                <li>Add your own Gemini or Groq key in Settings if you want AI-generated summaries with a regenerate button. Your key stays on your device.</li>
-                                <li>No fake "smart" layer bolted over the data. No key farming.</li>
-                            </ul>
-                            <div>
-                                <span class="ai-badge"><i class="ph-fill ph-key" aria-hidden="true"></i> Bring your own key</span>
+                    <article class="merge-surface span-5">
+                        <p class="surface-kicker">Calculation lane</p>
+                        <h3 class="surface-title">The math tools that usually end up split across notes, tabs, and quick searches.</h3>
+                        <div class="tool-rows">
+                            <div class="tool-row">
+                                <div class="tool-title">
+                                    <span class="row-icon"><i class="ph-fill ph-equals" aria-hidden="true"></i></span>
+                                    <strong>Reaction Balancer</strong>
+                                </div>
+                                <p>Balance equations with exact rational arithmetic and quick-insert controls for the notation you use often.</p>
+                            </div>
+                            <div class="tool-row">
+                                <div class="tool-title">
+                                    <span class="row-icon"><i class="ph-fill ph-funnel" aria-hidden="true"></i></span>
+                                    <strong>Limiting Reagent</strong>
+                                </div>
+                                <p>Identify the reagent that runs out first and estimate theoretical yield from a balanced equation.</p>
+                            </div>
+                            <div class="tool-row">
+                                <div class="tool-title">
+                                    <span class="row-icon"><i class="ph-fill ph-percent" aria-hidden="true"></i></span>
+                                    <strong>Percent Yield</strong>
+                                </div>
+                                <p>Compare theoretical and actual yield in seconds when the bench result and the plan do not match.</p>
+                            </div>
+                            <div class="tool-row">
+                                <div class="tool-title">
+                                    <span class="row-icon"><i class="ph-fill ph-arrows-out-cardinal" aria-hidden="true"></i></span>
+                                    <strong>Reaction Scaling</strong>
+                                </div>
+                                <p>Scale reagent amounts toward a target product quantity without recalculating every value manually.</p>
+                            </div>
+                            <div class="tool-row">
+                                <div class="tool-title">
+                                    <span class="row-icon"><i class="ph-fill ph-drop" aria-hidden="true"></i></span>
+                                    <strong>Dilution + Ideal Gas Law</strong>
+                                </div>
+                                <p>Keep C₁V₁ = C₂V₂ and PV = nRT close to the rest of the workflow with unit-friendly calculators.</p>
                             </div>
                         </div>
                     </article>
                 </div>
             </section>
 
-            <section class="section reveal delay-2" id="tools">
-                <p class="section-eyebrow"><i class="ph-fill ph-toolbox" aria-hidden="true"></i> 11 tools built in</p>
-                <h2>The chemistry drawer</h2>
-                <p class="section-intro">The calculations you'd usually hunt down a separate app (or a pencil) for. Most of the standard classroom and lab math is already here, in the Tools tab.</p>
-
-                <div class="tools-grid" id="toolsGrid">
-                    <article class="tool info-card">
-                        <div class="tool-head"><i class="ph-fill ph-cube" aria-hidden="true"></i><strong>Custom 3D Molecule Viewer</strong></div>
-                        <span>Load any <code>.mol</code> or <code>.sdf</code> file from your device and explore it in the same native 3D engine used for PubChem compounds.</span>
-                    </article>
-                    <article class="tool info-card">
-                        <div class="tool-head"><i class="ph-fill ph-scales" aria-hidden="true"></i><strong>Molar Mass Calculator</strong></div>
-                        <span>Handles parentheses, hydrate dot notation, and the formulas people write when focus has well and truly left the building.</span>
-                    </article>
-                    <article class="tool info-card">
-                        <div class="tool-head"><i class="ph-fill ph-equals" aria-hidden="true"></i><strong>Reaction Balancer</strong></div>
-                        <span>Gaussian elimination with exact rational arithmetic. Quick-insert buttons for common symbols; swap-sides control included.</span>
-                    </article>
-                    <article class="tool info-card">
-                        <div class="tool-head"><i class="ph-fill ph-lightning" aria-hidden="true"></i><strong>Oxidation State Finder</strong></div>
-                        <span>Covers peroxides, superoxides, ozonides, metal hydrides, and interhalogen compounds. Accepts overall charge for polyatomic ions.</span>
-                    </article>
-                    <article class="tool info-card">
-                        <div class="tool-head"><i class="ph-fill ph-bezier-curve" aria-hidden="true"></i><strong>SMILES Visualizer</strong></div>
-                        <span>Paste a SMILES string, get the 2D structure and 3D model from PubChem. Useful when you have the notation but not the name.</span>
-                    </article>
-                    <article class="tool info-card tool-extra">
-                        <div class="tool-head"><i class="ph-fill ph-squares-four" aria-hidden="true"></i><strong>Isomer Finder</strong></div>
-                        <span>Enter a molecular formula and get up to 20 structural isomers back. Also accessible by tapping the formula on any compound page.</span>
-                    </article>
-                    <article class="tool info-card tool-extra">
-                        <div class="tool-head"><i class="ph-fill ph-funnel" aria-hidden="true"></i><strong>Limiting Reagent</strong></div>
-                        <span>Identifies which reagent runs out first, the molar ratios, and the theoretical yield - for a balanced equation you provide.</span>
-                    </article>
-                    <article class="tool info-card tool-extra">
-                        <div class="tool-head"><i class="ph-fill ph-percent" aria-hidden="true"></i><strong>Percent Yield</strong></div>
-                        <span>Quick reality check between theoretical and actual yield. For when the bench disagrees with the calculation.</span>
-                    </article>
-                    <article class="tool info-card tool-extra">
-                        <div class="tool-head"><i class="ph-fill ph-arrows-out-cardinal" aria-hidden="true"></i><strong>Reaction Scaling</strong></div>
-                        <span>Scale reactant amounts for a target product quantity, without rewriting every number by hand.</span>
-                    </article>
-                    <article class="tool info-card tool-extra">
-                        <div class="tool-head"><i class="ph-fill ph-drop" aria-hidden="true"></i><strong>Dilution Calculator</strong></div>
-                        <span>C₁V₁ = C₂V₂, solved for any variable. For when the formula evaporates the moment you need it most.</span>
-                    </article>
-                    <article class="tool info-card tool-extra">
-                        <div class="tool-head"><i class="ph-fill ph-wind" aria-hidden="true"></i><strong>Ideal Gas Law</strong></div>
-                        <span>PV = nRT, solves for any one unknown. Covers the standard unit conversions so you don't have to.</span>
-                    </article>
+            <section class="section-slab reveal" id="screenshots">
+                <div class="section-head">
+                    <div>
+                        <p class="section-kicker">Interface tour</p>
+                        <h2>The gallery now sits inside one larger media panel instead of standing alone.</h2>
+                    </div>
+                    <p class="section-lead">Browse the main screens, swipe through on mobile, open any screenshot into a lightbox, and compare light and dark mode without leaving the page.</p>
                 </div>
-                <button class="tools-more-btn" id="toolsMoreBtn" type="button" aria-expanded="false">
-                    <i class="ph-bold ph-caret-down" aria-hidden="true"></i>
-                    <span id="toolsMoreLabel">Show 6 more tools</span>
-                </button>
-            </section>
 
-            <section class="section reveal delay-3" id="screenshots">
-                <p class="section-eyebrow"><i class="ph-fill ph-images-square" aria-hidden="true"></i> A quick look around</p>
-                <h2>See it in action</h2>
-                <p class="section-intro">Search, favorites, safety cards, structure viewer, and the tools tab. Drag, tap, or use the arrows.</p>
-
-                <div class="screenshots-shell">
-                    
-                    <div class="carousel-outer">
-                        <button class="carousel-arrow prev" id="screenshotsPrev" type="button" aria-label="Previous screenshot" aria-controls="screenshotsCarouselTrack">
-                            <i class="ph-bold ph-caret-left" aria-hidden="true"></i>
-                        </button>
-
-                        <div class="carousel-viewport" id="screenshotsCarouselTrack" tabindex="0" role="region" aria-label="Screenshots carousel. Use left and right arrow keys to navigate.">
-                            <figure class="carousel-slide info-card">
-                                <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/home_dark.jpg" data-preview-caption="Search (Dark)" aria-label="Open screenshot preview: Search dark mode">
-                                    <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/home_dark.jpg" alt="Home screen - dark mode">
-                                </button>
-                                <figcaption>Search - Dark</figcaption>
-                            </figure>
-                            <figure class="carousel-slide info-card">
-                                <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/home_light.jpg" data-preview-caption="Search (Light)" aria-label="Open screenshot preview: Search light mode">
-                                    <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/home_light.jpg" alt="Home screen - light mode">
-                                </button>
-                                <figcaption>Search - Light</figcaption>
-                            </figure>
-                            <figure class="carousel-slide info-card">
-                                <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/3dmolecule.jpg" data-preview-caption="3D Molecule Viewer" aria-label="Open screenshot preview: 3D molecule viewer">
-                                    <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/3dmolecule.jpg" alt="3D molecule viewer">
-                                </button>
-                                <figcaption>3D Molecule Viewer</figcaption>
-                            </figure>
-                            <figure class="carousel-slide info-card">
-                                <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/favorites.jpg" data-preview-caption="Favorites" aria-label="Open screenshot preview: Favorites">
-                                    <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/favorites.jpg" alt="Favorites screen">
-                                </button>
-                                <figcaption>Favorites</figcaption>
-                            </figure>
-                            <figure class="carousel-slide info-card">
-                                <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/tools_page.jpg" data-preview-caption="Tools Page" aria-label="Open screenshot preview: Tools page">
-                                    <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/tools_page.jpg" alt="Tools screen">
-                                </button>
-                                <figcaption>Tools Page</figcaption>
-                            </figure>
-                            <figure class="carousel-slide info-card">
-                                <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/iden_ea.jpg" data-preview-caption="Identifiers + Elemental Analysis" aria-label="Open screenshot preview: Identifiers and elemental analysis">
-                                    <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/iden_ea.jpg" alt="Identifiers and elemental analysis">
-                                </button>
-                                <figcaption>Identifiers + Elemental Analysis</figcaption>
-                            </figure>
-                            <figure class="carousel-slide info-card">
-                                <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/ghs_safety.jpg" data-preview-caption="GHS Safety Information" aria-label="Open screenshot preview: GHS safety information">
-                                    <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/ghs_safety.jpg" alt="GHS safety information">
-                                </button>
-                                <figcaption>GHS Safety Information</figcaption>
-                            </figure>
-                            <figure class="carousel-slide info-card">
-                                <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/tool_mmc.jpg" data-preview-caption="Molar Mass Calculator" aria-label="Open screenshot preview: Molar mass calculator">
-                                    <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/tool_mmc.jpg" alt="Molar mass calculator">
-                                </button>
-                                <figcaption>Molar Mass Calculator</figcaption>
-                            </figure>
+                <div class="media-layout">
+                    <aside class="section-sidecopy">
+                        <p class="surface-kicker">Gallery tips</p>
+                        <h3>Every screenshot keeps one shared height and shows the full frame.</h3>
+                        <p>The carousel uses image-driven widths, so screenshots stay readable without aggressive cropping. That makes denser screens like identifiers and tools much easier to compare.</p>
+                        <ul class="inline-list">
+                            <li>Drag or swipe through the gallery.</li>
+                            <li>Use the arrows or keyboard to move one image at a time.</li>
+                            <li>Tap any screenshot to open a larger preview.</li>
+                        </ul>
+                        <div class="section-actions">
+                            <a class="btn btn-secondary" href="faq.html">
+                                <i class="ph-bold ph-question" aria-hidden="true"></i><span>Read the FAQ</span>
+                            </a>
                         </div>
+                    </aside>
 
-                        <button class="carousel-arrow next" id="screenshotsNext" type="button" aria-label="Next screenshot" aria-controls="screenshotsCarouselTrack">
-                            <i class="ph-bold ph-caret-right" aria-hidden="true"></i>
-                        </button>
-                    </div>
+                    <div class="gallery-panel">
+                        <div class="screenshots-shell">
+                            <div class="carousel-outer">
+                                <button class="carousel-arrow prev" id="screenshotsPrev" type="button" aria-label="Previous screenshot" aria-controls="screenshotsCarouselTrack">
+                                    <i class="ph-bold ph-caret-left" aria-hidden="true"></i>
+                                </button>
 
-                    <div class="carousel-meta">
-                        <div class="carousel-dots" id="screenshotsCarouselDots" role="tablist" aria-label="Screenshot navigation dots"></div>
-                        <p class="carousel-status" id="screenshotsCarouselStatus" aria-live="polite">1 / 8</p>
+                                <div class="carousel-viewport" id="screenshotsCarouselTrack" tabindex="0" role="region" aria-label="Screenshots carousel. Use left and right arrow keys to navigate.">
+                                    <figure class="carousel-slide">
+                                        <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/home_dark.jpg" data-preview-caption="Search · Dark mode" aria-label="Open screenshot preview: Search dark mode">
+                                            <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/home_dark.jpg" alt="Home screen in dark mode">
+                                        </button>
+                                        <figcaption>Search · Dark mode</figcaption>
+                                    </figure>
+                                    <figure class="carousel-slide">
+                                        <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/home_light.jpg" data-preview-caption="Search · Light mode" aria-label="Open screenshot preview: Search light mode">
+                                            <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/home_light.jpg" alt="Home screen in light mode">
+                                        </button>
+                                        <figcaption>Search · Light mode</figcaption>
+                                    </figure>
+                                    <figure class="carousel-slide">
+                                        <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/3dmolecule.jpg" data-preview-caption="3D molecule viewer" aria-label="Open screenshot preview: 3D molecule viewer">
+                                            <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/3dmolecule.jpg" alt="3D molecule viewer">
+                                        </button>
+                                        <figcaption>3D molecule viewer</figcaption>
+                                    </figure>
+                                    <figure class="carousel-slide">
+                                        <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/favorites.jpg" data-preview-caption="Favorites" aria-label="Open screenshot preview: Favorites">
+                                            <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/favorites.jpg" alt="Favorites screen">
+                                        </button>
+                                        <figcaption>Favorites</figcaption>
+                                    </figure>
+                                    <figure class="carousel-slide">
+                                        <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/tools_page.jpg" data-preview-caption="Tools tab" aria-label="Open screenshot preview: Tools tab">
+                                            <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/tools_page.jpg" alt="Tools screen">
+                                        </button>
+                                        <figcaption>Tools tab</figcaption>
+                                    </figure>
+                                    <figure class="carousel-slide">
+                                        <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/iden_ea.jpg" data-preview-caption="Identifiers + elemental analysis" aria-label="Open screenshot preview: Identifiers and elemental analysis">
+                                            <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/iden_ea.jpg" alt="Identifiers and elemental analysis screen">
+                                        </button>
+                                        <figcaption>Identifiers + elemental analysis</figcaption>
+                                    </figure>
+                                    <figure class="carousel-slide">
+                                        <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/ghs_safety.jpg" data-preview-caption="GHS safety card" aria-label="Open screenshot preview: GHS safety card">
+                                            <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/ghs_safety.jpg" alt="GHS safety information screen">
+                                        </button>
+                                        <figcaption>GHS safety card</figcaption>
+                                    </figure>
+                                    <figure class="carousel-slide">
+                                        <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/tool_mmc.jpg" data-preview-caption="Molar mass calculator" aria-label="Open screenshot preview: Molar mass calculator">
+                                            <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/tool_mmc.jpg" alt="Molar mass calculator screen">
+                                        </button>
+                                        <figcaption>Molar mass calculator</figcaption>
+                                    </figure>
+                                </div>
+
+                                <button class="carousel-arrow next" id="screenshotsNext" type="button" aria-label="Next screenshot" aria-controls="screenshotsCarouselTrack">
+                                    <i class="ph-bold ph-caret-right" aria-hidden="true"></i>
+                                </button>
+                            </div>
+
+                            <div class="carousel-meta">
+                                <div class="carousel-dots" id="screenshotsCarouselDots" role="tablist" aria-label="Screenshot navigation dots"></div>
+                                <p class="carousel-status" id="screenshotsCarouselStatus" aria-live="polite">1 / 8</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            <section class="section reveal" id="stack">
-                <p class="section-eyebrow"><i class="ph-fill ph-cpu" aria-hidden="true"></i> Under the hood</p>
-                <h2>How it's built</h2>
-                <p class="section-intro">Native Android, straight API calls, no mystery backend. Everything is open source and the stack is exactly what it looks like.</p>
-
-                <div class="table-wrap">
-                    <table class="info-card">
-                        <thead>
-                            <tr><th>Component</th><th>Technology</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>Language</td><td>Kotlin</td></tr>
-                            <tr><td>UI</td><td>Jetpack Compose + Material 3</td></tr>
-                            <tr><td>Networking</td><td>Retrofit 2 + OkHttp</td></tr>
-                            <tr><td>Image loading</td><td>Coil</td></tr>
-                            <tr><td>Async</td><td>Kotlin Coroutines + StateFlow</td></tr>
-                            <tr><td>JSON</td><td>Gson</td></tr>
-                            <tr><td>3D rendering</td><td>Custom native Canvas engine</td></tr>
-                            <tr><td>Storage</td><td>SharedPreferences + local cache</td></tr>
-                        </tbody>
-                    </table>
-
-                    <table class="info-card">
-                        <thead>
-                            <tr><th>Source</th><th>Used for</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <a class="source-link" href="https://pubchem.ncbi.nlm.nih.gov/docs/pug-rest-tutorial" target="_blank" rel="noopener noreferrer">
-                                        <i class="ph-fill ph-flask" aria-hidden="true"></i> PubChem PUG REST
-                                    </a>
-                                    <span class="source-note">Official PubChem endpoint docs.</span>
-                                </td>
-                                <td>Compound lookup, properties, autocomplete, synonyms, SDF and structure files.</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <a class="source-link" href="https://pubchem.ncbi.nlm.nih.gov/docs/pug-view" target="_blank" rel="noopener noreferrer">
-                                        <i class="ph-fill ph-warning-diamond" aria-hidden="true"></i> PubChem PUG View
-                                    </a>
-                                    <span class="source-note">Structured safety and annotation records.</span>
-                                </td>
-                                <td>GHS hazard classifications, signal words, and safety card details.</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <a class="source-link" href="https://en.wikipedia.org/api/rest_v1/" target="_blank" rel="noopener noreferrer">
-                                        <i class="ph-fill ph-newspaper-clipping" aria-hidden="true"></i> Wikipedia REST API
-                                    </a>
-                                    <span class="source-note">Fallback for plain-language summaries.</span>
-                                </td>
-                                <td>Compound descriptions when PubChem's entries are sparse.</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <a class="source-link" href="https://ai.google.dev/gemini-api/docs" target="_blank" rel="noopener noreferrer">
-                                        <i class="ph-fill ph-sparkle" aria-hidden="true"></i> Gemini API
-                                    </a>
-                                    <span class="source-note">
-                                        Optional - also supports
-                                        <a class="source-link" href="https://console.groq.com/docs/api-reference" target="_blank" rel="noopener noreferrer">
-                                            <i class="ph-fill ph-lightning" aria-hidden="true"></i> Groq
-                                        </a>
-                                    </span>
-                                </td>
-                                <td>Bring-your-own-key AI summaries. The app runs fully without these.</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <a class="source-link" href="https://docs.github.com/en/rest/releases/releases?apiVersion=2022-11-28#get-the-latest-release" target="_blank" rel="noopener noreferrer">
-                                        <i class="ph-fill ph-github-logo" aria-hidden="true"></i> GitHub Releases API
-                                    </a>
-                                    <span class="source-note">Release metadata endpoint.</span>
-                                </td>
-                                <td>Latest APK version check and update status shown in the header.</td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <section class="section-slab reveal" id="stack">
+                <div class="section-head">
+                    <div>
+                        <p class="section-kicker">Under the hood</p>
+                        <h2>A native Android app with direct integrations and very little mystery.</h2>
+                    </div>
+                    <p class="section-lead">ChemSearch stays intentionally straightforward: public APIs, a Kotlin Android stack, and optional AI providers that only activate when you bring your own key.</p>
                 </div>
 
-                <div class="meta-grid">
-                    <article class="meta-card info-card">
-                        <h3><i class="ph-fill ph-check-circle" aria-hidden="true"></i><span>Requirements</span></h3>
-                        <ul>
-                            <li>Android 8.0+ (API 26+), internet connection</li>
-                            <li>Android Studio Hedgehog+ to build from source</li>
-                            <li>No API keys required to use the app</li>
-                        </ul>
+                <div class="merge-grid">
+                    <article class="merge-surface span-8">
+                        <p class="surface-kicker">Implementation</p>
+                        <div class="table-shell">
+                            <table>
+                                <thead>
+                                    <tr><th>Component</th><th>Technology</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Language</td><td>Kotlin</td></tr>
+                                    <tr><td>UI</td><td>Jetpack Compose + Material 3</td></tr>
+                                    <tr><td>Networking</td><td>Retrofit 2 + OkHttp</td></tr>
+                                    <tr><td>Image loading</td><td>Coil</td></tr>
+                                    <tr><td>Async</td><td>Kotlin Coroutines + StateFlow</td></tr>
+                                    <tr><td>JSON</td><td>Gson</td></tr>
+                                    <tr><td>3D rendering</td><td>Custom native Canvas engine</td></tr>
+                                    <tr><td>Storage</td><td>SharedPreferences + local cache</td></tr>
+                                </tbody>
+                            </table>
+
+                            <table>
+                                <thead>
+                                    <tr><th>Source</th><th>Used for</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <a class="source-link" href="https://pubchem.ncbi.nlm.nih.gov/docs/pug-rest-tutorial" target="_blank" rel="noopener noreferrer">
+                                                <i class="ph-fill ph-flask" aria-hidden="true"></i> PubChem PUG REST
+                                            </a>
+                                            <span class="source-note">Compound records, structures, autocomplete, synonyms, and exports.</span>
+                                        </td>
+                                        <td>Search, identifiers, structure files, and most compound-facing data.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <a class="source-link" href="https://pubchem.ncbi.nlm.nih.gov/docs/pug-view" target="_blank" rel="noopener noreferrer">
+                                                <i class="ph-fill ph-warning-diamond" aria-hidden="true"></i> PubChem PUG View
+                                            </a>
+                                            <span class="source-note">Structured safety and annotation records.</span>
+                                        </td>
+                                        <td>GHS classifications, signal words, and safety card details.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <a class="source-link" href="https://en.wikipedia.org/api/rest_v1/" target="_blank" rel="noopener noreferrer">
+                                                <i class="ph-fill ph-newspaper-clipping" aria-hidden="true"></i> Wikipedia REST API
+                                            </a>
+                                            <span class="source-note">Fallback for plain-language summaries.</span>
+                                        </td>
+                                        <td>Descriptions when PubChem entries are sparse.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <a class="source-link" href="https://ai.google.dev/gemini-api/docs" target="_blank" rel="noopener noreferrer">
+                                                <i class="ph-fill ph-sparkle" aria-hidden="true"></i> Gemini API
+                                            </a>
+                                            <span class="source-note">Optional - also supports Groq with your own key.</span>
+                                        </td>
+                                        <td>Optional AI summaries; the main app remains fully usable without them.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </article>
 
-                    <article class="meta-card info-card">
-                        <h3><i class="ph-fill ph-lock-key" aria-hidden="true"></i><span>Permissions</span></h3>
-                        <ul>
-                            <li><code>INTERNET</code> - compound data and release checks</li>
-                            <li><code>POST_NOTIFICATIONS</code> - optional update alerts</li>
-                            <li><code>WRITE_EXTERNAL_STORAGE</code> - Android 9 and below only</li>
-                        </ul>
-                    </article>
-
-                    <article class="meta-card info-card">
-                        <h3><i class="ph-fill ph-shield-check" aria-hidden="true"></i><span>Privacy</span></h3>
-                        <p>No analytics, no telemetry, no creepy extras. Favorites, search history, cache, and API keys live on your device. Data goes directly to PubChem, Wikipedia, Gemini, or Groq - no intermediate servers.</p>
+                    <article class="merge-surface span-4">
+                        <p class="surface-kicker">Requirements and privacy</p>
+                        <div class="stack-rows">
+                            <div class="stack-row">
+                                <h3 class="surface-title">Requirements</h3>
+                                <ul class="stack-list">
+                                    <li>Android 8.0+ (API 26+) with internet access for live data.</li>
+                                    <li>Android Studio Hedgehog or newer to build from source.</li>
+                                    <li>No API key required unless you enable optional AI summaries.</li>
+                                </ul>
+                            </div>
+                            <div class="stack-row">
+                                <h3 class="surface-title">Permissions</h3>
+                                <ul class="stack-list">
+                                    <li><code>INTERNET</code> for compound data, descriptions, and release checks.</li>
+                                    <li><code>POST_NOTIFICATIONS</code> for optional update alerts.</li>
+                                    <li><code>WRITE_EXTERNAL_STORAGE</code> only for legacy export support on Android 9 and below.</li>
+                                </ul>
+                            </div>
+                            <div class="stack-row">
+                                <h3 class="surface-title">Privacy</h3>
+                                <p>The app does not require an account. Favorites, recents, cache, and any API keys stay on your device, and requests go directly to the upstream data source or provider you enable.</p>
+                            </div>
+                        </div>
                     </article>
                 </div>
             </section>
 
             <footer class="footer reveal">
-                <span>MIT licensed. Built by FurtherSecrets24680. No account wall, no nonsense.</span>
-                <span>
-                    <a href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer">Releases</a> ·
-                    <a href="https://github.com/FurtherSecrets24680/chemsearch-android" target="_blank" rel="noopener noreferrer">Repository</a>
-                </span>
+                <div class="footer-shell">
+                    <div class="footer-main">
+                        <div class="footer-brand">
+                            <p class="footer-eyebrow">Stay connected</p>
+                            <h2>Everything you need, plus the right links when you want more.</h2>
+                            <p>ChemSearch is open source and built to be easy to download, inspect, and follow. Grab the latest APK, jump into the repository, or find FurtherSecrets across the platforms where new work and updates show up.</p>
+                            <div class="footer-cta">
+                                <a class="footer-pill footer-pill-primary" href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer">
+                                    <i class="ph-bold ph-download-simple" aria-hidden="true"></i><span>Download latest APK</span>
+                                </a>
+                                <a class="footer-pill footer-pill-secondary" href="faq.html">
+                                    <i class="ph-bold ph-question" aria-hidden="true"></i><span>Read the FAQ</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="footer-links-grid">
+                            <section class="footer-col">
+                                <h3>Quick links</h3>
+                                <div class="footer-list">
+                                    <a class="footer-link" href="#features" data-section-link>
+                                        <span class="footer-link-copy">
+                                            <strong>Features</strong>
+                                            <span>See how search, identifiers, structure, and safety are grouped into one workflow.</span>
+                                        </span>
+                                        <i class="ph-bold ph-arrow-up-right" aria-hidden="true"></i>
+                                    </a>
+                                    <a class="footer-link" href="#screenshots" data-section-link>
+                                        <span class="footer-link-copy">
+                                            <strong>Screenshots</strong>
+                                            <span>Browse the UI gallery and open any screen into the lightbox.</span>
+                                        </span>
+                                        <i class="ph-bold ph-arrow-up-right" aria-hidden="true"></i>
+                                    </a>
+                                    <a class="footer-link" href="#stack" data-section-link>
+                                        <span class="footer-link-copy">
+                                            <strong>Tech stack</strong>
+                                            <span>Review the Android stack, public APIs, and project requirements.</span>
+                                        </span>
+                                        <i class="ph-bold ph-arrow-up-right" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </section>
+
+                            <section class="footer-col">
+                                <h3>Project</h3>
+                                <div class="footer-list">
+                                    <a class="footer-link" href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer">
+                                        <span class="footer-link-copy">
+                                            <strong>Releases</strong>
+                                            <span>Download builds and follow version updates on GitHub.</span>
+                                        </span>
+                                        <i class="ph-bold ph-rocket-launch" aria-hidden="true"></i>
+                                    </a>
+                                    <a class="footer-link" href="https://github.com/FurtherSecrets24680/chemsearch-android" target="_blank" rel="noopener noreferrer">
+                                        <span class="footer-link-copy">
+                                            <strong>Source code</strong>
+                                            <span>Inspect the Kotlin app, architecture, and project structure.</span>
+                                        </span>
+                                        <i class="ph-bold ph-code" aria-hidden="true"></i>
+                                    </a>
+                                    <a class="footer-link" href="https://github.com/FurtherSecrets24680/chemsearch-android/issues" target="_blank" rel="noopener noreferrer">
+                                        <span class="footer-link-copy">
+                                            <strong>Issues</strong>
+                                            <span>Report a bug, request a feature, or track project discussion.</span>
+                                        </span>
+                                        <i class="ph-bold ph-bug" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </section>
+
+                            <section class="footer-col">
+                                <h3>Profiles</h3>
+                                <div class="footer-list">
+                                    <a class="footer-link" href="https://github.com/FurtherSecrets24680" target="_blank" rel="noopener noreferrer">
+                                        <span class="footer-link-copy">
+                                            <strong>GitHub</strong>
+                                            <span>@FurtherSecrets24680</span>
+                                        </span>
+                                        <i class="ph-bold ph-github-logo" aria-hidden="true"></i>
+                                    </a>
+                                    <a class="footer-link" href="https://www.instagram.com/notfurthersecrets/" target="_blank" rel="noopener noreferrer">
+                                        <span class="footer-link-copy">
+                                            <strong>Instagram</strong>
+                                            <span>@notfurthersecrets</span>
+                                        </span>
+                                        <i class="ph-bold ph-instagram-logo" aria-hidden="true"></i>
+                                    </a>
+                                    <a class="footer-link" href="https://www.youtube.com/@furthersecrets" target="_blank" rel="noopener noreferrer">
+                                        <span class="footer-link-copy">
+                                            <strong>YouTube</strong>
+                                            <span>@furthersecrets</span>
+                                        </span>
+                                        <i class="ph-bold ph-youtube-logo" aria-hidden="true"></i>
+                                    </a>
+                                    <a class="footer-link" href="https://www.reddit.com/user/FurtherSecrets24680/" target="_blank" rel="noopener noreferrer">
+                                        <span class="footer-link-copy">
+                                            <strong>Reddit</strong>
+                                            <span>u/FurtherSecrets24680</span>
+                                        </span>
+                                        <i class="ph-bold ph-reddit-logo" aria-hidden="true"></i>
+                                    </a>
+                                    <a class="footer-link" href="https://x.com/FurSec24680" target="_blank" rel="noopener noreferrer">
+                                        <span class="footer-link-copy">
+                                            <strong>X</strong>
+                                            <span>@FurSec24680</span>
+                                        </span>
+                                        <i class="ph-bold ph-x-logo" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+
+                    <div class="footer-meta">
+                        <span><strong>ChemSearch</strong> is MIT licensed and runs as a direct, native Android app.</span>
+                        <span>Data flows directly to public APIs and optional AI providers you enable.</span>
+                    </div>
+                </div>
             </footer>
         </main>
     </div>
@@ -2384,374 +680,5 @@
     </div>
 
     <button class="to-top" id="toTopBtn" type="button" aria-label="Back to top">↑ Top</button>
-
-    <script>
-    (function () {
-        'use strict';
-
-        const body = document.body;
-        const themeToggle = document.getElementById('themeToggle');
-        const themeToggleIcon = document.getElementById('themeToggleIcon');
-        const releaseStatus = document.getElementById('releaseStatus');
-        const releaseStatusText = document.getElementById('releaseStatusText');
-        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-        const mobileMenuIcon = document.getElementById('mobileMenuIcon');
-        const mobileNavPanel = document.getElementById('mobileNavPanel');
-        const sectionLinks = Array.from(document.querySelectorAll('.section-link'));
-        const sections = sectionLinks
-            .map((link) => document.querySelector(link.getAttribute('href')))
-            .filter(Boolean);
-        const galleryLightbox = document.getElementById('galleryLightbox');
-        const galleryLightboxImage = document.getElementById('galleryLightboxImage');
-        const galleryLightboxCaption = document.getElementById('galleryLightboxCaption');
-        const galleryLightboxClose = document.getElementById('galleryLightboxClose');
-        const galleryCards = Array.from(document.querySelectorAll('.gallery-card'));
-        const heroPreviewImage = document.getElementById('heroPreviewImage');
-        const heroPreviewCaption = document.getElementById('heroPreviewCaption');
-        const screenshotsTrack = document.getElementById('screenshotsCarouselTrack');
-        const screenshotsPrev = document.getElementById('screenshotsPrev');
-        const screenshotsNext = document.getElementById('screenshotsNext');
-        const screenshotsDots = document.getElementById('screenshotsCarouselDots');
-        const screenshotsStatus = document.getElementById('screenshotsCarouselStatus');
-        const screenshotSlides = screenshotsTrack
-            ? Array.from(screenshotsTrack.querySelectorAll('.carousel-slide'))
-            : [];
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const mobileBreakpoint = window.matchMedia('(max-width: 760px)');
-        const themeKey = 'chemsearch-theme';
-        const heroPreviewSources = {
-            dark: {
-                src: 'hero-home-dark.jpg',
-                alt: 'ChemSearch home screen preview in dark mode',
-                caption: 'Search workspace · dark mode'
-            },
-            light: {
-                src: 'hero-home-light.jpg',
-                alt: 'ChemSearch home screen preview in light mode',
-                caption: 'Search workspace · light mode'
-            }
-        };
-        let galleryReturnFocus = null;
-
-        function syncHeroPreview(theme) {
-            if (!heroPreviewImage) return;
-            const preview = heroPreviewSources[theme === 'dark' ? 'dark' : 'light'];
-            heroPreviewImage.src = preview.src;
-            heroPreviewImage.alt = preview.alt;
-            if (heroPreviewCaption) heroPreviewCaption.textContent = preview.caption;
-        }
-
-        function setTheme(theme, persist) {
-            const isDark = theme === 'dark';
-            body.setAttribute('data-theme', isDark ? 'dark' : 'light');
-            if (themeToggle) {
-                themeToggle.setAttribute('aria-pressed', String(isDark));
-                themeToggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
-            }
-            if (themeToggleIcon) {
-                themeToggleIcon.className = isDark ? 'ph-fill ph-sun-dim' : 'ph-fill ph-moon-stars';
-            }
-            syncHeroPreview(isDark ? 'dark' : 'light');
-            if (persist) localStorage.setItem(themeKey, isDark ? 'dark' : 'light');
-        }
-
-        const savedTheme = localStorage.getItem(themeKey);
-        setTheme(
-            savedTheme || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'),
-            false
-        );
-
-        if (themeToggle) {
-            themeToggle.addEventListener('click', () => {
-                const isDark = body.getAttribute('data-theme') === 'dark';
-                setTheme(isDark ? 'light' : 'dark', true);
-            });
-        }
-        function setMobileNavState(isOpen) {
-            body.classList.toggle('mobile-nav-open', isOpen);
-            if (mobileMenuToggle) mobileMenuToggle.setAttribute('aria-expanded', String(isOpen));
-            if (mobileMenuIcon) mobileMenuIcon.className = isOpen ? 'ph-bold ph-x' : 'ph-bold ph-list';
-        }
-
-        function closeMobileNavIfMobile() {
-            if (mobileBreakpoint.matches) setMobileNavState(false);
-        }
-
-        if (mobileMenuToggle) {
-            mobileMenuToggle.addEventListener('click', () => {
-                setMobileNavState(!body.classList.contains('mobile-nav-open'));
-            });
-        }
-
-        mobileBreakpoint.addEventListener('change', (e) => {
-            if (!e.matches) setMobileNavState(false);
-        });
-
-        document.querySelectorAll('.section-link')
-            .forEach((el) => el.addEventListener('click', closeMobileNavIfMobile));
-
-        document.addEventListener('click', (e) => {
-            if (!body.classList.contains('mobile-nav-open') || !mobileBreakpoint.matches) return;
-            if (!(e.target instanceof Node)) return;
-            if (mobileNavPanel && mobileNavPanel.contains(e.target)) return;
-            if (mobileMenuToggle && mobileMenuToggle.contains(e.target)) return;
-            setMobileNavState(false);
-        });
-        const revealEls = Array.from(document.querySelectorAll('.reveal'));
-        if ('IntersectionObserver' in window) {
-            const io = new IntersectionObserver((entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('is-visible');
-                        io.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
-            revealEls.forEach((el) => io.observe(el));
-        } else {
-            revealEls.forEach((el) => el.classList.add('is-visible'));
-        }
-        if (sections.length && sectionLinks.length) {
-            let lastActive = null;
-            const secObs = new IntersectionObserver((entries) => {
-                entries.forEach((entry) => {
-                    if (!entry.isIntersecting) return;
-                    const link = sectionLinks.find(
-                        (l) => l.getAttribute('href') === '#' + entry.target.id
-                    );
-                    if (!link) return;
-                    if (lastActive && lastActive !== link) lastActive.classList.remove('is-active');
-                    link.classList.add('is-active');
-                    lastActive = link;
-                });
-            }, { threshold: 0.3, rootMargin: '0px 0px -40% 0px' });
-            sections.forEach((s) => secObs.observe(s));
-        }
-        const toolsMoreBtn = document.getElementById('toolsMoreBtn');
-        const toolsMoreLabel = document.getElementById('toolsMoreLabel');
-        const extraTools = Array.from(document.querySelectorAll('.tool-extra'));
-        if (toolsMoreBtn) {
-            toolsMoreBtn.addEventListener('click', () => {
-                const isOpen = toolsMoreBtn.classList.toggle('is-open');
-                toolsMoreBtn.setAttribute('aria-expanded', String(isOpen));
-                extraTools.forEach((t) => t.classList.toggle('is-visible', isOpen));
-                if (toolsMoreLabel) {
-                    toolsMoreLabel.textContent = isOpen ? 'Show fewer tools' : 'Show 6 more tools';
-                }
-            });
-        }
-        function openLightbox(src, caption) {
-            if (!galleryLightbox || !galleryLightboxImage) return;
-            galleryLightboxImage.src = src;
-            galleryLightboxImage.alt = caption || '';
-            if (galleryLightboxCaption) galleryLightboxCaption.textContent = caption || '';
-            galleryLightbox.hidden = false;
-            document.body.style.overflow = 'hidden';
-            if (galleryLightboxClose) galleryLightboxClose.focus();
-        }
-
-        function closeLightbox() {
-            if (!galleryLightbox) return;
-            galleryLightbox.hidden = true;
-            document.body.style.overflow = '';
-            if (galleryReturnFocus) { galleryReturnFocus.focus(); galleryReturnFocus = null; }
-        }
-
-        if (galleryLightbox) {
-            galleryLightbox.addEventListener('keydown', (e) => {
-                if (galleryLightbox.hidden || e.key !== 'Tab') return;
-                const focusable = Array.from(galleryLightbox.querySelectorAll(
-                    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-                )).filter((el) => !el.disabled && el.offsetParent !== null);
-                if (!focusable.length) { e.preventDefault(); return; }
-                const first = focusable[0];
-                const last = focusable[focusable.length - 1];
-                if (e.shiftKey && document.activeElement === first) {
-                    e.preventDefault(); last.focus();
-                } else if (!e.shiftKey && document.activeElement === last) {
-                    e.preventDefault(); first.focus();
-                }
-            });
-            galleryLightbox.addEventListener('click', (e) => {
-                if (e.target === galleryLightbox) closeLightbox();
-            });
-        }
-
-        galleryCards.forEach((card) => {
-            card.addEventListener('click', () => {
-                galleryReturnFocus = card;
-                openLightbox(card.dataset.previewSrc || '', card.dataset.previewCaption || '');
-            });
-        });
-
-        if (galleryLightboxClose) galleryLightboxClose.addEventListener('click', closeLightbox);
-        if (screenshotsTrack && screenshotSlides.length) {
-            const total = screenshotSlides.length;
-            let currentIndex = 0;
-            const dotButtons = [];
-            screenshotSlides.forEach((_, i) => {
-                if (!screenshotsDots) return;
-                const dot = document.createElement('button');
-                dot.type = 'button';
-                dot.className = 'carousel-dot';
-                dot.setAttribute('role', 'tab');
-                dot.setAttribute('aria-label', `Go to screenshot ${i + 1}`);
-                dot.setAttribute('aria-selected', 'false');
-                dot.tabIndex = -1;
-                dot.addEventListener('click', () => goTo(i));
-                screenshotsDots.appendChild(dot);
-                dotButtons.push(dot);
-            });
-            function getScrollTargetForIndex(i) {
-                const slide = screenshotSlides[i];
-                if (!slide) return 0;
-                return slide.offsetLeft - screenshotsTrack.offsetLeft;
-            }
-
-            function updateUI(i) {
-                currentIndex = Math.max(0, Math.min(total - 1, i));
-                dotButtons.forEach((dot, di) => {
-                    const active = di === currentIndex;
-                    dot.classList.toggle('is-active', active);
-                    dot.setAttribute('aria-selected', String(active));
-                    dot.tabIndex = active ? 0 : -1;
-                });
-                if (screenshotsStatus) screenshotsStatus.textContent = `${currentIndex + 1} / ${total}`;
-                if (screenshotsPrev) screenshotsPrev.disabled = currentIndex === 0;
-                if (screenshotsNext) screenshotsNext.disabled = currentIndex === total - 1;
-            }
-
-            function goTo(i, smooth = true) {
-                const target = Math.max(0, Math.min(total - 1, i));
-                updateUI(target);
-                const left = getScrollTargetForIndex(target);
-                screenshotsTrack.scrollTo({
-                    left,
-                    behavior: (smooth && !prefersReducedMotion) ? 'smooth' : 'auto'
-                });
-            }
-            let syncTimer = null;
-            function syncFromScroll() {
-                let closest = 0;
-                let closestDist = Infinity;
-                const trackLeft = screenshotsTrack.scrollLeft;
-                screenshotSlides.forEach((slide, i) => {
-                    const slideLeft = slide.offsetLeft - screenshotsTrack.offsetLeft;
-                    const dist = Math.abs(slideLeft - trackLeft);
-                    if (dist < closestDist) { closestDist = dist; closest = i; }
-                });
-                if (closest !== currentIndex) updateUI(closest);
-            }
-
-            screenshotsTrack.addEventListener('scroll', () => {
-                clearTimeout(syncTimer);
-                syncTimer = setTimeout(syncFromScroll, 80);
-            }, { passive: true });
-            screenshotsTrack.addEventListener('keydown', (e) => {
-                if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-                    e.preventDefault(); goTo(currentIndex + 1);
-                } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-                    e.preventDefault(); goTo(currentIndex - 1);
-                } else if (e.key === 'Home') {
-                    e.preventDefault(); goTo(0);
-                } else if (e.key === 'End') {
-                    e.preventDefault(); goTo(total - 1);
-                }
-            });
-            let isDragging = false, didDrag = false, dragStartX = 0, dragStartScroll = 0;
-
-            screenshotsTrack.addEventListener('pointerdown', (e) => {
-                if (e.button !== 0) return;
-                isDragging = true;
-                didDrag = false;
-                dragStartX = e.clientX;
-                dragStartScroll = screenshotsTrack.scrollLeft;
-                screenshotsTrack.setPointerCapture(e.pointerId);
-            });
-
-            screenshotsTrack.addEventListener('pointermove', (e) => {
-                if (!isDragging) return;
-                const delta = e.clientX - dragStartX;
-                if (Math.abs(delta) > 6) didDrag = true;
-                screenshotsTrack.scrollLeft = dragStartScroll - delta;
-            });
-
-            function endDrag(e) {
-                if (!isDragging) return;
-                isDragging = false;
-                if (didDrag) {
-                    screenshotsTrack.dataset.dragged = '1';
-                    requestAnimationFrame(() => { screenshotsTrack.dataset.dragged = '0'; });
-                    syncFromScroll();
-                    goTo(currentIndex, true);
-                }
-                if (e && e.pointerId !== undefined) {
-                    try { screenshotsTrack.releasePointerCapture(e.pointerId); } catch (_) {}
-                }
-            }
-
-            screenshotsTrack.addEventListener('pointerup', endDrag);
-            screenshotsTrack.addEventListener('pointercancel', endDrag);
-            screenshotsTrack.addEventListener('click', (e) => {
-                if (screenshotsTrack.dataset.dragged === '1') e.stopPropagation();
-            }, true);
-            screenshotsTrack.addEventListener('wheel', (e) => {
-                if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
-                e.preventDefault();
-                screenshotsTrack.scrollLeft += e.deltaY;
-            }, { passive: false });
-            if (screenshotsPrev) screenshotsPrev.addEventListener('click', () => goTo(currentIndex - 1));
-            if (screenshotsNext) screenshotsNext.addEventListener('click', () => goTo(currentIndex + 1));
-            let resizeTimer = null;
-            window.addEventListener('resize', () => {
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(() => goTo(currentIndex, false), 120);
-            }, { passive: true });
-            goTo(0, false);
-        }
-        const toTopBtn = document.getElementById('toTopBtn');
-        if (toTopBtn) {
-            window.addEventListener('scroll', () => {
-                toTopBtn.classList.toggle('is-visible', window.scrollY > 420);
-            }, { passive: true });
-            toTopBtn.addEventListener('click', () => {
-                window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
-            });
-        }
-        document.addEventListener('keydown', (e) => {
-            if (e.key !== 'Escape') return;
-            if (galleryLightbox && !galleryLightbox.hidden) { closeLightbox(); return; }
-            if (body.classList.contains('mobile-nav-open')) setMobileNavState(false);
-        });
-        async function loadRelease() {
-            if (!releaseStatus) return;
-            releaseStatus.setAttribute('aria-busy', 'true');
-            try {
-                const res = await fetch(
-                    'https://api.github.com/repos/FurtherSecrets24680/chemsearch-android/releases/latest',
-                    { headers: { Accept: 'application/vnd.github+json' } }
-                );
-                if (!res.ok) throw new Error('fetch failed');
-                const data = await res.json();
-                const tag = data.tag_name || 'latest';
-                const date = data.published_at
-                    ? new Date(data.published_at).toLocaleDateString('en-US', {
-                        year: 'numeric', month: 'short', day: 'numeric'
-                    })
-                    : '';
-                if (data.html_url) releaseStatus.href = data.html_url;
-                if (releaseStatusText) {
-                    releaseStatusText.textContent = date ? `${tag} · ${date}` : tag;
-                }
-            } catch (_) {
-                if (releaseStatusText) releaseStatusText.textContent = 'Latest release on GitHub';
-            } finally {
-                releaseStatus.setAttribute('aria-busy', 'false');
-            }
-        }
-
-        loadRelease();
-    })();
-    </script>
 </body>
 </html>

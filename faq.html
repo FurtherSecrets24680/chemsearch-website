@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChemSearch FAQ</title>
+    <meta name="description" content="Answers to common ChemSearch questions about features, data sources, privacy, AI keys, exports, installation, and building from source.">
+    <link rel="icon" href="favicon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://api.fontshare.com">
+    <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@500,700,800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script defer src="script.js"></script>
+</head>
+<body class="page-faq">
+    <a class="skip-link" href="#content">Skip to content</a>
+
+    <div class="page-shell">
+        <header class="masthead reveal">
+            <a href="index.html" class="brand" aria-label="ChemSearch Home">
+                <img src="chemsearch-logo.png" alt="ChemSearch logo">
+                <span class="brand-text">
+                    <span class="brand-title">ChemSearch</span>
+                    <span class="brand-sub">CHEMISTRY SIMPLIFIED</span>
+                </span>
+            </a>
+
+            <nav class="primary-nav" aria-label="Primary navigation">
+                <a class="nav-link" href="index.html">Overview</a>
+                <a class="nav-link" href="index.html#features">Features</a>
+                <a class="nav-link" href="index.html#tools">Tools</a>
+                <a class="nav-link" href="index.html#screenshots">Screenshots</a>
+                <a class="nav-link is-current" href="faq.html">FAQ</a>
+                <a class="nav-link" href="index.html#stack">Tech</a>
+            </nav>
+
+            <div class="header-actions">
+                <a class="release-chip" id="releaseStatus" href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer" aria-live="polite" aria-busy="true">
+                    <i class="ph-fill ph-rocket-launch" aria-hidden="true"></i>
+                    <span id="releaseStatusText">Checking latest release…</span>
+                </a>
+                <button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false" aria-label="Toggle dark mode">
+                    <i class="ph-fill ph-moon-stars" id="themeToggleIcon" aria-hidden="true"></i>
+                </button>
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" type="button" aria-controls="mobileNavPanel" aria-expanded="false">
+                    <span class="sr-only">Toggle menu</span>
+                    <i class="ph-bold ph-list" id="mobileMenuIcon" aria-hidden="true"></i>
+                </button>
+            </div>
+        </header>
+
+        <div class="mobile-drawer" id="mobileNavPanel" aria-label="Mobile navigation">
+            <nav class="mobile-nav">
+                <a class="nav-link" href="index.html">Overview</a>
+                <a class="nav-link" href="index.html#features">Features</a>
+                <a class="nav-link" href="index.html#tools">Tools</a>
+                <a class="nav-link" href="index.html#screenshots">Screenshots</a>
+                <a class="nav-link is-current" href="faq.html">FAQ</a>
+                <a class="nav-link" href="index.html#stack">Tech</a>
+                <a class="nav-link" href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer">Latest release</a>
+            </nav>
+        </div>
+
+        <main class="page-main" id="content" tabindex="-1">
+            <section class="section-slab faq-hero reveal">
+                <div class="section-head">
+                    <div>
+                        <p class="section-kicker">Frequently asked questions</p>
+                        <h1>Questions people actually ask before they install.</h1>
+                    </div>
+                    <p class="section-lead">This page covers setup, search behavior, data sources, exports, privacy, AI keys, and building from source. If you want a quick answer before downloading the APK, it is probably here.</p>
+                </div>
+                <div class="faq-jumps" aria-label="FAQ categories">
+                    <a class="faq-jump" href="#faq-getting" data-section-link>Getting started</a>
+                    <a class="faq-jump" href="#faq-search" data-section-link>Search & data</a>
+                    <a class="faq-jump" href="#faq-tools" data-section-link>Features & tools</a>
+                    <a class="faq-jump" href="#faq-build" data-section-link>AI, privacy & build</a>
+                </div>
+            </section>
+
+            <section class="section-slab reveal" id="faq-getting">
+                <div class="section-head">
+                    <div>
+                        <p class="section-kicker">Category one</p>
+                        <h2>Getting started</h2>
+                    </div>
+                    <p class="section-lead">The basics: what ChemSearch is, where it runs, and how to get the app onto a device quickly.</p>
+                </div>
+                <div class="faq-grid">
+                    <details class="faq-item" open>
+                        <summary>What is ChemSearch?</summary>
+                        <div class="faq-answer">
+                            <p>ChemSearch is a native Android chemistry reference app. It helps you search compounds, inspect structures, review safety data, copy identifiers, and use built-in chemistry tools from one interface.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Do I need an account to use it?</summary>
+                        <div class="faq-answer">
+                            <p>No. The app does not require a sign-in flow or account before you can search compounds or use the tools.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>What Android versions are supported?</summary>
+                        <div class="faq-answer">
+                            <p>The app targets Android 8.0 and newer, which corresponds to API level 26 and above.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Can I use ChemSearch on a tablet?</summary>
+                        <div class="faq-answer">
+                            <p>Yes. ChemSearch is designed for Android, so it can run on phones and tablets that meet the platform requirements. Layout and touch behavior remain usable on larger screens as well.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Where should I download the APK from?</summary>
+                        <div class="faq-answer">
+                            <p>The safest source is the official GitHub Releases page for the project. That is where new builds are published and versioned.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Does the app work fully offline?</summary>
+                        <div class="faq-answer">
+                            <p>Compound search and live reference data depend on internet access because the app talks directly to public APIs. Cached results, saved favorites, and some local workflows still help when you revisit something you already opened.</p>
+                        </div>
+                    </details>
+                </div>
+            </section>
+
+            <section class="section-slab reveal" id="faq-search">
+                <div class="section-head">
+                    <div>
+                        <p class="section-kicker">Category two</p>
+                        <h2>Search and data</h2>
+                    </div>
+                    <p class="section-lead">How search behaves, which sources are involved, and why some compound pages may vary depending on source coverage.</p>
+                </div>
+                <div class="faq-grid">
+                    <details class="faq-item">
+                        <summary>What can I search by?</summary>
+                        <div class="faq-answer">
+                            <p>You can search by compound name, CAS number, or PubChem CID. That makes it flexible enough for classroom use, lab work, and quick lookups from documentation.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Which data sources does ChemSearch use?</summary>
+                        <div class="faq-answer">
+                            <p>PubChem is the main source for compound records, structures, autocomplete, identifiers, and safety-related data. Wikipedia is used as a fallback for plain-language descriptions when PubChem entries are sparse.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Does CAS search work directly?</summary>
+                        <div class="faq-answer">
+                            <p>Yes. CAS numbers are part of the search flow, so you can search with the identifier you already have instead of translating it into another field first.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Why do some descriptions look different from one compound to another?</summary>
+                        <div class="faq-answer">
+                            <p>Description quality depends on source coverage. Some compounds have strong PubChem summaries, while others rely on fallback plain-language descriptions when the main record is lighter.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Can I copy identifiers like SMILES, InChI, and CAS?</summary>
+                        <div class="faq-answer">
+                            <p>Yes. ChemSearch is designed so commonly reused identifiers can be copied directly from the result screen without extra navigation.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Does the app cache results?</summary>
+                        <div class="faq-answer">
+                            <p>Yes. There is a local cache for repeat lookups, which helps previously viewed compounds load faster and makes recent work easier to revisit.</p>
+                        </div>
+                    </details>
+                </div>
+            </section>
+
+            <section class="section-slab reveal" id="faq-tools">
+                <div class="section-head">
+                    <div>
+                        <p class="section-kicker">Category three</p>
+                        <h2>Features and tools</h2>
+                    </div>
+                    <p class="section-lead">What the app can do once you find a compound, plus what is included in the built-in chemistry toolkit.</p>
+                </div>
+                <div class="faq-grid">
+                    <details class="faq-item">
+                        <summary>Can I view compounds in 3D?</summary>
+                        <div class="faq-answer">
+                            <p>Yes. ChemSearch includes a native 3D viewer, and compound pages can switch from the 2D structure into an interactive 3D model when supported.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Can I export structure files or images?</summary>
+                        <div class="faq-answer">
+                            <p>Yes. The app supports exports such as SDF and PNG so you can move structures into other workflows without re-searching elsewhere.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>How many built-in tools are included?</summary>
+                        <div class="faq-answer">
+                            <p>ChemSearch includes 11 built-in chemistry tools, covering reference workflows, stoichiometry, gas law calculations, dilution math, reaction scaling, and more.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Does the app include elemental analysis and formula details?</summary>
+                        <div class="faq-answer">
+                            <p>Yes. Compound pages surface formula-level information and elemental breakdown where the source record supports it.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Are GHS hazards and signal words included?</summary>
+                        <div class="faq-answer">
+                            <p>Yes. ChemSearch pulls structured safety information such as signal words, GHS pictograms, and hazard-related details from PubChem where available.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>What happens when a record is missing some data?</summary>
+                        <div class="faq-answer">
+                            <p>The app can still present the fields and views that are available for that compound. Some sections may be less complete when the upstream data source does not provide them.</p>
+                        </div>
+                    </details>
+                </div>
+            </section>
+
+            <section class="section-slab reveal" id="faq-build">
+                <div class="section-head">
+                    <div>
+                        <p class="section-kicker">Category four</p>
+                        <h2>AI, privacy, and building from source</h2>
+                    </div>
+                    <p class="section-lead">The questions that usually come up around API keys, permissions, local storage, and contributing to the project.</p>
+                </div>
+                <div class="faq-grid">
+                    <details class="faq-item">
+                        <summary>Do I need an API key for the app itself?</summary>
+                        <div class="faq-answer">
+                            <p>No. Core use of the app does not require an API key. You only need one if you explicitly enable optional AI summaries.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Which AI providers are supported?</summary>
+                        <div class="faq-answer">
+                            <p>The app supports optional AI summaries using Gemini and Groq. Those providers are not required for the main reference workflow.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Does ChemSearch send my API key through its own backend?</summary>
+                        <div class="faq-answer">
+                            <p>No. The project is built around direct integrations. Keys stay on your device, and requests go directly to the provider you enable.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>What permissions does the app request?</summary>
+                        <div class="faq-answer">
+                            <p>The key permissions are related to internet access, optional update notifications, and export support on older Android versions where storage access behaves differently.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Can I build ChemSearch from source?</summary>
+                        <div class="faq-answer">
+                            <p>Yes. The repository is public and can be opened in Android Studio. The current documented build baseline is Android Studio Hedgehog or newer.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Where should I report a bug or request a feature?</summary>
+                        <div class="faq-answer">
+                            <p>The best place is the GitHub repository, especially the issue tracker. That keeps bug reports, suggestions, and follow-up discussion in one public place.</p>
+                        </div>
+                    </details>
+                </div>
+            </section>
+
+            <section class="section-slab reveal">
+                <div class="section-head">
+                    <div>
+                        <p class="section-kicker">Still need something?</p>
+                        <h2>Use the project links below.</h2>
+                    </div>
+                    <p class="section-lead">If the FAQ does not cover your case, the repository, release page, and issue tracker are the fastest next steps.</p>
+                </div>
+                <div class="section-actions">
+                    <a class="btn btn-primary" href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer">
+                        <i class="ph-bold ph-download-simple" aria-hidden="true"></i><span>Download latest APK</span>
+                    </a>
+                    <a class="btn btn-secondary" href="https://github.com/FurtherSecrets24680/chemsearch-android/issues" target="_blank" rel="noopener noreferrer">
+                        <i class="ph-bold ph-bug" aria-hidden="true"></i><span>Open issue tracker</span>
+                    </a>
+                    <a class="btn btn-secondary" href="index.html">
+                        <i class="ph-bold ph-arrow-left" aria-hidden="true"></i><span>Back to overview</span>
+                    </a>
+                </div>
+            </section>
+
+            <footer class="footer reveal">
+                <div class="footer-shell">
+                    <div class="footer-main">
+                        <div class="footer-brand">
+                            <p class="footer-eyebrow">Stay connected</p>
+                            <h2>Keep the app close and the project links closer.</h2>
+                            <p>The FAQ covers the common questions. When you want builds, source, or updates from FurtherSecrets, the links below are the fastest way to get there.</p>
+                            <div class="footer-cta">
+                                <a class="footer-pill footer-pill-primary" href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer">
+                                    <i class="ph-bold ph-download-simple" aria-hidden="true"></i><span>Download latest APK</span>
+                                </a>
+                                <a class="footer-pill footer-pill-secondary" href="index.html">
+                                    <i class="ph-bold ph-arrow-left" aria-hidden="true"></i><span>Back to homepage</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="footer-links-grid">
+                            <section class="footer-col">
+                                <h3>Quick links</h3>
+                                <div class="footer-list">
+                                    <a class="footer-link" href="index.html#features">
+                                        <span class="footer-link-copy">
+                                            <strong>Features</strong>
+                                            <span>Review the main lookup, structure, and safety workflow.</span>
+                                        </span>
+                                        <i class="ph-bold ph-arrow-up-right" aria-hidden="true"></i>
+                                    </a>
+                                    <a class="footer-link" href="index.html#screenshots">
+                                        <span class="footer-link-copy">
+                                            <strong>Screenshots</strong>
+                                            <span>Jump back to the live UI gallery and previews.</span>
+                                        </span>
+                                        <i class="ph-bold ph-arrow-up-right" aria-hidden="true"></i>
+                                    </a>
+                                    <a class="footer-link" href="index.html#stack">
+                                        <span class="footer-link-copy">
+                                            <strong>Tech stack</strong>
+                                            <span>See the app architecture, sources, and implementation details.</span>
+                                        </span>
+                                        <i class="ph-bold ph-arrow-up-right" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </section>
+
+                            <section class="footer-col">
+                                <h3>Project</h3>
+                                <div class="footer-list">
+                                    <a class="footer-link" href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer">
+                                        <span class="footer-link-copy">
+                                            <strong>Releases</strong>
+                                            <span>Download builds and follow version updates on GitHub.</span>
+                                        </span>
+                                        <i class="ph-bold ph-rocket-launch" aria-hidden="true"></i>
+                                    </a>
+                                    <a class="footer-link" href="https://github.com/FurtherSecrets24680/chemsearch-android" target="_blank" rel="noopener noreferrer">
+                                        <span class="footer-link-copy">
+                                            <strong>Source code</strong>
+                                            <span>Inspect the Kotlin app, stack, and project structure.</span>
+                                        </span>
+                                        <i class="ph-bold ph-code" aria-hidden="true"></i>
+                                    </a>
+                                    <a class="footer-link" href="https://github.com/FurtherSecrets24680/chemsearch-android/issues" target="_blank" rel="noopener noreferrer">
+                                        <span class="footer-link-copy">
+                                            <strong>Issues</strong>
+                                            <span>Report a bug, request a feature, or track discussion.</span>
+                                        </span>
+                                        <i class="ph-bold ph-bug" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </section>
+
+                            <section class="footer-col">
+                                <h3>Profiles</h3>
+                                <div class="footer-list">
+                                    <a class="footer-link" href="https://github.com/FurtherSecrets24680" target="_blank" rel="noopener noreferrer">
+                                        <span class="footer-link-copy">
+                                            <strong>GitHub</strong>
+                                            <span>@FurtherSecrets24680</span>
+                                        </span>
+                                        <i class="ph-bold ph-github-logo" aria-hidden="true"></i>
+                                    </a>
+                                    <a class="footer-link" href="https://www.instagram.com/notfurthersecrets/" target="_blank" rel="noopener noreferrer">
+                                        <span class="footer-link-copy">
+                                            <strong>Instagram</strong>
+                                            <span>@notfurthersecrets</span>
+                                        </span>
+                                        <i class="ph-bold ph-instagram-logo" aria-hidden="true"></i>
+                                    </a>
+                                    <a class="footer-link" href="https://www.youtube.com/@furthersecrets" target="_blank" rel="noopener noreferrer">
+                                        <span class="footer-link-copy">
+                                            <strong>YouTube</strong>
+                                            <span>@furthersecrets</span>
+                                        </span>
+                                        <i class="ph-bold ph-youtube-logo" aria-hidden="true"></i>
+                                    </a>
+                                    <a class="footer-link" href="https://www.reddit.com/user/FurtherSecrets24680/" target="_blank" rel="noopener noreferrer">
+                                        <span class="footer-link-copy">
+                                            <strong>Reddit</strong>
+                                            <span>u/FurtherSecrets24680</span>
+                                        </span>
+                                        <i class="ph-bold ph-reddit-logo" aria-hidden="true"></i>
+                                    </a>
+                                    <a class="footer-link" href="https://x.com/FurSec24680" target="_blank" rel="noopener noreferrer">
+                                        <span class="footer-link-copy">
+                                            <strong>X</strong>
+                                            <span>@FurSec24680</span>
+                                        </span>
+                                        <i class="ph-bold ph-x-logo" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+
+                    <div class="footer-meta">
+                        <span><strong>ChemSearch</strong> is MIT licensed and runs as a direct, native Android app.</span>
+                        <span>Data flows directly to public APIs and optional AI providers you enable.</span>
+                    </div>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <button class="to-top" id="toTopBtn" type="button" aria-label="Back to top">↑ Top</button>
+</body>
+</html>
