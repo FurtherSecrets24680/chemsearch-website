@@ -15,29 +15,6 @@
     const mobileNavPanel = document.getElementById('mobileNavPanel');
     const toTopBtn = document.getElementById('toTopBtn');
 
-    const heroPreviewImage = document.getElementById('heroPreviewImage');
-    const heroPreviewCaption = document.getElementById('heroPreviewCaption');
-    const heroPreviewSources = {
-        dark: {
-            src: 'hero-home-dark.jpg',
-            alt: 'ChemSearch home screen preview in dark mode',
-            caption: 'Search workspace · dark mode'
-        },
-        light: {
-            src: 'hero-home-light.jpg',
-            alt: 'ChemSearch home screen preview in light mode',
-            caption: 'Search workspace · light mode'
-        }
-    };
-
-    function syncHeroPreview(theme) {
-        if (!heroPreviewImage) return;
-        const preview = heroPreviewSources[theme === 'dark' ? 'dark' : 'light'];
-        heroPreviewImage.src = preview.src;
-        heroPreviewImage.alt = preview.alt;
-        if (heroPreviewCaption) heroPreviewCaption.textContent = preview.caption;
-    }
-
     function setTheme(theme, persist) {
         const isDark = theme === 'dark';
         body.setAttribute('data-theme', isDark ? 'dark' : 'light');
@@ -48,7 +25,6 @@
         if (themeToggleIcon) {
             themeToggleIcon.className = isDark ? 'ph-fill ph-sun-dim' : 'ph-fill ph-moon-stars';
         }
-        syncHeroPreview(isDark ? 'dark' : 'light');
         if (persist) localStorage.setItem(themeKey, isDark ? 'dark' : 'light');
     }
 

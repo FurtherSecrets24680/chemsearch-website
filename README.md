@@ -19,8 +19,6 @@ chemsearch/
 ├── styles.css
 ├── chemsearch-logo.png
 ├── favicon.png
-├── hero-home-dark.jpg
-├── hero-home-light.jpg
 ├── LICENSE
 └── README.md
 ```
