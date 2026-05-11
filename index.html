@@ -4,7 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ChemSearch - Chemistry Simplified</title>
-    <meta name="description" content="ChemSearch is a native Android app for compound search, structure viewing, GHS safety data, elemental analysis, and built-in chemistry tools.">
+    <meta name="description" content="ChemSearch is a native Android app for PubChem lookup, 2D and 3D structures, GHS safety data, a 659-entry offline chemistry database, and 12 built-in tools.">
+    <meta property="og:title" content="ChemSearch for Android">
+    <meta property="og:description" content="Compound lookup, 2D/3D structures, GHS safety data, a 659-entry offline chemistry database, and 12 built-in tools in one native Android app.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="chemsearch-logo.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="ChemSearch for Android">
+    <meta name="twitter:description" content="Search compounds, inspect structures, browse offline reference data, and use practical chemistry tools on Android.">
+    <meta name="twitter:image" content="chemsearch-logo.png">
     <link rel="icon" href="favicon.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -70,10 +78,10 @@
                     <div class="hero-copy">
                         <div class="section-head">
                             <div>
-                                <p class="section-kicker">Native Android · Open Source · MIT</p>
-                                <h1>Chemistry search that feels like one <em>connected surface</em>.</h1>
+                                <p class="section-kicker">Native Android · Material 3 blue · MIT</p>
+                                <h1>ChemSearch for Android</h1>
                             </div>
-                            <p class="section-lead">ChemSearch brings compound lookup, structures, GHS safety information, identifiers, and built-in chemistry tools into one Android flow that stays fast and readable.</p>
+                            <p class="section-lead">Search compounds, inspect 2D and 3D structures, copy identifiers, check safety context, browse an offline chemistry database, and use practical calculators from one clean Android app.</p>
                         </div>
 
                         <div class="hero-actions">
@@ -83,27 +91,27 @@
                             <a class="btn btn-secondary" href="#screenshots" data-section-link>
                                 <i class="ph-bold ph-images-square" aria-hidden="true"></i><span>See the interface</span>
                             </a>
-                            <a class="btn btn-secondary" href="faq.html">
-                                <i class="ph-bold ph-question" aria-hidden="true"></i><span>Read the FAQ</span>
+                            <a class="btn btn-secondary" href="#features" data-section-link>
+                                <i class="ph-bold ph-list-checks" aria-hidden="true"></i><span>View features</span>
                             </a>
                         </div>
 
                         <div class="hero-points" aria-label="What ChemSearch covers">
                             <div class="hero-point">
-                                <strong>Search by name, CAS, or CID</strong>
-                                <span>Use the identifier you already have instead of translating it into another workflow.</span>
+                                <strong>Search by name, formula, CAS, or CID</strong>
+                                <span>Use the identifier you already have, including common names, IUPAC names, formulas, and PubChem IDs.</span>
                             </div>
                             <div class="hero-point">
                                 <strong>Move through structure and safety fast</strong>
-                                <span>2D, 3D, identifiers, elemental analysis, and GHS stay close together on the result page.</span>
+                                <span>2D images, native 3D models, identifiers, elemental analysis, synonyms, and GHS details stay close together.</span>
                             </div>
                             <div class="hero-point">
-                                <strong>Keep repeat work local</strong>
-                                <span>Favorites, recents, and cache help you reopen compounds without starting over.</span>
+                                <strong>Use the offline reference database</strong>
+                                <span>Browse 659 substances, ions, functional groups, and reactions without leaving the Tools tab.</span>
                             </div>
                             <div class="hero-point">
                                 <strong>Use AI only if you want it</strong>
-                                <span>Optional summaries support your own Gemini or Groq key while the core app remains fully usable without AI.</span>
+                                <span>Optional summaries support Gemini, Groq, OpenAI, OpenRouter, or Mistral with your own API key.</span>
                             </div>
                         </div>
                     </div>
@@ -113,7 +121,7 @@
                             <div class="hero-preview-head">
                                 <span class="hero-preview-chip">
                                     <span class="hero-preview-dot" aria-hidden="true"></span>
-                                    Live app preview
+                                    Android app preview
                                 </span>
                                 <span class="hero-preview-caption" id="heroPreviewCaption">Search workspace · light mode</span>
                             </div>
@@ -125,22 +133,22 @@
                         <div class="hero-rail">
                             <div class="rail-row">
                                 <p class="surface-kicker">Fast lookup flow</p>
-                                <h3>Search once, then move through structure, safety, and identifiers without losing context.</h3>
-                                <p>The result screen keeps the pieces that matter together, so you can inspect a compound the way you actually work through it.</p>
+                                <h3>Search once, then move through structure, safety, identifiers, and tools without losing context.</h3>
+                                <p>The result screen keeps the pieces that matter together, while Favorites, Recents, and cache make repeat lookup feel local.</p>
                             </div>
 
                             <div class="rail-row metric-band" aria-label="Key stats">
                                 <div class="metric-item">
-                                    <strong>11</strong>
+                                    <strong>12</strong>
                                     <span>built-in tools</span>
                                 </div>
                                 <div class="metric-item">
-                                    <strong>3</strong>
-                                    <span>live data sources</span>
+                                    <strong>659</strong>
+                                    <span>offline entries</span>
                                 </div>
                                 <div class="metric-item">
-                                    <strong>118</strong>
-                                    <span>CPK elements covered</span>
+                                    <strong>5</strong>
+                                    <span>optional AI providers</span>
                                 </div>
                                 <div class="metric-item">
                                     <strong>API 26+</strong>
@@ -151,10 +159,10 @@
                             <div class="rail-row">
                                 <p class="surface-kicker">What makes it usable</p>
                                 <ul class="inline-list">
-                                    <li>Tap-to-copy identifiers and formula details.</li>
-                                    <li>2D and 3D views in the same compound workspace.</li>
-                                    <li>Safety summaries that are quick to scan on-device.</li>
-                                    <li>Exports and tools close to the search flow instead of hidden behind extra screens.</li>
+                                    <li>Tap-to-copy identifiers, formulas, summaries, SMILES, and InChI values.</li>
+                                    <li>Download 2D PNG and 3D SDF structure files when available.</li>
+                                    <li>Use calculators for molar mass, oxidation states, balancing, stoichiometry, dilution, and gas laws.</li>
+                                    <li>Keep API keys encrypted locally with Android Keystore-backed storage.</li>
                                 </ul>
                             </div>
                         </div>
@@ -166,9 +174,9 @@
                 <div class="section-head">
                     <div>
                         <p class="section-kicker">Core workflow</p>
-                        <h2>A merged chemistry workspace, not a stack of isolated widgets.</h2>
+                        <h2>A chemistry workspace that keeps the compound record together.</h2>
                     </div>
-                    <p class="section-lead">The homepage now leans into bigger connected surfaces: fewer repeated cards, more split panels that group related tasks the way product sites like Apple, Google, and Microsoft often do.</p>
+                    <p class="section-lead">ChemSearch is organized around the way you actually check a compound: find the record, read the structure, copy the identifiers, check safety, then jump into calculations only when you need them.</p>
                 </div>
 
                 <div class="merge-grid">
@@ -176,29 +184,29 @@
                         <p class="surface-kicker">Compound workflow</p>
                         <div class="surface-split">
                             <div class="surface-copy">
-                                <h3 class="surface-title">Everything useful stays within a couple of taps.</h3>
-                                <p>Search is only the entry point. The real win is that identifiers, structures, elemental breakdowns, and safety details stay tied together once you land on a compound.</p>
+                                <h3 class="surface-title">Everything useful stays within a couple of taps after search.</h3>
+                                <p>Search is only the entry point. The result page keeps identifiers, structures, synonyms, elemental breakdowns, descriptions, and safety details tied to the same compound.</p>
                             </div>
                             <div class="surface-list">
                                 <div class="surface-row">
                                     <span class="row-icon"><i class="ph-fill ph-magnifying-glass" aria-hidden="true"></i></span>
                                     <div>
                                         <strong>Search with the identifier you already have</strong>
-                                        <p>Use a common name, IUPAC name, CAS number, or PubChem CID without switching modes or tools.</p>
+                                        <p>Use a common name, IUPAC name, formula, CAS number, or PubChem CID without switching modes.</p>
                                     </div>
                                 </div>
                                 <div class="surface-row">
                                     <span class="row-icon"><i class="ph-fill ph-identification-card" aria-hidden="true"></i></span>
                                     <div>
                                         <strong>Copy identifiers without digging</strong>
-                                        <p>SMILES, InChI, InChIKey, formula details, and other values stay near the top of the result flow.</p>
+                                        <p>SMILES, InChI, InChIKey, formulas, CAS values, summaries, and key fields are designed for quick reuse.</p>
                                     </div>
                                 </div>
                                 <div class="surface-row">
                                     <span class="row-icon"><i class="ph-fill ph-shield-checkered" aria-hidden="true"></i></span>
                                     <div>
                                         <strong>See safety details early</strong>
-                                        <p>Signal words, pictograms, and hazard context are visible before you need to open a longer source document.</p>
+                                        <p>Signal words, GHS pictogram cards, and hazard statements are pulled from PubChem PUG View when available.</p>
                                     </div>
                                 </div>
                             </div>
@@ -213,7 +221,7 @@
                     <article class="merge-surface span-4">
                         <p class="surface-kicker">Structures</p>
                         <h3 class="surface-title">2D first, 3D when it matters.</h3>
-                        <p>The structure workflow stays touch-friendly. Use 2D for quick reading, then switch into the interactive 3D view when geometry matters more than speed.</p>
+                        <p>The structure workflow stays touch-friendly. Use 2D for quick reading, then switch into the interactive 3D ball-and-stick viewer when geometry matters more than speed.</p>
                         <div class="surface-tags">
                             <span class="surface-tag">Zoomable 2D</span>
                             <span class="surface-tag">Native 3D viewer</span>
@@ -225,7 +233,7 @@
                     <article class="merge-surface span-4">
                         <p class="surface-kicker">Safety</p>
                         <h3 class="surface-title">Useful hazard context without extra hunting.</h3>
-                        <p>PubChem safety data, signal words, and GHS pictograms sit close to the rest of the compound record so you do not need a second app just to stay oriented.</p>
+                        <p>PubChem safety data, signal words, and GHS pictograms sit close to the rest of the compound record so you can quickly orient yourself before opening a full SDS.</p>
                         <div class="surface-tags">
                             <span class="surface-tag">Signal words</span>
                             <span class="surface-tag">GHS pictograms</span>
@@ -236,10 +244,10 @@
                     <article class="merge-surface span-4">
                         <p class="surface-kicker">Optional AI</p>
                         <h3 class="surface-title">Layer in summaries only when you want them.</h3>
-                        <p>Core use stays reference-first. If you want generated summaries, plug in your own Gemini or Groq key and keep the rest of the app exactly as it is.</p>
+                        <p>Core use stays reference-first. If you want generated summaries, plug in your own Gemini, Groq, OpenAI, OpenRouter, or Mistral key and keep the rest of the app exactly as it is.</p>
                         <div class="surface-tags">
                             <span class="surface-tag">Your own API key</span>
-                            <span class="surface-tag">Local preferences</span>
+                            <span class="surface-tag">Encrypted local keys</span>
                             <span class="surface-tag">No account wall</span>
                         </div>
                     </article>
@@ -250,15 +258,15 @@
                 <div class="section-head">
                     <div>
                         <p class="section-kicker">Built-in toolset</p>
-                        <h2>A toolkit arranged as connected lanes instead of 11 separate boxes.</h2>
+                        <h2>Twelve built-in tools for lookup, structure, reference, and chemistry math.</h2>
                     </div>
-                    <p class="section-lead">The tools are grouped into larger merged panels so the section reads like a system: model viewing and reference on one side, calculation workflows on the other.</p>
+                    <p class="section-lead">The Tools tab includes searchable categories, manual reordering, file import where it matters, and calculators that stay close to the compound search workflow.</p>
                 </div>
 
                 <div class="merge-grid">
                     <article class="merge-surface span-7">
                         <p class="surface-kicker">Reference and model tools</p>
-                        <h3 class="surface-title">The part you reach for when you need to inspect or translate a compound quickly.</h3>
+                        <h3 class="surface-title">The part you reach for when you need to inspect, translate, or browse chemistry quickly.</h3>
                         <div class="tool-rows">
                             <div class="tool-row">
                                 <div class="tool-title">
@@ -280,6 +288,13 @@
                                     <strong>Isomer Finder</strong>
                                 </div>
                                 <p>Enter a molecular formula to retrieve structural isomers, or jump in directly from a compound formula on the result page.</p>
+                            </div>
+                            <div class="tool-row">
+                                <div class="tool-title">
+                                    <span class="row-icon"><i class="ph-fill ph-books" aria-hidden="true"></i></span>
+                                    <strong>Chemical Database</strong>
+                                </div>
+                                <p>Browse 331 substances, 108 ions, 71 functional groups, and 149 reactions from editable offline JSON data.</p>
                             </div>
                             <div class="tool-row">
                                 <div class="tool-title">
@@ -346,16 +361,16 @@
                 <div class="section-head">
                     <div>
                         <p class="section-kicker">Interface tour</p>
-                        <h2>The gallery now sits inside one larger media panel instead of standing alone.</h2>
+                        <h2>Light, dark, search, tools, structure, safety, and identifiers in one tour.</h2>
                     </div>
-                    <p class="section-lead">Browse the main screens, swipe through on mobile, open any screenshot into a lightbox, and compare light and dark mode without leaving the page.</p>
+                    <p class="section-lead">Browse the main screens, swipe through on mobile, open any screenshot into a lightbox, and compare how the Android app uses the same white, slate, and blue theme.</p>
                 </div>
 
                 <div class="media-layout">
                     <aside class="section-sidecopy">
                         <p class="surface-kicker">Gallery tips</p>
-                        <h3>Every screenshot keeps one shared height and shows the full frame.</h3>
-                        <p>The carousel uses image-driven widths, so screenshots stay readable without aggressive cropping. That makes denser screens like identifiers and tools much easier to compare.</p>
+                        <h3>Every screenshot keeps one shared height and shows the full phone frame.</h3>
+                        <p>The carousel uses image-driven widths, so dense screens like identifiers, tools, and calculators stay readable instead of being cropped into decoration.</p>
                         <ul class="inline-list">
                             <li>Drag or swipe through the gallery.</li>
                             <li>Use the arrows or keyboard to move one image at a time.</li>
@@ -424,6 +439,30 @@
                                         </button>
                                         <figcaption>Molar mass calculator</figcaption>
                                     </figure>
+                                    <figure class="carousel-slide">
+                                        <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/tool_osf.jpg" data-preview-caption="Oxidation state finder" aria-label="Open screenshot preview: Oxidation state finder">
+                                            <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/tool_osf.jpg" alt="Oxidation state finder screen">
+                                        </button>
+                                        <figcaption>Oxidation state finder</figcaption>
+                                    </figure>
+                                    <figure class="carousel-slide">
+                                        <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/tool_rb.jpg" data-preview-caption="Reaction balancer" aria-label="Open screenshot preview: Reaction balancer">
+                                            <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/tool_rb.jpg" alt="Reaction balancer screen">
+                                        </button>
+                                        <figcaption>Reaction balancer</figcaption>
+                                    </figure>
+                                    <figure class="carousel-slide">
+                                        <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/tool_sv.jpg" data-preview-caption="SMILES visualizer" aria-label="Open screenshot preview: SMILES visualizer">
+                                            <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/tool_sv.jpg" alt="SMILES visualizer screen">
+                                        </button>
+                                        <figcaption>SMILES visualizer</figcaption>
+                                    </figure>
+                                    <figure class="carousel-slide">
+                                        <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/syn_desc.jpg" data-preview-caption="Synonyms and descriptions" aria-label="Open screenshot preview: Synonyms and descriptions">
+                                            <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/syn_desc.jpg" alt="Synonyms and descriptions screen">
+                                        </button>
+                                        <figcaption>Synonyms + descriptions</figcaption>
+                                    </figure>
                                 </div>
 
                                 <button class="carousel-arrow next" id="screenshotsNext" type="button" aria-label="Next screenshot" aria-controls="screenshotsCarouselTrack">
@@ -433,7 +472,7 @@
 
                             <div class="carousel-meta">
                                 <div class="carousel-dots" id="screenshotsCarouselDots" role="tablist" aria-label="Screenshot navigation dots"></div>
-                                <p class="carousel-status" id="screenshotsCarouselStatus" aria-live="polite">1 / 8</p>
+                                <p class="carousel-status" id="screenshotsCarouselStatus" aria-live="polite">1 / 12</p>
                             </div>
                         </div>
                     </div>
@@ -446,7 +485,7 @@
                         <p class="section-kicker">Under the hood</p>
                         <h2>A native Android app with direct integrations and very little mystery.</h2>
                     </div>
-                    <p class="section-lead">ChemSearch stays intentionally straightforward: public APIs, a Kotlin Android stack, and optional AI providers that only activate when you bring your own key.</p>
+                    <p class="section-lead">ChemSearch stays intentionally straightforward: public APIs, local storage, encrypted optional AI keys, editable JSON reference data, and no app-owned backend in the middle.</p>
                 </div>
 
                 <div class="merge-grid">
@@ -460,12 +499,14 @@
                                 <tbody>
                                     <tr><td>Language</td><td>Kotlin</td></tr>
                                     <tr><td>UI</td><td>Jetpack Compose + Material 3</td></tr>
-                                    <tr><td>Networking</td><td>Retrofit 2 + OkHttp</td></tr>
+                                    <tr><td>Networking</td><td>Retrofit 3 + OkHttp 5</td></tr>
                                     <tr><td>Image loading</td><td>Coil</td></tr>
                                     <tr><td>Async</td><td>Kotlin Coroutines + StateFlow</td></tr>
                                     <tr><td>JSON</td><td>Gson</td></tr>
                                     <tr><td>3D rendering</td><td>Custom native Canvas engine</td></tr>
-                                    <tr><td>Storage</td><td>SharedPreferences + local cache</td></tr>
+                                    <tr><td>Storage</td><td>SharedPreferences + local cache files</td></tr>
+                                    <tr><td>API keys</td><td>Android Keystore-backed encryption</td></tr>
+                                    <tr><td>Build</td><td>Android Gradle Plugin + Compose Compiler + Gradle</td></tr>
                                 </tbody>
                             </table>
 
@@ -504,11 +545,20 @@
                                     <tr>
                                         <td>
                                             <a class="source-link" href="https://ai.google.dev/gemini-api/docs" target="_blank" rel="noopener noreferrer">
-                                                <i class="ph-fill ph-sparkle" aria-hidden="true"></i> Gemini API
+                                                <i class="ph-fill ph-sparkle" aria-hidden="true"></i> AI provider APIs
                                             </a>
-                                            <span class="source-note">Optional - also supports Groq with your own key.</span>
+                                            <span class="source-note">Optional Gemini, Groq, OpenAI, OpenRouter, or Mistral summaries with your own key.</span>
                                         </td>
                                         <td>Optional AI summaries; the main app remains fully usable without them.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span class="source-link">
+                                                <i class="ph-fill ph-database" aria-hidden="true"></i> Offline JSON database
+                                            </span>
+                                            <span class="source-note">Substances, ions, functional groups, and reactions bundled with the app.</span>
+                                        </td>
+                                        <td>659 reference entries available from the Chemical Database tool.</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -522,7 +572,7 @@
                                 <h3 class="surface-title">Requirements</h3>
                                 <ul class="stack-list">
                                     <li>Android 8.0+ (API 26+) with internet access for live data.</li>
-                                    <li>Android Studio Hedgehog or newer to build from source.</li>
+                                    <li>Android Studio, JDK 11, and Android SDK API 36 to build from source.</li>
                                     <li>No API key required unless you enable optional AI summaries.</li>
                                 </ul>
                             </div>
@@ -536,7 +586,7 @@
                             </div>
                             <div class="stack-row">
                                 <h3 class="surface-title">Privacy</h3>
-                                <p>The app does not require an account. Favorites, recents, cache, and any API keys stay on your device, and requests go directly to the upstream data source or provider you enable.</p>
+                                <p>The app does not require an account, analytics, tracking, or an app-owned server. Favorites, recents, cache, settings, and encrypted API keys stay on your device, and requests go directly to the upstream data source or provider you enable.</p>
                             </div>
                         </div>
                     </article>
@@ -548,8 +598,8 @@
                     <div class="footer-main">
                         <div class="footer-brand">
                             <p class="footer-eyebrow">Stay connected</p>
-                            <h2>Everything you need, plus the right links when you want more.</h2>
-                            <p>ChemSearch is open source and built to be easy to download, inspect, and follow. Grab the latest APK, jump into the repository, or find FurtherSecrets across the platforms where new work and updates show up.</p>
+                            <h2>Download the app, inspect the source, or follow what ships next.</h2>
+                            <p>ChemSearch is open source, MIT licensed, and built to be easy to download, build, and inspect. Grab the latest APK, jump into the repository, or follow FurtherSecrets where updates are posted.</p>
                             <div class="footer-cta">
                                 <a class="footer-pill footer-pill-primary" href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer">
                                     <i class="ph-bold ph-download-simple" aria-hidden="true"></i><span>Download latest APK</span>
@@ -660,7 +710,7 @@
 
                     <div class="footer-meta">
                         <span><strong>ChemSearch</strong> is MIT licensed and runs as a direct, native Android app.</span>
-                        <span>Data flows directly to public APIs and optional AI providers you enable.</span>
+                        <span>Public data and optional AI requests go directly to the providers you enable.</span>
                     </div>
                 </div>
             </footer>

@@ -4,7 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ChemSearch FAQ</title>
-    <meta name="description" content="Answers to common ChemSearch questions about features, data sources, privacy, AI keys, exports, installation, and building from source.">
+    <meta name="description" content="Answers to common ChemSearch questions about compound search, the 659-entry offline database, 12 tools, privacy, AI keys, exports, installation, and building from source.">
+    <meta property="og:title" content="ChemSearch FAQ">
+    <meta property="og:description" content="Answers about ChemSearch setup, data sources, offline reference data, tools, privacy, optional AI keys, and building from source.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="chemsearch-logo.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="ChemSearch FAQ">
+    <meta name="twitter:description" content="Common questions about the ChemSearch Android app, tools, privacy, data sources, and source builds.">
+    <meta name="twitter:image" content="chemsearch-logo.png">
     <link rel="icon" href="favicon.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -71,7 +79,7 @@
                         <p class="section-kicker">Frequently asked questions</p>
                         <h1>Questions people actually ask before they install.</h1>
                     </div>
-                    <p class="section-lead">This page covers setup, search behavior, data sources, exports, privacy, AI keys, and building from source. If you want a quick answer before downloading the APK, it is probably here.</p>
+                    <p class="section-lead">This page covers setup, search behavior, data sources, the offline database, exports, privacy, AI keys, and building from source. If you want a quick answer before downloading the APK, it is probably here.</p>
                 </div>
                 <div class="faq-jumps" aria-label="FAQ categories">
                     <a class="faq-jump" href="#faq-getting" data-section-link>Getting started</a>
@@ -84,7 +92,7 @@
             <section class="section-slab reveal" id="faq-getting">
                 <div class="section-head">
                     <div>
-                        <p class="section-kicker">Category one</p>
+                        <p class="section-kicker">Install and setup</p>
                         <h2>Getting started</h2>
                     </div>
                     <p class="section-lead">The basics: what ChemSearch is, where it runs, and how to get the app onto a device quickly.</p>
@@ -123,7 +131,7 @@
                     <details class="faq-item">
                         <summary>Does the app work fully offline?</summary>
                         <div class="faq-answer">
-                            <p>Compound search and live reference data depend on internet access because the app talks directly to public APIs. Cached results, saved favorites, and some local workflows still help when you revisit something you already opened.</p>
+                            <p>Live compound search depends on internet access because the app talks directly to PubChem, Wikipedia, GitHub Releases, and optional AI providers. The bundled Chemical Database is offline, and cached results, saved favorites, settings, and recent searches stay on the device.</p>
                         </div>
                     </details>
                 </div>
@@ -132,7 +140,7 @@
             <section class="section-slab reveal" id="faq-search">
                 <div class="section-head">
                     <div>
-                        <p class="section-kicker">Category two</p>
+                        <p class="section-kicker">Search and sources</p>
                         <h2>Search and data</h2>
                     </div>
                     <p class="section-lead">How search behaves, which sources are involved, and why some compound pages may vary depending on source coverage.</p>
@@ -141,13 +149,13 @@
                     <details class="faq-item">
                         <summary>What can I search by?</summary>
                         <div class="faq-answer">
-                            <p>You can search by compound name, CAS number, or PubChem CID. That makes it flexible enough for classroom use, lab work, and quick lookups from documentation.</p>
+                            <p>You can search by common name, IUPAC name, molecular formula, CAS number, or PubChem CID. That makes it flexible enough for classroom use, lab prep, and quick lookups from documentation.</p>
                         </div>
                     </details>
                     <details class="faq-item">
                         <summary>Which data sources does ChemSearch use?</summary>
                         <div class="faq-answer">
-                            <p>PubChem is the main source for compound records, structures, autocomplete, identifiers, and safety-related data. Wikipedia is used as a fallback for plain-language descriptions when PubChem entries are sparse.</p>
+                            <p>PubChem PUG REST is the main source for compound records, structures, autocomplete, identifiers, synonyms, and exports. PubChem PUG View provides safety annotations, Wikipedia can provide plain-language summaries, GitHub Releases powers update checks, and the bundled JSON database provides offline reference entries.</p>
                         </div>
                     </details>
                     <details class="faq-item">
@@ -180,7 +188,7 @@
             <section class="section-slab reveal" id="faq-tools">
                 <div class="section-head">
                     <div>
-                        <p class="section-kicker">Category three</p>
+                        <p class="section-kicker">Tools and outputs</p>
                         <h2>Features and tools</h2>
                     </div>
                     <p class="section-lead">What the app can do once you find a compound, plus what is included in the built-in chemistry toolkit.</p>
@@ -201,7 +209,13 @@
                     <details class="faq-item">
                         <summary>How many built-in tools are included?</summary>
                         <div class="faq-answer">
-                            <p>ChemSearch includes 11 built-in chemistry tools, covering reference workflows, stoichiometry, gas law calculations, dilution math, reaction scaling, and more.</p>
+                            <p>ChemSearch includes 12 built-in chemistry tools: Custom 3D Molecule Viewer, Molar Mass Calculator, Oxidation State Finder, SMILES Visualizer, Reaction Balancer, Isomer Finder, Limiting Reagent, Percent Yield, Reaction Scaling, Chemical Database, Dilution Calculator, and Ideal Gas Law.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>What is included in the Chemical Database?</summary>
+                        <div class="faq-answer">
+                            <p>The offline database currently includes 659 entries: 331 substances, 108 ions, 71 functional groups, and 149 reactions. Entries can include formulas, aliases, charges, uses, notes, source links, conditions, observations, and equations depending on the category.</p>
                         </div>
                     </details>
                     <details class="faq-item">
@@ -228,7 +242,7 @@
             <section class="section-slab reveal" id="faq-build">
                 <div class="section-head">
                     <div>
-                        <p class="section-kicker">Category four</p>
+                        <p class="section-kicker">Keys and source builds</p>
                         <h2>AI, privacy, and building from source</h2>
                     </div>
                     <p class="section-lead">The questions that usually come up around API keys, permissions, local storage, and contributing to the project.</p>
@@ -243,13 +257,13 @@
                     <details class="faq-item">
                         <summary>Which AI providers are supported?</summary>
                         <div class="faq-answer">
-                            <p>The app supports optional AI summaries using Gemini and Groq. Those providers are not required for the main reference workflow.</p>
+                            <p>The app supports optional AI summaries using Google Gemini, Groq Cloud, OpenAI, OpenRouter, and Mistral AI. Those providers are not required for the main reference workflow.</p>
                         </div>
                     </details>
                     <details class="faq-item">
                         <summary>Does ChemSearch send my API key through its own backend?</summary>
                         <div class="faq-answer">
-                            <p>No. The project is built around direct integrations. Keys stay on your device, and requests go directly to the provider you enable.</p>
+                            <p>No. The project is built around direct integrations. Keys are encrypted locally with Android Keystore-backed storage, and requests go directly to the provider you enable.</p>
                         </div>
                     </details>
                     <details class="faq-item">
@@ -261,7 +275,7 @@
                     <details class="faq-item">
                         <summary>Can I build ChemSearch from source?</summary>
                         <div class="faq-answer">
-                            <p>Yes. The repository is public and can be opened in Android Studio. The current documented build baseline is Android Studio Hedgehog or newer.</p>
+                            <p>Yes. The repository is public and can be opened in Android Studio. The current build notes call for Android Studio, JDK 11, and Android SDK API 36; debug builds can be produced with <code>./gradlew assembleDebug</code>.</p>
                         </div>
                     </details>
                     <details class="faq-item">
@@ -300,7 +314,7 @@
                         <div class="footer-brand">
                             <p class="footer-eyebrow">Stay connected</p>
                             <h2>Keep the app close and the project links closer.</h2>
-                            <p>The FAQ covers the common questions. When you want builds, source, or updates from FurtherSecrets, the links below are the fastest way to get there.</p>
+                            <p>The FAQ covers the common questions. When you want builds, source, issues, or updates from FurtherSecrets, the links below are the fastest way to get there.</p>
                             <div class="footer-cta">
                                 <a class="footer-pill footer-pill-primary" href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer">
                                     <i class="ph-bold ph-download-simple" aria-hidden="true"></i><span>Download latest APK</span>
@@ -411,7 +425,7 @@
 
                     <div class="footer-meta">
                         <span><strong>ChemSearch</strong> is MIT licensed and runs as a direct, native Android app.</span>
-                        <span>Data flows directly to public APIs and optional AI providers you enable.</span>
+                        <span>Public data and optional AI requests go directly to the providers you enable.</span>
                     </div>
                 </div>
             </footer>
