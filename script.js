@@ -13,7 +13,17 @@
     const mobileMenuToggle = document.getElementById('mobileMenuToggle');
     const mobileMenuIcon = document.getElementById('mobileMenuIcon');
     const mobileNavPanel = document.getElementById('mobileNavPanel');
+    const mobileNavDropdown = document.getElementById('mobileNavDropdown');
     const toTopBtn = document.getElementById('toTopBtn');
+    let mobileNavCloseTimer = null;
+
+    function cssMs(name, fallback) {
+        const raw = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+        if (!raw) return fallback;
+        if (raw.endsWith('ms')) return parseFloat(raw) || fallback;
+        if (raw.endsWith('s')) return (parseFloat(raw) || 0) * 1000 || fallback;
+        return parseFloat(raw) || fallback;
+    }
 
     function setTheme(theme, persist) {
         const isDark = theme === 'dark';
@@ -23,16 +33,13 @@
             themeToggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
         }
         if (themeToggleIcon) {
-            themeToggleIcon.className = isDark ? 'ph-fill ph-sun-dim' : 'ph-fill ph-moon-stars';
+            themeToggleIcon.dataset.state = isDark ? 'b' : 'a';
         }
         if (persist) localStorage.setItem(themeKey, isDark ? 'dark' : 'light');
     }
 
     const savedTheme = localStorage.getItem(themeKey);
-    setTheme(
-        savedTheme || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'),
-        false
-    );
+    setTheme(savedTheme || 'dark', false);
 
     if (themeToggle) {
         themeToggle.addEventListener('click', () => {
@@ -42,9 +49,25 @@
     }
 
     function setMobileNavState(isOpen) {
+        clearTimeout(mobileNavCloseTimer);
         body.classList.toggle('mobile-nav-open', isOpen);
         if (mobileMenuToggle) mobileMenuToggle.setAttribute('aria-expanded', String(isOpen));
-        if (mobileMenuIcon) mobileMenuIcon.className = isOpen ? 'ph-bold ph-x' : 'ph-bold ph-list';
+        if (mobileMenuIcon) mobileMenuIcon.dataset.state = isOpen ? 'b' : 'a';
+        if (!mobileNavDropdown) return;
+        if (isOpen) {
+            mobileNavDropdown.classList.remove('is-closing');
+            mobileNavDropdown.classList.add('is-open');
+            return;
+        }
+        mobileNavDropdown.classList.remove('is-open');
+        mobileNavDropdown.classList.add('is-closing');
+        if (prefersReducedMotion) {
+            mobileNavDropdown.classList.remove('is-closing');
+            return;
+        }
+        mobileNavCloseTimer = setTimeout(() => {
+            mobileNavDropdown.classList.remove('is-closing');
+        }, cssMs('--dropdown-close-dur', 150));
     }
 
     if (mobileMenuToggle) {
@@ -86,6 +109,45 @@
         revealEls.forEach((el) => el.classList.add('is-visible'));
     }
 
+    const avatarGroups = Array.from(document.querySelectorAll('.t-avatar-group'));
+    if (!prefersReducedMotion) {
+        const rootStyles = getComputedStyle(document.documentElement);
+        const num = (name, fallback) => {
+            const value = parseFloat(rootStyles.getPropertyValue(name));
+            return Number.isFinite(value) ? value : fallback;
+        };
+        const ease = (name, fallback) => rootStyles.getPropertyValue(name).trim() || fallback;
+
+        avatarGroups.forEach((group) => {
+            const avatars = Array.from(group.querySelectorAll('.t-avatar'));
+            const setShifts = (activeIdx, phase) => {
+                const lift = num('--avatar-lift', -4);
+                const falloff = num('--avatar-falloff', 0.45);
+                const scale = num('--avatar-scale', 1.05);
+                const timing = phase === 'out'
+                    ? ease('--avatar-ease-out', 'cubic-bezier(0.34, 3.85, 0.64, 1)')
+                    : ease('--avatar-ease-in', 'cubic-bezier(0.22, 1, 0.36, 1)');
+
+                avatars.forEach((el, index) => {
+                    el.style.transitionTimingFunction = timing;
+                    if (activeIdx == null) {
+                        el.style.setProperty('--shift', '0px');
+                        el.style.setProperty('--scale-active', '1');
+                        return;
+                    }
+                    const distance = Math.abs(index - activeIdx);
+                    el.style.setProperty('--shift', `${(lift * Math.pow(falloff, distance)).toFixed(3)}px`);
+                    el.style.setProperty('--scale-active', index === activeIdx ? String(scale) : '1');
+                });
+            };
+
+            avatars.forEach((el, index) => {
+                el.addEventListener('mouseenter', () => setShifts(index, 'in'));
+            });
+            group.addEventListener('mouseleave', () => setShifts(null, 'out'));
+        });
+    }
+
     const sectionLinks = Array.from(document.querySelectorAll('[data-section-link]'))
         .filter((link) => (link.getAttribute('href') || '').startsWith('#'));
     const sections = sectionLinks
@@ -109,11 +171,13 @@
     const galleryLightboxImage = document.getElementById('galleryLightboxImage');
     const galleryLightboxCaption = document.getElementById('galleryLightboxCaption');
     const galleryLightboxClose = document.getElementById('galleryLightboxClose');
+    const galleryLightboxShell = galleryLightbox ? galleryLightbox.querySelector('.lightbox-shell') : null;
     const galleryCards = Array.from(document.querySelectorAll('.gallery-card'));
     const galleryImages = galleryCards
         .map((card) => card.querySelector('img'))
         .filter(Boolean);
     let galleryReturnFocus = null;
+    let galleryCloseTimer = null;
 
     function syncGalleryCardWidths() {
         galleryImages.forEach((img) => {
@@ -128,22 +192,46 @@
 
     function openLightbox(src, caption) {
         if (!galleryLightbox || !galleryLightboxImage) return;
+        clearTimeout(galleryCloseTimer);
         galleryLightboxImage.src = src;
         galleryLightboxImage.alt = caption || '';
         if (galleryLightboxCaption) galleryLightboxCaption.textContent = caption || '';
         galleryLightbox.hidden = false;
+        if (galleryLightboxShell) {
+            galleryLightboxShell.classList.remove('is-closing');
+            if (prefersReducedMotion) {
+                galleryLightboxShell.classList.add('is-open');
+            } else {
+                requestAnimationFrame(() => galleryLightboxShell.classList.add('is-open'));
+            }
+        }
         document.body.style.overflow = 'hidden';
         if (galleryLightboxClose) galleryLightboxClose.focus();
     }
 
     function closeLightbox() {
         if (!galleryLightbox) return;
-        galleryLightbox.hidden = true;
-        document.body.style.overflow = '';
-        if (galleryReturnFocus) {
-            galleryReturnFocus.focus();
-            galleryReturnFocus = null;
+        clearTimeout(galleryCloseTimer);
+
+        const finishClose = () => {
+            if (galleryLightboxShell) galleryLightboxShell.classList.remove('is-closing');
+            galleryLightbox.hidden = true;
+            document.body.style.overflow = '';
+            if (galleryReturnFocus) {
+                galleryReturnFocus.focus();
+                galleryReturnFocus = null;
+            }
+        };
+
+        if (!galleryLightboxShell || prefersReducedMotion) {
+            if (galleryLightboxShell) galleryLightboxShell.classList.remove('is-open');
+            finishClose();
+            return;
         }
+
+        galleryLightboxShell.classList.remove('is-open');
+        galleryLightboxShell.classList.add('is-closing');
+        galleryCloseTimer = setTimeout(finishClose, cssMs('--modal-close-dur', 150));
     }
 
     if (galleryLightbox) {
@@ -292,6 +380,7 @@
 
         screenshotsTrack.addEventListener('pointerdown', (event) => {
             if (event.button !== 0) return;
+            if (event.target instanceof Element && event.target.closest('.gallery-card')) return;
             isDragging = true;
             didDrag = false;
             dragStartX = event.clientX;
@@ -302,7 +391,7 @@
         screenshotsTrack.addEventListener('pointermove', (event) => {
             if (!isDragging) return;
             const delta = event.clientX - dragStartX;
-            if (Math.abs(delta) > 6) didDrag = true;
+            if (Math.abs(delta) > 14) didDrag = true;
             screenshotsTrack.scrollLeft = dragStartScroll - delta;
         });
 

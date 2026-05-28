@@ -38,9 +38,12 @@
 
             <nav class="primary-nav" aria-label="Primary navigation">
                 <a class="nav-link" href="index.html">Overview</a>
+                <a class="nav-link" href="index.html#stats">Stats</a>
                 <a class="nav-link" href="index.html#features">Features</a>
                 <a class="nav-link" href="index.html#tools">Tools</a>
+                <a class="nav-link" href="index.html#flow">Flow</a>
                 <a class="nav-link" href="index.html#screenshots">Screenshots</a>
+                <a class="nav-link" href="index.html#settings">Settings</a>
                 <a class="nav-link is-current" href="faq.html">FAQ</a>
                 <a class="nav-link" href="index.html#stack">Tech</a>
             </nav>
@@ -51,21 +54,30 @@
                     <span id="releaseStatusText">Checking latest release…</span>
                 </a>
                 <button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false" aria-label="Toggle dark mode">
-                    <i class="ph-fill ph-moon-stars" id="themeToggleIcon" aria-hidden="true"></i>
+                    <span class="t-icon-swap" id="themeToggleIcon" data-state="b" aria-hidden="true">
+                        <i class="t-icon ph-fill ph-moon-stars" data-icon="a"></i>
+                        <i class="t-icon ph-fill ph-sun-dim" data-icon="b"></i>
+                    </span>
                 </button>
                 <button class="mobile-menu-toggle" id="mobileMenuToggle" type="button" aria-controls="mobileNavPanel" aria-expanded="false">
                     <span class="sr-only">Toggle menu</span>
-                    <i class="ph-bold ph-list" id="mobileMenuIcon" aria-hidden="true"></i>
+                    <span class="t-icon-swap" id="mobileMenuIcon" data-state="a" aria-hidden="true">
+                        <i class="t-icon ph-bold ph-list" data-icon="a"></i>
+                        <i class="t-icon ph-bold ph-x" data-icon="b"></i>
+                    </span>
                 </button>
             </div>
         </header>
 
         <div class="mobile-drawer" id="mobileNavPanel" aria-label="Mobile navigation">
-            <nav class="mobile-nav">
+            <nav class="mobile-nav t-dropdown" id="mobileNavDropdown" data-origin="top-right">
                 <a class="nav-link" href="index.html">Overview</a>
+                <a class="nav-link" href="index.html#stats">Stats</a>
                 <a class="nav-link" href="index.html#features">Features</a>
                 <a class="nav-link" href="index.html#tools">Tools</a>
+                <a class="nav-link" href="index.html#flow">Flow</a>
                 <a class="nav-link" href="index.html#screenshots">Screenshots</a>
+                <a class="nav-link" href="index.html#settings">Settings</a>
                 <a class="nav-link is-current" href="faq.html">FAQ</a>
                 <a class="nav-link" href="index.html#stack">Tech</a>
                 <a class="nav-link" href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer">Latest release</a>
@@ -76,16 +88,16 @@
             <section class="section-slab faq-hero reveal">
                 <div class="section-head">
                     <div>
-                        <p class="section-kicker">Frequently asked questions</p>
+                        <p class="section-kicker">FAQ</p>
                         <h1>Questions before you install.</h1>
                     </div>
-                    <p class="section-lead">Short answers about setup, search, data sources, the offline database, exports, privacy, AI keys, and source builds.</p>
+                    <p class="section-lead">Short answers about setup, search, saved compounds, tools, privacy, AI keys, and source builds.</p>
                 </div>
                 <div class="faq-jumps" aria-label="FAQ categories">
-                    <a class="faq-jump" href="#faq-getting" data-section-link>Getting started</a>
-                    <a class="faq-jump" href="#faq-search" data-section-link>Search & data</a>
-                    <a class="faq-jump" href="#faq-tools" data-section-link>Features & tools</a>
-                    <a class="faq-jump" href="#faq-build" data-section-link>AI, privacy & build</a>
+                    <a class="faq-jump" href="#faq-getting" data-section-link><i class="ph-fill ph-download-simple" aria-hidden="true"></i>Getting started</a>
+                    <a class="faq-jump" href="#faq-search" data-section-link><i class="ph-fill ph-magnifying-glass" aria-hidden="true"></i>Search & data</a>
+                    <a class="faq-jump" href="#faq-tools" data-section-link><i class="ph-fill ph-wrench" aria-hidden="true"></i>Features & tools</a>
+                    <a class="faq-jump" href="#faq-build" data-section-link><i class="ph-fill ph-shield-checkered" aria-hidden="true"></i>Privacy & build</a>
                 </div>
             </section>
 
@@ -101,7 +113,7 @@
                     <details class="faq-item" open>
                         <summary>What is ChemSearch?</summary>
                         <div class="faq-answer">
-                            <p>ChemSearch is a native Android chemistry reference app. It searches compounds, shows structures and safety data, copies identifiers, and includes chemistry tools.</p>
+                            <p>ChemSearch is a native Android chemistry app. It searches compounds, shows structures and safety data, saves records offline, compares compounds, and includes chemistry tools.</p>
                         </div>
                     </details>
                     <details class="faq-item">
@@ -113,7 +125,7 @@
                     <details class="faq-item">
                         <summary>What Android versions are supported?</summary>
                         <div class="faq-answer">
-                            <p>ChemSearch targets Android 8.0 and newer, which is API level 26 and above.</p>
+                            <p>ChemSearch runs on Android 8.0 and newer.</p>
                         </div>
                     </details>
                     <details class="faq-item">
@@ -129,9 +141,9 @@
                         </div>
                     </details>
                     <details class="faq-item">
-                        <summary>Does the app work fully offline?</summary>
+                        <summary>Does the app work offline?</summary>
                         <div class="faq-answer">
-                            <p>Live compound search needs internet access because the app talks directly to PubChem, Wikipedia, GitHub Releases, and any AI provider you enable. The bundled Chemical Database works offline. Cached results, favorites, settings, and recent searches stay on the device.</p>
+                            <p>Live compound search needs internet because the app contacts PubChem, Wikipedia, GitHub Releases, and any AI provider you enable. The built-in Chemical Database works offline, and downloaded compound records can include structures, identifiers, descriptions, synonyms, safety data, and source notes.</p>
                         </div>
                     </details>
                 </div>
@@ -159,7 +171,7 @@
                         </div>
                     </details>
                     <details class="faq-item">
-                        <summary>Does CAS search work directly?</summary>
+                        <summary>Can I search by CAS number?</summary>
                         <div class="faq-answer">
                             <p>Yes. Paste the CAS number into search like any other query.</p>
                         </div>
@@ -167,19 +179,19 @@
                     <details class="faq-item">
                         <summary>Why do some descriptions look different from one compound to another?</summary>
                         <div class="faq-answer">
-                            <p>The source coverage varies. Some compounds have detailed PubChem summaries. Others fall back to a shorter Wikipedia or generated description.</p>
+                            <p>Source coverage varies. Some compounds have detailed PubChem summaries. Others fall back to Wikipedia or, if you enable it, a generated description from your chosen provider.</p>
                         </div>
                     </details>
                     <details class="faq-item">
                         <summary>Can I copy identifiers like SMILES, InChI, and CAS?</summary>
                         <div class="faq-answer">
-                            <p>Yes. You can copy commonly reused identifiers from the result screen.</p>
+                            <p>Yes. You can copy SMILES, InChI, and CAS identifiers from the result screen.</p>
                         </div>
                     </details>
                     <details class="faq-item">
                         <summary>Does the app cache results?</summary>
                         <div class="faq-answer">
-                            <p>Yes. Previously viewed compounds can load from the local cache, and recent searches are saved on the device.</p>
+                            <p>Yes. Compounds you viewed before can load from the local cache, and recent searches are saved on the device.</p>
                         </div>
                     </details>
                 </div>
@@ -209,7 +221,7 @@
                     <details class="faq-item">
                         <summary>How many built-in tools are included?</summary>
                         <div class="faq-answer">
-                            <p>ChemSearch has 12 tools: Custom 3D Molecule Viewer, Molar Mass Calculator, Oxidation State Finder, SMILES Visualizer, Reaction Balancer, Isomer Finder, Limiting Reagent, Percent Yield, Reaction Scaling, Chemical Database, Dilution Calculator, and Ideal Gas Law.</p>
+                            <p>ChemSearch has 13 chemistry tools: Molar Mass, Oxidation State, pH / pOH, Reaction Balancer, Isomer Finder, Limiting Reagent, Percent Yield, Reaction Scaling, Dilution, Ideal Gas Law, SMILES Visualizer, Custom 3D Molecule Viewer, and Compare Compounds. The Library also includes the built-in Chemical Database.</p>
                         </div>
                     </details>
                     <details class="faq-item">
@@ -221,13 +233,19 @@
                     <details class="faq-item">
                         <summary>Does the app include elemental analysis and formula details?</summary>
                         <div class="faq-answer">
-                            <p>Yes. Compound pages show formula details and elemental breakdowns when the source record supports them.</p>
+                            <p>Yes. Compound pages show formula details, identifiers, synonyms, and elemental breakdowns when the source record supports them.</p>
                         </div>
                     </details>
                     <details class="faq-item">
                         <summary>Are GHS hazards and signal words included?</summary>
                         <div class="faq-answer">
                             <p>Yes. ChemSearch pulls signal words, GHS pictograms, and hazard details from PubChem when available.</p>
+                        </div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Can I compare compounds?</summary>
+                        <div class="faq-answer">
+                            <p>Yes. Compare Compounds can line up formulas, descriptions, identifiers, atom counts, bond counts, molecular weight, and other properties across several compounds.</p>
                         </div>
                     </details>
                     <details class="faq-item">
@@ -251,31 +269,31 @@
                     <details class="faq-item">
                         <summary>Do I need an API key for the app itself?</summary>
                         <div class="faq-answer">
-                            <p>No. You only need an API key if you turn on AI summaries.</p>
+                            <p>No. AI summaries need an API key.</p>
                         </div>
                     </details>
                     <details class="faq-item">
                         <summary>Which AI providers are supported?</summary>
                         <div class="faq-answer">
-                            <p>AI summaries can use Google Gemini, Groq Cloud, OpenAI, OpenRouter, or Mistral AI. The rest of the app does not depend on them.</p>
+                            <p>AI summaries can use Google Gemini, Groq Cloud, OpenAI, OpenRouter, or Mistral AI. You can also use PubChem or Wikipedia descriptions without an AI key.</p>
                         </div>
                     </details>
                     <details class="faq-item">
                         <summary>Does ChemSearch send my API key through its own backend?</summary>
                         <div class="faq-answer">
-                            <p>No. Keys are encrypted locally with Android Keystore-backed storage, and requests go directly to the provider you choose.</p>
+                            <p>No. Keys are encrypted with Android Keystore-backed storage, and requests go to the provider you choose. Keep exported settings files private if they include saved keys.</p>
                         </div>
                     </details>
                     <details class="faq-item">
                         <summary>What permissions does the app request?</summary>
                         <div class="faq-answer">
-                            <p>The app asks for internet access, optional update notifications, and legacy export support on Android 9 and below.</p>
+                            <p>The app asks for internet access, update notifications, APK install prompts for in-app updates, and legacy export support on Android 9 and below.</p>
                         </div>
                     </details>
                     <details class="faq-item">
                         <summary>Can I build ChemSearch from source?</summary>
                         <div class="faq-answer">
-                            <p>Yes. Open the public repository in Android Studio. The current build notes call for Android Studio, JDK 11, and Android SDK API 36. For a debug APK, run <code>./gradlew assembleDebug</code>.</p>
+                            <p>Yes. Open the public repository in Android Studio. Current build notes call for JDK 17+. On Windows, run <code>.\gradlew.bat assembleDebug</code>. On macOS or Linux, run <code>./gradlew assembleDebug</code>.</p>
                         </div>
                     </details>
                     <details class="faq-item">
@@ -336,10 +354,24 @@
                                         </span>
                                         <i class="ph-bold ph-arrow-up-right" aria-hidden="true"></i>
                                     </a>
+                                    <a class="footer-link" href="index.html#flow">
+                                        <span class="footer-link-copy">
+                                            <strong>Workflow</strong>
+                                            <span>See the search, inspect, save, compare, and calculate path.</span>
+                                        </span>
+                                        <i class="ph-bold ph-arrow-up-right" aria-hidden="true"></i>
+                                    </a>
                                     <a class="footer-link" href="index.html#screenshots">
                                         <span class="footer-link-copy">
                                             <strong>Screenshots</strong>
                                             <span>Open the UI gallery on the homepage.</span>
+                                        </span>
+                                        <i class="ph-bold ph-arrow-up-right" aria-hidden="true"></i>
+                                    </a>
+                                    <a class="footer-link" href="index.html#settings">
+                                        <span class="footer-link-copy">
+                                            <strong>Settings</strong>
+                                            <span>Review layout, cache, update, and description controls.</span>
                                         </span>
                                         <i class="ph-bold ph-arrow-up-right" aria-hidden="true"></i>
                                     </a>
