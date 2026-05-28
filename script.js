@@ -55,6 +55,62 @@
         }
     }
 
+    function createLabBackdrop() {
+        if (document.querySelector('.lab-backdrop')) return;
+
+        const backdrop = document.createElement('div');
+        backdrop.className = 'lab-backdrop';
+        backdrop.setAttribute('aria-hidden', 'true');
+
+        const seedSource = window.location.pathname || 'chemsearch';
+        let seed = Array.from(seedSource).reduce((sum, char) => sum + char.charCodeAt(0), 1987);
+        const random = () => {
+            seed = (seed * 1664525 + 1013904223) >>> 0;
+            return seed / 4294967296;
+        };
+        const pick = (items) => items[Math.floor(random() * items.length)];
+        const icons = [
+            'ph-fill ph-flask',
+            'ph-fill ph-test-tube',
+            'ph-fill ph-atom'
+        ];
+        const moleculeClasses = ['molecule-a', 'molecule-b', 'molecule-c'];
+        const count = window.innerWidth < 720 ? 32 : 58;
+        const fragment = document.createDocumentFragment();
+
+        for (let i = 0; i < count; i += 1) {
+            const isMolecule = random() > 0.42;
+            const item = document.createElement('span');
+            item.className = isMolecule
+                ? `lab-silhouette lab-molecule ${pick(moleculeClasses)}`
+                : 'lab-silhouette lab-icon';
+            item.style.setProperty('--x', `${(random() * 112 - 6).toFixed(2)}vw`);
+            item.style.setProperty('--y', `${(random() * 112 - 6).toFixed(2)}vh`);
+            item.style.setProperty('--size', `${Math.round(36 + random() * 112)}px`);
+            item.style.setProperty('--rot', `${Math.round(random() * 360)}deg`);
+            item.style.setProperty('--swing', `${(5 + random() * 18).toFixed(2)}deg`);
+            item.style.setProperty('--drift-x', `${Math.round((random() - 0.5) * 72)}px`);
+            item.style.setProperty('--drift-y', `${Math.round((random() - 0.5) * 58)}px`);
+            item.style.setProperty('--dur', `${(16 + random() * 20).toFixed(2)}s`);
+            item.style.setProperty('--delay', `${(-random() * 28).toFixed(2)}s`);
+            item.style.setProperty('--opacity', `${(0.18 + random() * 0.34).toFixed(2)}`);
+            item.style.setProperty('--blur', random() > 0.78 ? '1.5px' : '0px');
+
+            if (!isMolecule) {
+                const icon = document.createElement('i');
+                icon.className = pick(icons);
+                item.appendChild(icon);
+            }
+
+            fragment.appendChild(item);
+        }
+
+        backdrop.appendChild(fragment);
+        document.body.insertBefore(backdrop, document.body.firstChild);
+    }
+
+    createLabBackdrop();
+
     if (themeToggle) {
         themeToggle.addEventListener('click', () => {
             const isDark = body.getAttribute('data-theme') === 'dark';
@@ -238,6 +294,19 @@
 
         playfulEls.forEach((el) => {
             el.classList.add('is-playful');
+            const isGlowButton = el.matches('.header-cta, .btn, .footer-pill');
+            const applyButtonGlow = () => {
+                if (!isGlowButton) return;
+                const tiltX = el.style.getPropertyValue('--tilt-x') || '0deg';
+                const tiltY = el.style.getPropertyValue('--tilt-y') || '0deg';
+                el.style.boxShadow = 'var(--glow-strong)';
+                el.style.transform = `perspective(760px) rotateX(${tiltX}) rotateY(${tiltY}) translateY(-3px) scale(1.01)`;
+            };
+
+            el.addEventListener('pointerenter', () => {
+                el.classList.add('is-glowing');
+                applyButtonGlow();
+            });
 
             el.addEventListener('pointermove', (event) => {
                 const rect = el.getBoundingClientRect();
@@ -250,9 +319,15 @@
                 el.style.setProperty('--spot-y', `${(y * 100).toFixed(1)}%`);
                 el.style.setProperty('--tilt-x', `${tiltX.toFixed(2)}deg`);
                 el.style.setProperty('--tilt-y', `${tiltY.toFixed(2)}deg`);
+                applyButtonGlow();
             });
 
             el.addEventListener('pointerleave', () => {
+                el.classList.remove('is-glowing');
+                if (isGlowButton) {
+                    el.style.boxShadow = '';
+                    el.style.transform = '';
+                }
                 el.style.setProperty('--spot-x', '50%');
                 el.style.setProperty('--spot-y', '50%');
                 el.style.setProperty('--tilt-x', '0deg');
