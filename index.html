@@ -3,648 +3,389 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChemSearch - Chemistry Simplified</title>
-    <meta name="description" content="ChemSearch is an Android app for compound lookup, 2D and 3D structures, GHS safety data, offline saves, comparison, and 13 chemistry tools.">
+    <title>ChemSearch - Chemistry simplified</title>
+    <meta name="description" content="ChemSearch is an Android chemistry app for compound lookup, structures, offline saves, a periodic table, a chemical database, and practical chemistry tools.">
     <meta property="og:title" content="ChemSearch for Android">
-    <meta property="og:description" content="Look up compounds, inspect 2D and 3D structures, check safety data, browse offline reference entries, and use chemistry tools on Android.">
+    <meta property="og:description" content="Search compounds, view 2D and 3D structures, save records offline, use chemistry tools, and browse reference data on Android.">
     <meta property="og:type" content="website">
     <meta property="og:image" content="chemsearch-logo.png">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="ChemSearch for Android">
-    <meta name="twitter:description" content="Look up compounds, inspect structures, browse offline reference data, and use chemistry tools on Android.">
+    <meta name="twitter:description" content="Compound search, structures, reference data, and chemistry tools for Android.">
     <meta name="twitter:image" content="chemsearch-logo.png">
     <link rel="icon" href="favicon.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://api.fontshare.com">
-    <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@500,700,800,900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script defer src="script.js"></script>
 </head>
-<body class="page-home">
+<body data-theme="dark">
     <a class="skip-link" href="#content">Skip to content</a>
 
-    <div class="page-shell">
-        <header class="masthead reveal">
-            <a href="index.html" class="brand" aria-label="ChemSearch Home">
-                <img src="chemsearch-logo.png" alt="ChemSearch logo">
-                <span class="brand-text">
-                    <span class="brand-title">ChemSearch</span>
-                    <span class="brand-sub">CHEMISTRY SIMPLIFIED</span>
-                </span>
+    <header class="site-header">
+        <a href="index.html" class="brand" aria-label="ChemSearch home">
+            <img src="chemsearch-logo.png" alt="">
+            <span>
+                <strong>ChemSearch</strong>
+                <small>Chemistry simplified</small>
+            </span>
+        </a>
+
+        <nav class="desktop-nav" aria-label="Primary navigation">
+            <a href="#download">Download</a>
+            <a href="#features">Features</a>
+            <a href="#how-it-works">How it works</a>
+            <a href="#screenshots">Screenshots</a>
+            <a href="https://github.com/FurtherSecrets24680/chemsearch-android" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </nav>
+
+        <div class="header-actions">
+            <button class="icon-button" id="themeToggle" type="button" aria-label="Switch theme" aria-pressed="true">
+                <i class="ph ph-sun" aria-hidden="true"></i>
+            </button>
+            <button class="icon-button mobile-only" id="mobileMenuToggle" type="button" aria-controls="mobileNav" aria-expanded="false">
+                <span class="sr-only">Open menu</span>
+                <i class="ph ph-list" aria-hidden="true"></i>
+            </button>
+            <a class="header-download" href="https://github.com/FurtherSecrets24680/chemsearch-android/releases/download/1.13.7/ChemSearch.v1.13.7.apk" data-download-apk download="ChemSearch.v1.13.7.apk" rel="noopener noreferrer">
+                Download
             </a>
+        </div>
+    </header>
 
-            <nav class="primary-nav" aria-label="Primary navigation">
-                <a class="nav-link is-current" href="index.html">Overview</a>
-                <a class="nav-link" href="#stats" data-section-link>Stats</a>
-                <a class="nav-link" href="#features" data-section-link>Features</a>
-                <a class="nav-link" href="#tools" data-section-link>Tools</a>
-                <a class="nav-link" href="#flow" data-section-link>Flow</a>
-                <a class="nav-link" href="#screenshots" data-section-link>Screenshots</a>
-                <a class="nav-link" href="#settings" data-section-link>Settings</a>
-                <a class="nav-link" href="faq.html">FAQ</a>
-                <a class="nav-link" href="#stack" data-section-link>Tech</a>
-            </nav>
+    <div class="mobile-nav" id="mobileNav" hidden>
+        <a href="#download">Download</a>
+        <a href="#features">Features</a>
+        <a href="#how-it-works">How it works</a>
+        <a href="#screenshots">Screenshots</a>
+        <a href="https://github.com/FurtherSecrets24680/chemsearch-android" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </div>
 
-            <div class="header-actions">
-                <a class="release-chip" id="releaseStatus" href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer" aria-live="polite" aria-busy="true">
-                    <i class="ph-fill ph-github-logo" aria-hidden="true"></i>
-                    <span id="releaseStatusText">Latest release</span>
-                </a>
-                <a class="header-cta" href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer">
-                    <span>Download</span>
-                    <i class="ph-bold ph-arrow-right" aria-hidden="true"></i>
-                </a>
-                <button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false" aria-label="Toggle dark mode">
-                    <span class="t-icon-swap" id="themeToggleIcon" data-state="b" aria-hidden="true">
-                        <i class="t-icon ph-fill ph-moon-stars" data-icon="a"></i>
-                        <i class="t-icon ph-fill ph-sun-dim" data-icon="b"></i>
-                    </span>
+    <main id="content" tabindex="-1">
+        <section class="hero" id="download">
+            <div class="hero-copy">
+                <h1 class="hero-title">
+                    <span class="hero-brand-word">ChemSearch</span>
+                    <span class="hero-tagline">Chemistry simplified.</span>
+                </h1>
+                <p class="hero-lead">
+                    Search a compound, check formulas and identifiers, open 2D or 3D structures, read safety notes, save data for offline use, and use chemistry tools when you need a quick result.
+                </p>
+
+                <div class="hero-actions">
+                    <div class="download-group">
+                        <a class="button primary" href="https://github.com/FurtherSecrets24680/chemsearch-android/releases/download/1.13.7/ChemSearch.v1.13.7.apk" data-download-apk download="ChemSearch.v1.13.7.apk" rel="noopener noreferrer">
+                            <i class="ph ph-download-simple button-leading" aria-hidden="true"></i>
+                            <span>Download latest APK</span>
+                            <i class="ph ph-caret-right button-trailing" aria-hidden="true"></i>
+                        </a>
+                        <p class="support-note">
+                            <i class="ph ph-android-logo" aria-hidden="true"></i>
+                            <span>Android 8.0+ supported</span>
+                        </p>
+                    </div>
+                    <a class="button secondary desktop-screenshot-button" href="#screenshots">
+                        <i class="ph ph-images-square button-leading" aria-hidden="true"></i>
+                        <span>View screenshots</span>
+                        <i class="ph ph-caret-right button-trailing" aria-hidden="true"></i>
+                    </a>
+                    <a class="button secondary mobile-screenshot-button" href="#screenshots">
+                        <i class="ph ph-images-square button-leading" aria-hidden="true"></i>
+                        <span>View screenshots</span>
+                        <i class="ph ph-caret-right button-trailing" aria-hidden="true"></i>
+                    </a>
+                    <a class="button secondary source-code-button" href="https://github.com/FurtherSecrets24680/chemsearch-android" target="_blank" rel="noopener noreferrer">
+                        <i class="ph ph-github-logo button-leading" aria-hidden="true"></i>
+                        <span>Source code</span>
+                        <i class="ph ph-arrow-square-out button-trailing" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="section features-section" id="features">
+            <div class="section-head centered">
+                <h2>Reference, tools, and saved chemistry.</h2>
+                <p>
+                    ChemSearch keeps lookup, structures, safety notes, offline records, and practical calculators in one phone app.
+                </p>
+            </div>
+
+            <div class="highlight-grid">
+                <article class="info-card">
+                    <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+                    <h3>Compound search</h3>
+                    <p>Find compounds by name, formula, CAS number, PubChem CID, drawn structure, or a random pick.</p>
+                </article>
+                <article class="info-card">
+                    <i class="ph ph-cube" aria-hidden="true"></i>
+                    <h3>Structures</h3>
+                    <p>Open 2D structures and 3D models from compound records.</p>
+                </article>
+                <article class="info-card">
+                    <i class="ph ph-shield-check" aria-hidden="true"></i>
+                    <h3>Safety notes</h3>
+                    <p>Check GHS pictograms, hazard details, and handling notes from public chemistry data.</p>
+                </article>
+                <article class="info-card">
+                    <i class="ph ph-download-simple" aria-hidden="true"></i>
+                    <h3>Offline records</h3>
+                    <p>Save useful records so common details stay available without a connection.</p>
+                </article>
+                <article class="info-card">
+                    <i class="ph ph-table" aria-hidden="true"></i>
+                    <h3>Reference data</h3>
+                    <p>Browse the periodic table and a built-in chemical reference database.</p>
+                </article>
+                <article class="info-card">
+                    <i class="ph ph-calculator" aria-hidden="true"></i>
+                    <h3>Chemistry tools</h3>
+                    <p>Use calculators and converters for quick chemistry checks.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="section steps-section" id="how-it-works">
+            <div class="section-head centered">
+                <h2>Use it in three moves.</h2>
+                <p>Search by what you have, open the record, then save it or use a tool.</p>
+            </div>
+
+            <div class="steps-grid">
+                <article class="step-card">
+                    <div class="step-visual">
+                        <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+                    </div>
+                    <h3>Search a compound</h3>
+                    <p>Search by name, formula, CAS number, PubChem CID, drawn structure, or a random compound.</p>
+                </article>
+                <article class="step-card">
+                    <div class="step-visual">
+                        <i class="ph ph-cube-focus" aria-hidden="true"></i>
+                    </div>
+                    <h3>Check the record</h3>
+                    <p>Review identifiers, formulas, 2D structures, 3D models, synonyms, and safety notes.</p>
+                </article>
+                <article class="step-card">
+                    <div class="step-visual">
+                        <i class="ph ph-download-simple" aria-hidden="true"></i>
+                    </div>
+                    <h3>Save or calculate</h3>
+                    <p>Save records for offline use, or switch to tools for calculations and conversions.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="section screenshots-section" id="screenshots">
+            <div class="section-head centered">
+                <h2>Current app screenshots.</h2>
+                <p>These images come from the Android repository. Open one to inspect the screen.</p>
+            </div>
+
+            <div class="carousel" aria-label="ChemSearch screenshot carousel">
+                <button class="carousel-control" id="screenshotsPrev" type="button" aria-label="Previous screenshot">
+                    <i class="ph ph-caret-left" aria-hidden="true"></i>
                 </button>
-                <button class="mobile-menu-toggle" id="mobileMenuToggle" type="button" aria-controls="mobileNavPanel" aria-expanded="false">
-                    <span class="sr-only">Toggle menu</span>
-                    <span class="t-icon-swap" id="mobileMenuIcon" data-state="a" aria-hidden="true">
-                        <i class="t-icon ph-bold ph-list" data-icon="a"></i>
-                        <i class="t-icon ph-bold ph-x" data-icon="b"></i>
-                    </span>
+
+                <div class="carousel-track" id="screenshotsCarouselTrack" tabindex="0">
+                    <figure class="screenshot-slide">
+                        <button class="screenshot-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/01_home_recent_searches_dark_blue.png" data-preview-caption="Home with recent searches">
+                            <img src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/01_home_recent_searches_dark_blue.png" alt="ChemSearch home screen with recent searches" loading="lazy" decoding="async">
+                        </button>
+                        <figcaption>Home and recent searches</figcaption>
+                    </figure>
+                    <figure class="screenshot-slide">
+                        <button class="screenshot-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/02_periodic_table_library_dark_blue.png" data-preview-caption="Periodic table in Library">
+                            <img src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/02_periodic_table_library_dark_blue.png" alt="Periodic table in ChemSearch Library" loading="lazy" decoding="async">
+                        </button>
+                        <figcaption>Periodic table</figcaption>
+                    </figure>
+                    <figure class="screenshot-slide">
+                        <button class="screenshot-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/03_tools_list_dark_blue.png" data-preview-caption="Tools list">
+                            <img src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/03_tools_list_dark_blue.png" alt="ChemSearch tools list" loading="lazy" decoding="async">
+                        </button>
+                        <figcaption>Tools list</figcaption>
+                    </figure>
+                    <figure class="screenshot-slide">
+                        <button class="screenshot-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/04_settings_display_dark_blue.png" data-preview-caption="Display settings">
+                            <img src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/04_settings_display_dark_blue.png" alt="ChemSearch display settings" loading="lazy" decoding="async">
+                        </button>
+                        <figcaption>Display settings</figcaption>
+                    </figure>
+                    <figure class="screenshot-slide">
+                        <button class="screenshot-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/05_compound_benzene_2d_dark_blue.png" data-preview-caption="Benzene result with 2D structure">
+                            <img src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/05_compound_benzene_2d_dark_blue.png" alt="Benzene result with 2D structure" loading="lazy" decoding="async">
+                        </button>
+                        <figcaption>2D result</figcaption>
+                    </figure>
+                    <figure class="screenshot-slide">
+                        <button class="screenshot-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/06_compound_identifiers_synonyms_dark_blue.png" data-preview-caption="Identifiers and synonyms">
+                            <img src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/06_compound_identifiers_synonyms_dark_blue.png" alt="Compound identifiers and synonyms" loading="lazy" decoding="async">
+                        </button>
+                        <figcaption>Identifiers</figcaption>
+                    </figure>
+                    <figure class="screenshot-slide">
+                        <button class="screenshot-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/07_compound_description_ghs_dark_blue.png" data-preview-caption="Compound description and GHS">
+                            <img src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/07_compound_description_ghs_dark_blue.png" alt="Compound description and GHS pictograms" loading="lazy" decoding="async">
+                        </button>
+                        <figcaption>Description and GHS</figcaption>
+                    </figure>
+                    <figure class="screenshot-slide">
+                        <button class="screenshot-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/08_chemical_database_library_dark_blue.png" data-preview-caption="Chemical database">
+                            <img src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/08_chemical_database_library_dark_blue.png" alt="Chemical database in Library" loading="lazy" decoding="async">
+                        </button>
+                        <figcaption>Chemical database</figcaption>
+                    </figure>
+                    <figure class="screenshot-slide">
+                        <button class="screenshot-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/09_tool_reaction_balancer_dark_blue.png" data-preview-caption="Reaction balancer">
+                            <img src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/09_tool_reaction_balancer_dark_blue.png" alt="Reaction Balancer tool" loading="lazy" decoding="async">
+                        </button>
+                        <figcaption>Reaction balancer</figcaption>
+                    </figure>
+                    <figure class="screenshot-slide">
+                        <button class="screenshot-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/10_tool_molar_mass_dark_blue.png" data-preview-caption="Molar mass calculator">
+                            <img src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/10_tool_molar_mass_dark_blue.png" alt="Molar Mass Calculator tool" loading="lazy" decoding="async">
+                        </button>
+                        <figcaption>Molar mass</figcaption>
+                    </figure>
+                    <figure class="screenshot-slide">
+                        <button class="screenshot-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/11_tool_oxidation_state_dark_blue.png" data-preview-caption="Oxidation state finder">
+                            <img src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/11_tool_oxidation_state_dark_blue.png" alt="Oxidation State Finder tool" loading="lazy" decoding="async">
+                        </button>
+                        <figcaption>Oxidation state</figcaption>
+                    </figure>
+                    <figure class="screenshot-slide">
+                        <button class="screenshot-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/12_tool_compare_compounds_dark_blue.png" data-preview-caption="Compare compounds">
+                            <img src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/12_tool_compare_compounds_dark_blue.png" alt="Compare Compounds tool" loading="lazy" decoding="async">
+                        </button>
+                        <figcaption>Compare compounds</figcaption>
+                    </figure>
+                    <figure class="screenshot-slide">
+                        <button class="screenshot-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/13_tool_stoichiometry_dark_blue.png" data-preview-caption="Stoichiometry tool">
+                            <img src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/13_tool_stoichiometry_dark_blue.png" alt="Stoichiometry tool" loading="lazy" decoding="async">
+                        </button>
+                        <figcaption>Stoichiometry</figcaption>
+                    </figure>
+                    <figure class="screenshot-slide">
+                        <button class="screenshot-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/14_compound_ibuprofen_3d_dark_blue.png" data-preview-caption="Ibuprofen 3D result">
+                            <img src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/14_compound_ibuprofen_3d_dark_blue.png" alt="Ibuprofen result with 3D viewer" loading="lazy" decoding="async">
+                        </button>
+                        <figcaption>3D result</figcaption>
+                    </figure>
+                    <figure class="screenshot-slide">
+                        <button class="screenshot-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/15_structure_search_editor_dark_blue.png" data-preview-caption="Structure search editor">
+                            <img src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/15_structure_search_editor_dark_blue.png" alt="Native structure search editor" loading="lazy" decoding="async">
+                        </button>
+                        <figcaption>Structure search</figcaption>
+                    </figure>
+                    <figure class="screenshot-slide">
+                        <button class="screenshot-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/16_isomer_search_results_dark_blue.png" data-preview-caption="Isomer search results">
+                            <img src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/16_isomer_search_results_dark_blue.png" alt="Isomer search results" loading="lazy" decoding="async">
+                        </button>
+                        <figcaption>Isomer search</figcaption>
+                    </figure>
+                    <figure class="screenshot-slide">
+                        <button class="screenshot-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/17_compound_benzene_2d_light_blue.png" data-preview-caption="Light blue theme">
+                            <img src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/17_compound_benzene_2d_light_blue.png" alt="Benzene result in light blue theme" loading="lazy" decoding="async">
+                        </button>
+                        <figcaption>Light blue theme</figcaption>
+                    </figure>
+                    <figure class="screenshot-slide">
+                        <button class="screenshot-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/18_compound_phenol_3d_dark_violet.png" data-preview-caption="Dark violet theme">
+                            <img src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/18_compound_phenol_3d_dark_violet.png" alt="Phenol result in dark violet theme" loading="lazy" decoding="async">
+                        </button>
+                        <figcaption>Dark violet theme</figcaption>
+                    </figure>
+                    <figure class="screenshot-slide">
+                        <button class="screenshot-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/19_compound_aspirin_2d_dark_emerald.png" data-preview-caption="Dark emerald theme">
+                            <img src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/19_compound_aspirin_2d_dark_emerald.png" alt="Aspirin result in dark emerald theme" loading="lazy" decoding="async">
+                        </button>
+                        <figcaption>Dark emerald theme</figcaption>
+                    </figure>
+                    <figure class="screenshot-slide">
+                        <button class="screenshot-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/20_compound_caffeine_2d_dark_rose.png" data-preview-caption="Dark rose theme">
+                            <img src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/20_compound_caffeine_2d_dark_rose.png" alt="Caffeine result in dark rose theme" loading="lazy" decoding="async">
+                        </button>
+                        <figcaption>Dark rose theme</figcaption>
+                    </figure>
+                    <figure class="screenshot-slide">
+                        <button class="screenshot-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/21_compound_benzenesulfonyl_3d_dark_amber.png" data-preview-caption="Dark amber theme">
+                            <img src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/21_compound_benzenesulfonyl_3d_dark_amber.png" alt="Compound result in dark amber theme" loading="lazy" decoding="async">
+                        </button>
+                        <figcaption>Dark amber theme</figcaption>
+                    </figure>
+                </div>
+
+                <button class="carousel-control" id="screenshotsNext" type="button" aria-label="Next screenshot">
+                    <i class="ph ph-caret-right" aria-hidden="true"></i>
                 </button>
             </div>
-        </header>
 
-        <div class="mobile-drawer" id="mobileNavPanel" aria-label="Mobile navigation">
-            <nav class="mobile-nav t-dropdown" id="mobileNavDropdown" data-origin="top-right">
-                <a class="nav-link is-current" href="index.html">Overview</a>
-                <a class="nav-link" href="#stats">Stats</a>
-                <a class="nav-link" href="#features">Features</a>
-                <a class="nav-link" href="#tools">Tools</a>
-                <a class="nav-link" href="#flow">Flow</a>
-                <a class="nav-link" href="#screenshots">Screenshots</a>
-                <a class="nav-link" href="#settings">Settings</a>
-                <a class="nav-link" href="faq.html">FAQ</a>
-                <a class="nav-link" href="#stack">Tech</a>
-                <a class="nav-link" href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer">Latest release</a>
+            <div class="carousel-footer">
+                <div class="carousel-dots" id="screenshotsCarouselDots" aria-label="Screenshot position"></div>
+                <p id="screenshotsCarouselStatus" aria-live="polite">1 / 21</p>
+            </div>
+        </section>
+
+        <section class="section trust-section">
+            <div class="section-head centered">
+                <h2>Uses public chemistry sources.</h2>
+                <p>The details stay plain: sources, settings, and privacy choices are visible.</p>
+            </div>
+            <div class="detail-grid">
+                <div class="detail-card">
+                    <h3>PubChem data</h3>
+                    <p>ChemSearch uses PubChem for lookup, structures, properties, synonyms, descriptions, images, isomers, SDF files, and GHS safety data.</p>
+                </div>
+                <div class="detail-card">
+                    <h3>Phone-friendly settings</h3>
+                    <p>Compact mode, dark theme, AMOLED mode, color schemes, reduced motion, and high-contrast outlines live in the app settings.</p>
+                </div>
+                <div class="detail-card">
+                    <h3>Optional descriptions</h3>
+                    <p>Descriptions can come from PubChem, Wikipedia, or a configured provider. Provider keys stay on your phone.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-brand">
+            <a href="index.html" class="footer-logo" aria-label="ChemSearch home">
+                <img src="chemsearch-logo.png" alt="">
+                <strong>ChemSearch</strong>
+            </a>
+            <p>Compound search, structures, reference, and practical chemistry tools for Android.</p>
+        </div>
+        <div class="footer-links">
+            <nav aria-label="Product links">
+                <h4>Product</h4>
+                <a href="#download">Download</a>
+                <a href="#features">Features</a>
+                <a href="#screenshots">Screenshots</a>
+            </nav>
+            <nav aria-label="Project links">
+                <h4>Project</h4>
+                <a href="https://github.com/FurtherSecrets24680/chemsearch-android" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <a href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer">Releases</a>
             </nav>
         </div>
-
-        <main class="page-main" id="content" tabindex="-1">
-            <section class="hero-slab reveal" aria-labelledby="hero-title">
-                <div class="hero-field" aria-hidden="true">
-                    <span class="field-cluster cluster-a"></span>
-                    <span class="field-cluster cluster-b"></span>
-                    <span class="field-cluster cluster-c"></span>
-                    <span class="field-cluster cluster-d"></span>
-                    <span class="field-cluster cluster-e"></span>
-                </div>
-
-                <div class="hero-inner">
-                    <h1 id="hero-title" class="hero-title">
-                        <span>ChemSearch</span>
-                        <span class="hero-title-mark" aria-label="Chemistry simplified.">
-                            <span class="hero-title-text" aria-hidden="true">
-                                <span class="tag-char" style="--i: 0">C</span><span class="tag-char" style="--i: 1">h</span><span class="tag-char" style="--i: 2">e</span><span class="tag-char" style="--i: 3">m</span><span class="tag-char" style="--i: 4">i</span><span class="tag-char" style="--i: 5">s</span><span class="tag-char" style="--i: 6">t</span><span class="tag-char" style="--i: 7">r</span><span class="tag-char" style="--i: 8">y</span><span class="tag-space">&nbsp;</span><span class="tag-char" style="--i: 9">s</span><span class="tag-char" style="--i: 10">i</span><span class="tag-char" style="--i: 11">m</span><span class="tag-char" style="--i: 12">p</span><span class="tag-char" style="--i: 13">l</span><span class="tag-char" style="--i: 14">i</span><span class="tag-char" style="--i: 15">f</span><span class="tag-char" style="--i: 16">i</span><span class="tag-char" style="--i: 17">e</span><span class="tag-char" style="--i: 18">d</span><span class="tag-char" style="--i: 19">.</span>
-                            </span>
-                        </span>
-                    </h1>
-                    <p class="hero-lead">Look up compounds, save useful records offline, compare molecules, and open the calculators students reach for.</p>
-                    <div class="hero-pills t-avatar-group" aria-label="ChemSearch quick features">
-                        <span class="t-avatar"><i class="ph-fill ph-magnifying-glass" aria-hidden="true"></i> Search</span>
-                        <span class="t-avatar"><i class="ph-fill ph-download-simple" aria-hidden="true"></i> Save offline</span>
-                        <span class="t-avatar"><i class="ph-fill ph-git-diff" aria-hidden="true"></i> Compare</span>
-                        <span class="t-avatar"><i class="ph-fill ph-calculator" aria-hidden="true"></i> Calculate</span>
-                    </div>
-                    <div class="hero-actions">
-                        <a class="btn btn-primary" href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer">
-                            <span>Download latest APK</span>
-                            <i class="ph-bold ph-arrow-right" aria-hidden="true"></i>
-                        </a>
-                        <a class="btn btn-secondary" href="#screenshots" data-section-link>
-                            <span>View screenshots</span>
-                            <i class="ph-bold ph-images-square" aria-hidden="true"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="hero-metrics" aria-label="ChemSearch highlights">
-                    <div class="metric-item">
-                        <i class="ph-fill ph-android-logo" aria-hidden="true"></i>
-                        <strong>Android 8+</strong>
-                        <span>phones and tablets</span>
-                    </div>
-                    <div class="metric-item">
-                        <i class="ph-fill ph-wrench" aria-hidden="true"></i>
-                        <strong class="t-digit-group is-animating"><span class="t-digit">1</span><span class="t-digit" data-stagger="1">3</span></strong>
-                        <span>chemistry tools</span>
-                    </div>
-                    <div class="metric-item">
-                        <i class="ph-fill ph-database" aria-hidden="true"></i>
-                        <strong class="t-digit-group is-animating"><span class="t-digit">6</span><span class="t-digit" data-stagger="1">5</span><span class="t-digit" data-stagger="2">9</span></strong>
-                        <span>built-in reference entries</span>
-                    </div>
-                    <div class="metric-item">
-                        <i class="ph-fill ph-shield-checkered" aria-hidden="true"></i>
-                        <strong>No tracking</strong>
-                        <span>no ChemSearch server</span>
-                    </div>
-                </div>
-            </section>
-
-            <section class="section-slab intel-slab reveal" id="stats">
-                <div class="section-head">
-                    <h2>A full compound record, ready to use.</h2>
-                    <p class="section-lead">ChemSearch keeps the useful parts of a compound record close: identifiers, structures, safety notes, descriptions, offline copies, and the tools you need after the lookup.</p>
-                </div>
-
-                <div class="stat-mosaic" aria-label="ChemSearch app statistics">
-                    <article class="stat-card stat-card-large">
-                        <span class="stat-icon"><i class="ph-fill ph-books" aria-hidden="true"></i></span>
-                        <strong class="t-digit-group is-animating" aria-label="659"><span class="t-digit">6</span><span class="t-digit" data-stagger="1">5</span><span class="t-digit" data-stagger="2">9</span></strong>
-                        <span>offline reference entries</span>
-                        <p>331 substances, 108 ions, 71 functional groups, and 149 reactions live in the built-in Chemical Database.</p>
-                    </article>
-                    <article class="stat-card">
-                        <span class="stat-icon"><i class="ph-fill ph-cloud-arrow-down" aria-hidden="true"></i></span>
-                        <strong class="t-digit-group is-animating" aria-label="3"><span class="t-digit">3</span></strong>
-                        <span>download quality modes</span>
-                        <p>Save Basic, Structures, or Complete compound data for offline use.</p>
-                    </article>
-                    <article class="stat-card">
-                        <span class="stat-icon"><i class="ph-fill ph-file-text" aria-hidden="true"></i></span>
-                        <strong class="t-digit-group is-animating" aria-label="7"><span class="t-digit">7</span></strong>
-                        <span>description choices</span>
-                        <p>Use PubChem, Wikipedia, or one of five optional AI providers.</p>
-                    </article>
-                    <article class="stat-card">
-                        <span class="stat-icon"><i class="ph-fill ph-function" aria-hidden="true"></i></span>
-                        <strong class="t-digit-group is-animating" aria-label="2"><span class="t-digit">2</span></strong>
-                        <span>formula styles</span>
-                        <p>Switch between Conventional and Hill ordering when formulas need a different view.</p>
-                    </article>
-                    <article class="stat-card">
-                        <span class="stat-icon"><i class="ph-fill ph-hard-drives" aria-hidden="true"></i></span>
-                        <strong class="t-digit-group is-animating" aria-label="4"><span class="t-digit">4</span></strong>
-                        <span>cache size options</span>
-                        <p>Pick 10 MB, 50 MB, 100 MB, or unlimited cache storage.</p>
-                    </article>
-                    <article class="stat-card stat-card-privacy">
-                        <span class="stat-icon"><i class="ph-fill ph-shield-check" aria-hidden="true"></i></span>
-                        <strong>0</strong>
-                        <span>analytics or app server</span>
-                        <p>History, favorites, downloads, cache, settings, and saved keys stay on your device.</p>
-                    </article>
-                </div>
-
-                <div class="compound-packet">
-                    <div>
-                        <p class="section-kicker">Saved compound packet</p>
-                        <h3>What can an offline record include?</h3>
-                    </div>
-                    <div class="packet-tags t-avatar-group" aria-label="Offline compound data fields">
-                        <span class="t-avatar"><i class="ph-fill ph-identification-card" aria-hidden="true"></i> identifiers</span>
-                        <span class="t-avatar"><i class="ph-fill ph-image-square" aria-hidden="true"></i> 2D image</span>
-                        <span class="t-avatar"><i class="ph-fill ph-cube" aria-hidden="true"></i> 3D data</span>
-                        <span class="t-avatar"><i class="ph-fill ph-list-plus" aria-hidden="true"></i> synonyms</span>
-                        <span class="t-avatar"><i class="ph-fill ph-warning-diamond" aria-hidden="true"></i> GHS safety</span>
-                        <span class="t-avatar"><i class="ph-fill ph-file-text" aria-hidden="true"></i> descriptions</span>
-                        <span class="t-avatar"><i class="ph-fill ph-link-simple" aria-hidden="true"></i> source notes</span>
-                    </div>
-                </div>
-            </section>
-
-            <section class="section-slab reveal" id="features">
-                <div class="section-head">
-                    <h2>Find the compound. Keep what matters.</h2>
-                    <p class="section-lead">Search by name, CAS number, formula, or PubChem CID. Then save the record, compare it, or jump into the right tool.</p>
-                </div>
-
-                <div class="feature-river">
-                    <article class="feature-line feature-line-large">
-                        <span class="line-icon"><i class="ph-fill ph-magnifying-glass" aria-hidden="true"></i></span>
-                        <div>
-                            <h3>One search box for names, formulas, CAS, and CIDs.</h3>
-                            <p>Autosuggestions can pull from PubChem while you type. Repeat searches load faster from cache.</p>
-                        </div>
-                    </article>
-                    <article class="feature-line">
-                        <span class="line-icon"><i class="ph-fill ph-cube" aria-hidden="true"></i></span>
-                        <div>
-                            <h3>2D and 3D structures, with fallbacks labeled.</h3>
-                            <p>Open the 2D structure, switch to a 3D model when one exists, and export structure files when PubChem has them.</p>
-                        </div>
-                    </article>
-                    <article class="feature-line">
-                        <span class="line-icon"><i class="ph-fill ph-download-simple" aria-hidden="true"></i></span>
-                        <div>
-                            <h3>Save compounds for offline use.</h3>
-                            <p>Downloaded records can include structures, identifiers, descriptions, synonyms, safety data, and source notes.</p>
-                        </div>
-                    </article>
-                    <article class="feature-line">
-                        <span class="line-icon"><i class="ph-fill ph-git-diff" aria-hidden="true"></i></span>
-                        <div>
-                            <h3>Compare compounds side by side.</h3>
-                            <p>Check formulas, descriptions, identifiers, atom counts, bond counts, and molecular weight without bouncing between screens.</p>
-                        </div>
-                    </article>
-                    <article class="feature-line">
-                        <span class="line-icon"><i class="ph-fill ph-warning-diamond" aria-hidden="true"></i></span>
-                        <div>
-                            <h3>Safety data sits near the structure.</h3>
-                            <p>Signal words, GHS pictograms, and hazard notes appear when PubChem provides them. Serious handling still belongs to the official SDS.</p>
-                        </div>
-                    </article>
-                    <article class="feature-line">
-                        <span class="line-icon"><i class="ph-fill ph-palette" aria-hidden="true"></i></span>
-                        <div>
-                            <h3>Light, dark, AMOLED, compact, and color themes.</h3>
-                            <p>Keep the interface readable on the phone you use.</p>
-                        </div>
-                    </article>
-                </div>
-            </section>
-
-            <section class="section-slab reveal" id="tools">
-                <div class="section-head">
-                    <h2>Thirteen tools, plus a built-in database.</h2>
-                    <p class="section-lead">The Tools tab covers formulas, equations, pH, yields, gases, dilutions, isomers, SMILES, local molecule files, and compound comparison.</p>
-                </div>
-
-                <div class="tool-board">
-                    <div class="tool-column">
-                        <h3>Lookup and structure</h3>
-                        <div class="tool-rows">
-                            <article class="tool-row">
-                                <span class="row-icon"><i class="ph-fill ph-cube" aria-hidden="true"></i></span>
-                                <div><strong>Custom 3D Molecule Viewer</strong><p>Open a <code>.mol</code> or <code>.sdf</code> file from your device.</p></div>
-                            </article>
-                            <article class="tool-row">
-                                <span class="row-icon"><i class="ph-fill ph-bezier-curve" aria-hidden="true"></i></span>
-                                <div><strong>SMILES Visualizer</strong><p>Paste SMILES and open matching structure data.</p></div>
-                            </article>
-                            <article class="tool-row">
-                                <span class="row-icon"><i class="ph-fill ph-circles-three-plus" aria-hidden="true"></i></span>
-                                <div><strong>Isomer Finder</strong><p>Search isomers from a formula, then open a result.</p></div>
-                            </article>
-                            <article class="tool-row">
-                                <span class="row-icon"><i class="ph-fill ph-books" aria-hidden="true"></i></span>
-                                <div><strong>Chemical Database</strong><p>Browse 331 substances, 108 ions, 71 functional groups, and 149 reactions.</p></div>
-                            </article>
-                        </div>
-                    </div>
-
-                    <div class="tool-column">
-                        <h3>Calculators</h3>
-                        <div class="tool-rows">
-                            <article class="tool-row">
-                                <span class="row-icon"><i class="ph-fill ph-scales" aria-hidden="true"></i></span>
-                                <div><strong>Molar Mass Calculator</strong><p>Handle nested formulas and hydrates.</p></div>
-                            </article>
-                            <article class="tool-row">
-                                <span class="row-icon"><i class="ph-fill ph-equals" aria-hidden="true"></i></span>
-                                <div><strong>Reaction Balancer</strong><p>Balance equations before stoichiometry.</p></div>
-                            </article>
-                            <article class="tool-row">
-                                <span class="row-icon"><i class="ph-fill ph-flask" aria-hidden="true"></i></span>
-                                <div><strong>Limiting Reagent + Percent Yield</strong><p>Find the limiting reactant and compare actual yield.</p></div>
-                            </article>
-                            <article class="tool-row">
-                                <span class="row-icon"><i class="ph-fill ph-drop" aria-hidden="true"></i></span>
-                                <div><strong>Dilution, pH / pOH, and Gas Law</strong><p>Work with concentration, acidity, pressure, volume, and temperature.</p></div>
-                            </article>
-                        </div>
-                    </div>
-
-                    <div class="tool-column">
-                        <h3>Study flow</h3>
-                        <div class="tool-rows">
-                            <article class="tool-row">
-                                <span class="row-icon"><i class="ph-fill ph-git-diff" aria-hidden="true"></i></span>
-                                <div><strong>Compare Compounds</strong><p>Put several compounds next to each other and scan the differences.</p></div>
-                            </article>
-                            <article class="tool-row">
-                                <span class="row-icon"><i class="ph-fill ph-push-pin" aria-hidden="true"></i></span>
-                                <div><strong>Pinned Recents</strong><p>Keep repeat searches close.</p></div>
-                            </article>
-                            <article class="tool-row">
-                                <span class="row-icon"><i class="ph-fill ph-copy" aria-hidden="true"></i></span>
-                                <div><strong>Copy Identifiers</strong><p>Copy formulas, SMILES, InChI, InChIKey, CAS values, and summaries.</p></div>
-                            </article>
-                            <article class="tool-row">
-                                <span class="row-icon"><i class="ph-fill ph-sparkle" aria-hidden="true"></i></span>
-                                <div><strong>Optional AI Descriptions</strong><p>Use your own Gemini, Groq, OpenAI, OpenRouter, or Mistral key.</p></div>
-                            </article>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="section-slab flow-slab reveal" id="flow">
-                <div class="section-head">
-                    <h2>A faster study path.</h2>
-                    <p class="section-lead">Search once, then move through the same chain students use in real work: identify, inspect, save, compare, calculate, and check limits.</p>
-                </div>
-
-                <div class="workflow-strip" aria-label="ChemSearch workflow">
-                    <article class="workflow-step">
-                        <span class="workflow-number">01</span>
-                        <i class="ph-fill ph-magnifying-glass" aria-hidden="true"></i>
-                        <h3>Search</h3>
-                        <p>Name, formula, CAS, or PubChem CID.</p>
-                    </article>
-                    <article class="workflow-step">
-                        <span class="workflow-number">02</span>
-                        <i class="ph-fill ph-cube" aria-hidden="true"></i>
-                        <h3>Inspect</h3>
-                        <p>Formula, identifiers, 2D image, 3D model, and source labels.</p>
-                    </article>
-                    <article class="workflow-step">
-                        <span class="workflow-number">03</span>
-                        <i class="ph-fill ph-download-simple" aria-hidden="true"></i>
-                        <h3>Save</h3>
-                        <p>Favorite a result or download a fuller offline copy.</p>
-                    </article>
-                    <article class="workflow-step">
-                        <span class="workflow-number">04</span>
-                        <i class="ph-fill ph-git-diff" aria-hidden="true"></i>
-                        <h3>Compare</h3>
-                        <p>Line up formulas, identifiers, weights, atoms, bonds, and descriptions.</p>
-                    </article>
-                    <article class="workflow-step">
-                        <span class="workflow-number">05</span>
-                        <i class="ph-fill ph-calculator" aria-hidden="true"></i>
-                        <h3>Calculate</h3>
-                        <p>Jump into molar mass, pH, yield, dilution, gas law, or balancing tools.</p>
-                    </article>
-                </div>
-            </section>
-
-            <section class="section-slab reveal" id="screenshots">
-                <div class="section-head">
-                    <h2>The Android interface, up close.</h2>
-                    <p class="section-lead">Dark mode, light mode, structures, safety cards, tools, and result details from the actual app screenshots.</p>
-                </div>
-
-                <div class="gallery-panel">
-                    <div class="carousel-outer">
-                        <button class="carousel-arrow prev" id="screenshotsPrev" type="button" aria-label="Previous screenshot" aria-controls="screenshotsCarouselTrack">
-                            <i class="ph-bold ph-caret-left" aria-hidden="true"></i>
-                        </button>
-
-                        <div class="carousel-viewport" id="screenshotsCarouselTrack" tabindex="0" aria-label="ChemSearch screenshots">
-                            <figure class="carousel-slide">
-                                <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/home_dark.jpg" data-preview-caption="Search · Dark mode" aria-label="Open screenshot preview: Search dark mode">
-                                    <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/home_dark.jpg" alt="Home screen in dark mode">
-                                </button>
-                                <figcaption>Search · dark mode</figcaption>
-                            </figure>
-                            <figure class="carousel-slide">
-                                <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/home_light.jpg" data-preview-caption="Search · Light mode" aria-label="Open screenshot preview: Search light mode">
-                                    <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/home_light.jpg" alt="Home screen in light mode">
-                                </button>
-                                <figcaption>Search · light mode</figcaption>
-                            </figure>
-                            <figure class="carousel-slide">
-                                <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/3dmolecule.jpg" data-preview-caption="3D molecule viewer" aria-label="Open screenshot preview: 3D molecule viewer">
-                                    <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/3dmolecule.jpg" alt="3D molecule viewer">
-                                </button>
-                                <figcaption>3D molecule viewer</figcaption>
-                            </figure>
-                            <figure class="carousel-slide">
-                                <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/favorites.jpg" data-preview-caption="Favorites" aria-label="Open screenshot preview: Favorites">
-                                    <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/favorites.jpg" alt="Favorites screen">
-                                </button>
-                                <figcaption>Favorites</figcaption>
-                            </figure>
-                            <figure class="carousel-slide">
-                                <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/tools_page.jpg" data-preview-caption="Tools tab" aria-label="Open screenshot preview: Tools tab">
-                                    <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/tools_page.jpg" alt="Tools screen">
-                                </button>
-                                <figcaption>Tools tab</figcaption>
-                            </figure>
-                            <figure class="carousel-slide">
-                                <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/iden_ea.jpg" data-preview-caption="Identifiers + elemental analysis" aria-label="Open screenshot preview: Identifiers and elemental analysis">
-                                    <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/iden_ea.jpg" alt="Identifiers and elemental analysis screen">
-                                </button>
-                                <figcaption>Identifiers + elemental analysis</figcaption>
-                            </figure>
-                            <figure class="carousel-slide">
-                                <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/ghs_safety.jpg" data-preview-caption="GHS safety card" aria-label="Open screenshot preview: GHS safety card">
-                                    <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/ghs_safety.jpg" alt="GHS safety information screen">
-                                </button>
-                                <figcaption>GHS safety card</figcaption>
-                            </figure>
-                            <figure class="carousel-slide">
-                                <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/tool_mmc.jpg" data-preview-caption="Molar mass calculator" aria-label="Open screenshot preview: Molar mass calculator">
-                                    <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/tool_mmc.jpg" alt="Molar mass calculator screen">
-                                </button>
-                                <figcaption>Molar mass calculator</figcaption>
-                            </figure>
-                            <figure class="carousel-slide">
-                                <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/tool_osf.jpg" data-preview-caption="Oxidation state finder" aria-label="Open screenshot preview: Oxidation state finder">
-                                    <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/tool_osf.jpg" alt="Oxidation state finder screen">
-                                </button>
-                                <figcaption>Oxidation state finder</figcaption>
-                            </figure>
-                            <figure class="carousel-slide">
-                                <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/tool_rb.jpg" data-preview-caption="Reaction balancer" aria-label="Open screenshot preview: Reaction balancer">
-                                    <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/tool_rb.jpg" alt="Reaction balancer screen">
-                                </button>
-                                <figcaption>Reaction balancer</figcaption>
-                            </figure>
-                            <figure class="carousel-slide">
-                                <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/tool_sv.jpg" data-preview-caption="SMILES visualizer" aria-label="Open screenshot preview: SMILES visualizer">
-                                    <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/tool_sv.jpg" alt="SMILES visualizer screen">
-                                </button>
-                                <figcaption>SMILES visualizer</figcaption>
-                            </figure>
-                            <figure class="carousel-slide">
-                                <button class="gallery-card" type="button" data-preview-src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/syn_desc.jpg" data-preview-caption="Synonyms and descriptions" aria-label="Open screenshot preview: Synonyms and descriptions">
-                                    <img loading="lazy" src="https://raw.githubusercontent.com/FurtherSecrets24680/chemsearch-android/main/screenshots/syn_desc.jpg" alt="Synonyms and descriptions screen">
-                                </button>
-                                <figcaption>Synonyms + descriptions</figcaption>
-                            </figure>
-                        </div>
-
-                        <button class="carousel-arrow next" id="screenshotsNext" type="button" aria-label="Next screenshot" aria-controls="screenshotsCarouselTrack">
-                            <i class="ph-bold ph-caret-right" aria-hidden="true"></i>
-                        </button>
-                    </div>
-
-                    <div class="carousel-meta">
-                        <div class="carousel-dots" id="screenshotsCarouselDots" role="tablist" aria-label="Screenshot navigation dots"></div>
-                        <p class="carousel-status" id="screenshotsCarouselStatus" aria-live="polite">1 / 12</p>
-                    </div>
-                </div>
-            </section>
-
-            <section class="section-slab reveal" id="settings">
-                <div class="section-head">
-                    <h2>Tune the app to the way you study.</h2>
-                    <p class="section-lead">ChemSearch has quiet controls for layout, motion, cache, descriptions, updates, and developer checks without putting those switches in your way.</p>
-                </div>
-
-                <div class="control-grid">
-                    <article class="control-card">
-                        <i class="ph-fill ph-layout" aria-hidden="true"></i>
-                        <h3>Layout choices</h3>
-                        <p>List and grid layouts, compact mode, tool search, categories, and drag-style tool reordering.</p>
-                    </article>
-                    <article class="control-card">
-                        <i class="ph-fill ph-palette" aria-hidden="true"></i>
-                        <h3>Reading comfort</h3>
-                        <p>Light, dark, AMOLED, color schemes, reduced motion, and high-contrast outlines.</p>
-                    </article>
-                    <article class="control-card">
-                        <i class="ph-fill ph-broom" aria-hidden="true"></i>
-                        <h3>Cache control</h3>
-                        <p>Clear cache, pick a storage cap, or set auto-clear to daily, weekly, monthly, or manual.</p>
-                    </article>
-                    <article class="control-card">
-                        <i class="ph-fill ph-brain" aria-hidden="true"></i>
-                        <h3>Optional AI</h3>
-                        <p>Choose Gemini, Groq, OpenAI, OpenRouter, or Mistral, then select a model per provider.</p>
-                    </article>
-                    <article class="control-card">
-                        <i class="ph-fill ph-stethoscope" aria-hidden="true"></i>
-                        <h3>Source checks</h3>
-                        <p>Developer options can test PubChem lookup, structures, safety data, Wikipedia, fallback structures, release checks, and AI providers.</p>
-                    </article>
-                    <article class="control-card">
-                        <i class="ph-fill ph-bell-ringing" aria-hidden="true"></i>
-                        <h3>Update flow</h3>
-                        <p>The app can check GitHub Releases, download an APK update, show progress, and prompt after download.</p>
-                    </article>
-                </div>
-            </section>
-
-            <section class="section-slab reveal" id="stack">
-                <div class="section-head">
-                    <h2>Native Android. No middleman server.</h2>
-                    <p class="section-lead">ChemSearch contacts public data sources from your phone. Saved compounds, settings, cache, and optional API keys stay on the device.</p>
-                </div>
-
-                <div class="stack-layout">
-                    <div class="table-shell">
-                        <table>
-                            <thead>
-                                <tr><th>Component</th><th>Technology</th></tr>
-                            </thead>
-                            <tbody>
-                                <tr><td>Language</td><td>Kotlin</td></tr>
-                                <tr><td>UI</td><td>Jetpack Compose, Material 3, Phosphor Icons</td></tr>
-                                <tr><td>Storage</td><td>Room, DataStore, cache files, offline downloads</td></tr>
-                                <tr><td>Background work</td><td>WorkManager</td></tr>
-                                <tr><td>Networking</td><td>Retrofit, OkHttp</td></tr>
-                                <tr><td>Images</td><td>Coil</td></tr>
-                                <tr><td>Async</td><td>Kotlin Coroutines</td></tr>
-                                <tr><td>JSON</td><td>Gson</td></tr>
-                                <tr><td>API keys</td><td>Android Keystore-backed encryption</td></tr>
-                            </tbody>
-                        </table>
-
-                        <table>
-                            <thead>
-                                <tr><th>Source</th><th>Used for</th></tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><a class="source-link" href="https://pubchem.ncbi.nlm.nih.gov/docs/pug-rest-tutorial" target="_blank" rel="noopener noreferrer"><i class="ph-fill ph-flask" aria-hidden="true"></i> PubChem PUG REST</a></td>
-                                    <td>Lookup, properties, synonyms, images, isomers, and SDF files.</td>
-                                </tr>
-                                <tr>
-                                    <td><a class="source-link" href="https://pubchem.ncbi.nlm.nih.gov/docs/pug-view" target="_blank" rel="noopener noreferrer"><i class="ph-fill ph-warning-diamond" aria-hidden="true"></i> PubChem PUG View</a></td>
-                                    <td>GHS safety data.</td>
-                                </tr>
-                                <tr>
-                                    <td><a class="source-link" href="https://en.wikipedia.org/api/rest_v1/" target="_blank" rel="noopener noreferrer"><i class="ph-fill ph-newspaper" aria-hidden="true"></i> Wikipedia REST API</a></td>
-                                    <td>Short summaries when source records are sparse.</td>
-                                </tr>
-                                <tr>
-                                    <td><a class="source-link" href="https://cactus.nci.nih.gov/chemical/structure" target="_blank" rel="noopener noreferrer"><i class="ph-fill ph-cube" aria-hidden="true"></i> NCI/CADD Resolver</a></td>
-                                    <td>Fallback SDF models when PubChem has no usable 3D file.</td>
-                                </tr>
-                                <tr>
-                                    <td><a class="source-link" href="https://docs.github.com/en/rest/releases/releases" target="_blank" rel="noopener noreferrer"><i class="ph-fill ph-github-logo" aria-hidden="true"></i> GitHub Releases</a></td>
-                                    <td>Update checks and APK downloads.</td>
-                                </tr>
-                                <tr>
-                                    <td><span class="source-link"><i class="ph-fill ph-sparkle" aria-hidden="true"></i> AI provider APIs</span></td>
-                                    <td>Gemini, Groq, OpenAI, OpenRouter, or Mistral summaries with your own key.</td>
-                                </tr>
-                                <tr>
-                                    <td><span class="source-link"><i class="ph-fill ph-database" aria-hidden="true"></i> Local JSON database</span></td>
-                                    <td>659 reference entries in the Chemical Database.</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <aside class="stack-aside">
-                        <h3>Install notes</h3>
-                        <ul class="stack-list">
-                            <li>Runs on Android 8.0 and newer.</li>
-                            <li>Live lookup needs internet. Saved records and the built-in database can work offline.</li>
-                            <li>Source builds use Android Studio and JDK 17+.</li>
-                            <li>AI summaries need an API key.</li>
-                            <li>No account, analytics, tracking, or ChemSearch backend.</li>
-                            <li>Favorites, recents, cache, settings, and encrypted API keys stay on your device.</li>
-                        </ul>
-                    </aside>
-                </div>
-            </section>
-
-            <footer class="footer reveal">
-                <div class="footer-brand">
-                    <a href="index.html" class="footer-logo" aria-label="ChemSearch Home">
-                        <img src="chemsearch-logo.png" alt="">
-                        <strong>ChemSearch</strong>
-                    </a>
-                    <p>Compound lookup, saved records, structures, safety notes, and chemistry tools in one Android app.</p>
-                    <div class="social-links" aria-label="Social links">
-                        <a href="https://github.com/FurtherSecrets24680" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="ph-fill ph-github-logo" aria-hidden="true"></i></a>
-                        <a href="https://x.com/FurSec24680" target="_blank" rel="noopener noreferrer" aria-label="X"><i class="ph-fill ph-x-logo" aria-hidden="true"></i></a>
-                        <a href="https://www.youtube.com/@furthersecrets" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="ph-fill ph-youtube-logo" aria-hidden="true"></i></a>
-                    </div>
-                </div>
-
-                <div class="footer-columns">
-                    <section class="footer-col">
-                        <h3>Resources</h3>
-                        <a href="#stats" data-section-link>Stats</a>
-                        <a href="#features" data-section-link>Features</a>
-                        <a href="#tools" data-section-link>Tools</a>
-                        <a href="#flow" data-section-link>Workflow</a>
-                        <a href="#screenshots" data-section-link>Screenshots</a>
-                        <a href="#settings" data-section-link>Settings</a>
-                        <a href="faq.html">FAQ</a>
-                    </section>
-                    <section class="footer-col">
-                        <h3>Project</h3>
-                        <a href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer">Releases</a>
-                        <a href="https://github.com/FurtherSecrets24680/chemsearch-android" target="_blank" rel="noopener noreferrer">Source code</a>
-                        <a href="https://github.com/FurtherSecrets24680/chemsearch-android/issues" target="_blank" rel="noopener noreferrer">Issues</a>
-                        <a href="#stack" data-section-link>Tech stack</a>
-                    </section>
-                </div>
-
-                <p class="footer-meta">© 2026 ChemSearch. MIT licensed. Data requests go to the sources you choose.</p>
-            </footer>
-        </main>
-    </div>
+        <p class="footer-copyright">© 2026 ChemSearch · Open source under MIT</p>
+    </footer>
 
     <div class="lightbox" id="galleryLightbox" hidden>
-        <div class="lightbox-shell t-modal" role="dialog" aria-modal="true" aria-labelledby="galleryLightboxCaption">
-            <button class="lightbox-close" id="galleryLightboxClose" type="button" aria-label="Close screenshot preview">
-                <i class="ph-bold ph-x" aria-hidden="true"></i><span>Close</span>
+        <div class="lightbox-panel" role="dialog" aria-modal="true" aria-labelledby="galleryLightboxCaption">
+            <button class="icon-button lightbox-close" id="galleryLightboxClose" type="button" aria-label="Close screenshot preview">
+                <i class="ph ph-x" aria-hidden="true"></i>
             </button>
-            <figure class="lightbox-figure">
-                <img id="galleryLightboxImage" src="" alt="">
-                <figcaption class="lightbox-caption" id="galleryLightboxCaption"></figcaption>
-            </figure>
+            <img id="galleryLightboxImage" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="">
+            <p id="galleryLightboxCaption"></p>
         </div>
     </div>
-
-    <button class="to-top" id="toTopBtn" type="button" aria-label="Back to top">↑ Top</button>
 </body>
 </html>

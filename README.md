@@ -17,9 +17,10 @@ The site gives regular users the short version: search compounds, inspect struct
 ## Site Features
 
 - `index.html` is the main landing page.
-- `faq.html` answers app questions without exposing developer-only details.
-- `styles.css` contains the full responsive design, dark/light themes, animated lab background, glowing hover states, and reduced-motion fallbacks.
-- `script.js` handles theme switching, mobile navigation, carousel controls, lightbox previews, page transitions, hover motion, and the generated lab backdrop.
+- `styles.css` contains the responsive design, dark/light themes, screenshot layout, and mobile spacing.
+- `script.js` handles theme switching, mobile navigation, direct APK download links, carousel controls, and lightbox previews.
+- `PRODUCT.md` captures the design direction used by Impeccable.
+- `.impeccable/live/config.json` configures Impeccable live mode for `index.html`.
 
 No build step is required. The site is plain HTML, CSS, and JavaScript.
 
@@ -44,12 +45,13 @@ You can also open `index.html` directly, but a local server is better for testin
 ```text
 ChemSearch/
 ├── index.html
-├── faq.html
 ├── script.js
 ├── styles.css
+├── PRODUCT.md
 ├── chemsearch-logo.png
 ├── favicon.png
 ├── LICENSE
+├── .impeccable/
 └── README.md
 ```
 
@@ -59,7 +61,7 @@ The app details come from the ChemSearch Android repository and the app screensh
 
 ## Design Notes
 
-The current design keeps ChemSearch's blue Material-inspired palette, then adds a darker lab-style surface: molecule silhouettes, flask/test-tube shapes, soft glows, tactile buttons, screenshot previews, and motion that backs off for users who prefer reduced motion.
+The current design keeps ChemSearch's blue Material-inspired palette, with a dark lab-style surface, real app screenshots, readable mobile sections, and restrained motion for low-end devices. Impeccable is configured for future audit, polish, and live visual iteration passes.
 
 ## License
 
