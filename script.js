@@ -20,7 +20,8 @@
     const transparentPixel = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
     const fallbackApk = {
         name: "ChemSearch.v1.13.7.apk",
-        url: "https://github.com/FurtherSecrets24680/chemsearch-android/releases/download/1.13.7/ChemSearch.v1.13.7.apk"
+        url: "https://github.com/FurtherSecrets24680/chemsearch-android/releases/download/1.13.7/ChemSearch.v1.13.7.apk",
+        version: "v1.13.7"
     };
     let returnFocus = null;
 
@@ -30,24 +31,34 @@
         if (themeToggle) {
             themeToggle.setAttribute("aria-pressed", String(isDark));
             themeToggle.setAttribute("aria-label", isDark ? "Switch to light mode" : "Switch to dark mode");
-            themeToggle.innerHTML = `<i class="ph ph-${isDark ? "sun" : "moon"}" aria-hidden="true"></i>`;
+            themeToggle.setAttribute("data-state", isDark ? "a" : "b");
         }
         if (persist) localStorage.setItem(themeKey, isDark ? "dark" : "light");
     }
 
     setTheme(localStorage.getItem(themeKey) || "dark", false);
 
-    function setApkDownload(url, name) {
+    function formatVersion(value) {
+        const raw = typeof value === "string" ? value.trim() : "";
+        const match = raw.match(/v?\d+(?:\.\d+){1,3}(?:[-+][0-9A-Za-z.-]+)?/);
+        if (!match) return "";
+        return match[0].startsWith("v") ? match[0] : `v${match[0]}`;
+    }
+
+    function setApkDownload(url, name, version) {
+        const label = version ? `Download Latest (${version})` : "Download Latest";
         apkDownloadLinks.forEach((link) => {
             link.href = url;
             link.setAttribute("download", name);
-            link.setAttribute("aria-label", `Download ${name}`);
+            link.setAttribute("aria-label", `${label} APK`);
+            const labelNode = link.querySelector("[data-download-label]");
+            if (labelNode) labelNode.textContent = label;
         });
     }
 
     async function updateLatestApkLinks() {
         if (!apkDownloadLinks.length) return;
-        setApkDownload(fallbackApk.url, fallbackApk.name);
+        setApkDownload(fallbackApk.url, fallbackApk.name, fallbackApk.version);
 
         try {
             const response = await fetch(latestReleaseApiUrl, {
@@ -63,9 +74,12 @@
                 })
                 : null;
 
-            if (apkAsset) setApkDownload(apkAsset.browser_download_url, apkAsset.name);
+            if (apkAsset) {
+                const version = formatVersion(release.tag_name) || formatVersion(release.name) || formatVersion(apkAsset.name);
+                setApkDownload(apkAsset.browser_download_url, apkAsset.name, version);
+            }
         } catch (_) {
-            setApkDownload(fallbackApk.url, fallbackApk.name);
+            setApkDownload(fallbackApk.url, fallbackApk.name, fallbackApk.version);
         }
     }
 
@@ -79,14 +93,16 @@
 
     function setMobileNav(open) {
         if (!mobileNav || !mobileMenuToggle) return;
-        mobileNav.hidden = !open;
+        mobileNav.setAttribute("data-open", String(open));
         mobileMenuToggle.setAttribute("aria-expanded", String(open));
-        mobileMenuToggle.innerHTML = `<span class="sr-only">${open ? "Close menu" : "Open menu"}</span><i class="ph ph-${open ? "x" : "list"}" aria-hidden="true"></i>`;
+        mobileMenuToggle.setAttribute("data-state", open ? "b" : "a");
+        const sr = mobileMenuToggle.querySelector(".sr-only");
+        if (sr) sr.textContent = open ? "Close menu" : "Open menu";
     }
 
     if (mobileMenuToggle) {
         mobileMenuToggle.addEventListener("click", () => {
-            setMobileNav(mobileNav ? mobileNav.hidden : false);
+            setMobileNav(mobileNav ? mobileNav.getAttribute("data-open") !== "true" : false);
         });
     }
 
@@ -158,22 +174,31 @@
         sync();
     }
 
+    const modalCloseMs = parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue("--modal-close-dur")
+    ) || 150;
+
     function openLightbox(src, caption, trigger) {
         if (!lightbox || !lightboxImage || !lightboxCaption) return;
         returnFocus = trigger || null;
         lightboxImage.src = src;
         lightboxImage.alt = caption;
         lightboxCaption.textContent = caption;
-        lightbox.hidden = false;
+        lightbox.classList.remove("is-closing");
+        lightbox.classList.add("is-open");
         document.body.style.overflow = "hidden";
         if (lightboxClose) lightboxClose.focus();
     }
 
     function closeLightbox() {
-        if (!lightbox || lightbox.hidden) return;
-        lightbox.hidden = true;
+        if (!lightbox || !lightbox.classList.contains("is-open")) return;
+        lightbox.classList.remove("is-open");
+        lightbox.classList.add("is-closing");
         document.body.style.overflow = "";
-        if (lightboxImage) lightboxImage.src = transparentPixel;
+        setTimeout(() => {
+            lightbox.classList.remove("is-closing");
+            if (lightboxImage) lightboxImage.src = transparentPixel;
+        }, modalCloseMs);
         if (returnFocus) returnFocus.focus();
         returnFocus = null;
     }
@@ -186,7 +211,7 @@
 
     if (lightbox) {
         lightbox.addEventListener("click", (event) => {
-            if (event.target === lightbox) closeLightbox();
+            if (event.target === lightbox && lightbox.classList.contains("is-open")) closeLightbox();
         });
     }
 

@@ -44,12 +44,14 @@
         </nav>
 
         <div class="header-actions">
-            <button class="icon-button" id="themeToggle" type="button" aria-label="Switch theme" aria-pressed="true">
-                <i class="ph ph-sun" aria-hidden="true"></i>
+            <button class="icon-button t-icon-swap" id="themeToggle" type="button" aria-label="Switch theme" aria-pressed="true" data-state="a">
+                <span class="t-icon" data-icon="a"><i class="ph ph-sun" aria-hidden="true"></i></span>
+                <span class="t-icon" data-icon="b"><i class="ph ph-moon" aria-hidden="true"></i></span>
             </button>
-            <button class="icon-button mobile-only" id="mobileMenuToggle" type="button" aria-controls="mobileNav" aria-expanded="false">
+            <button class="icon-button mobile-only t-icon-swap" id="mobileMenuToggle" type="button" aria-controls="mobileNav" aria-expanded="false" data-state="a">
                 <span class="sr-only">Open menu</span>
-                <i class="ph ph-list" aria-hidden="true"></i>
+                <span class="t-icon" data-icon="a"><i class="ph ph-list" aria-hidden="true"></i></span>
+                <span class="t-icon" data-icon="b"><i class="ph ph-x" aria-hidden="true"></i></span>
             </button>
             <a class="header-download" href="https://github.com/FurtherSecrets24680/chemsearch-android/releases/download/1.13.7/ChemSearch.v1.13.7.apk" data-download-apk download="ChemSearch.v1.13.7.apk" rel="noopener noreferrer">
                 Download
@@ -57,7 +59,7 @@
         </div>
     </header>
 
-    <div class="mobile-nav" id="mobileNav" hidden>
+    <div class="mobile-nav" id="mobileNav" data-open="false">
         <a href="#download">Download</a>
         <a href="#features">Features</a>
         <a href="#how-it-works">How it works</a>
@@ -80,7 +82,7 @@
                     <div class="download-group">
                         <a class="button primary" href="https://github.com/FurtherSecrets24680/chemsearch-android/releases/download/1.13.7/ChemSearch.v1.13.7.apk" data-download-apk download="ChemSearch.v1.13.7.apk" rel="noopener noreferrer">
                             <i class="ph ph-download-simple button-leading" aria-hidden="true"></i>
-                            <span>Download latest APK</span>
+                            <span data-download-label>Download Latest</span>
                             <i class="ph ph-caret-right button-trailing" aria-hidden="true"></i>
                         </a>
                         <p class="support-note">
@@ -110,42 +112,37 @@
 
         <section class="section features-section" id="features">
             <div class="section-head centered">
-                <h2>Reference, tools, and saved chemistry.</h2>
-                <p>
-                    ChemSearch keeps lookup, structures, safety notes, offline records, and practical calculators in one phone app.
-                </p>
+                <h2>Highlights</h2>
             </div>
 
             <div class="highlight-grid">
                 <article class="info-card">
-                    <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+                    <div class="highlight-visual" aria-hidden="true">
+                        <i class="ph ph-magnifying-glass"></i>
+                    </div>
                     <h3>Compound search</h3>
-                    <p>Find compounds by name, formula, CAS number, PubChem CID, drawn structure, or a random pick.</p>
+                    <p>Search by name, formula, CAS number, PubChem CID, drawn structure, or a random compound.</p>
                 </article>
                 <article class="info-card">
-                    <i class="ph ph-cube" aria-hidden="true"></i>
+                    <div class="highlight-visual" aria-hidden="true">
+                        <i class="ph ph-cube"></i>
+                    </div>
                     <h3>Structures</h3>
-                    <p>Open 2D structures and 3D models from compound records.</p>
+                    <p>Open 2D structures and 3D models from compound records when the source data provides them.</p>
                 </article>
                 <article class="info-card">
-                    <i class="ph ph-shield-check" aria-hidden="true"></i>
-                    <h3>Safety notes</h3>
-                    <p>Check GHS pictograms, hazard details, and handling notes from public chemistry data.</p>
-                </article>
-                <article class="info-card">
-                    <i class="ph ph-download-simple" aria-hidden="true"></i>
+                    <div class="highlight-visual" aria-hidden="true">
+                        <i class="ph ph-download-simple"></i>
+                    </div>
                     <h3>Offline records</h3>
-                    <p>Save useful records so common details stay available without a connection.</p>
+                    <p>Save useful compound details so common records stay available without a connection.</p>
                 </article>
                 <article class="info-card">
-                    <i class="ph ph-table" aria-hidden="true"></i>
-                    <h3>Reference data</h3>
-                    <p>Browse the periodic table and a built-in chemical reference database.</p>
-                </article>
-                <article class="info-card">
-                    <i class="ph ph-calculator" aria-hidden="true"></i>
+                    <div class="highlight-visual" aria-hidden="true">
+                        <i class="ph ph-calculator"></i>
+                    </div>
                     <h3>Chemistry tools</h3>
-                    <p>Use calculators and converters for quick chemistry checks.</p>
+                    <p>Use calculators, converters, the periodic table, and reference data for quick chemistry checks.</p>
                 </article>
             </div>
         </section>
@@ -332,26 +329,6 @@
             </div>
         </section>
 
-        <section class="section trust-section">
-            <div class="section-head centered">
-                <h2>Uses public chemistry sources.</h2>
-                <p>The details stay plain: sources, settings, and privacy choices are visible.</p>
-            </div>
-            <div class="detail-grid">
-                <div class="detail-card">
-                    <h3>PubChem data</h3>
-                    <p>ChemSearch uses PubChem for lookup, structures, properties, synonyms, descriptions, images, isomers, SDF files, and GHS safety data.</p>
-                </div>
-                <div class="detail-card">
-                    <h3>Phone-friendly settings</h3>
-                    <p>Compact mode, dark theme, AMOLED mode, color schemes, reduced motion, and high-contrast outlines live in the app settings.</p>
-                </div>
-                <div class="detail-card">
-                    <h3>Optional descriptions</h3>
-                    <p>Descriptions can come from PubChem, Wikipedia, or a configured provider. Provider keys stay on your phone.</p>
-                </div>
-            </div>
-        </section>
     </main>
 
     <footer class="site-footer">
@@ -360,25 +337,14 @@
                 <img src="chemsearch-logo.png" alt="">
                 <strong>ChemSearch</strong>
             </a>
-            <p>Compound search, structures, reference, and practical chemistry tools for Android.</p>
+            <p>ChemSearch is an open-source Android app for compound lookup, structures, reference data, and quick chemistry tools.</p>
+            <p class="footer-meta">Built by FurtherSecrets. Source code and APK releases live on GitHub.</p>
         </div>
-        <div class="footer-links">
-            <nav aria-label="Product links">
-                <h4>Product</h4>
-                <a href="#download">Download</a>
-                <a href="#features">Features</a>
-                <a href="#screenshots">Screenshots</a>
-            </nav>
-            <nav aria-label="Project links">
-                <h4>Project</h4>
-                <a href="https://github.com/FurtherSecrets24680/chemsearch-android" target="_blank" rel="noopener noreferrer">GitHub</a>
-                <a href="https://github.com/FurtherSecrets24680/chemsearch-android/releases" target="_blank" rel="noopener noreferrer">Releases</a>
-            </nav>
-        </div>
-        <p class="footer-copyright">© 2026 ChemSearch · Open source under MIT</p>
+
+        <p class="footer-copyright">© 2026 FurtherSecrets. ChemSearch is open source under the MIT License.</p>
     </footer>
 
-    <div class="lightbox" id="galleryLightbox" hidden>
+    <div class="lightbox t-modal" id="galleryLightbox">
         <div class="lightbox-panel" role="dialog" aria-modal="true" aria-labelledby="galleryLightboxCaption">
             <button class="icon-button lightbox-close" id="galleryLightboxClose" type="button" aria-label="Close screenshot preview">
                 <i class="ph ph-x" aria-hidden="true"></i>
