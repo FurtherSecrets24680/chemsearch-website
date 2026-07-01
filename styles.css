@@ -25,7 +25,7 @@
     --shadow-2: 0 8px 14px rgba(15, 23, 42, 0.16);
 
     --radius-card: 8px;
-    --radius-control: 8px;
+    --radius-control: 12px;
     --max: 1180px;
     --wide: 1340px;
     --header-h: 54px;
@@ -509,6 +509,24 @@ main {
     padding: 112px 0 104px;
     overflow: visible;
     text-align: center;
+}
+
+.hero-pill {
+    display: inline-block;
+    margin-bottom: 16px;
+    padding: 5px 14px;
+    border-radius: 999px;
+    background: rgba(34, 197, 94, 0.15);
+    color: #16a34a;
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+body[data-theme="dark"] .hero-pill {
+    background: rgba(34, 197, 94, 0.18);
+    color: #4ade80;
 }
 
 .hero-copy {
@@ -1021,8 +1039,7 @@ body[data-theme="dark"] .site-footer {
 }
 
 @media (min-width: 1121px) {
-    .steps-section .section-head.centered,
-    .screenshots-section .section-head.centered {
+    .steps-section .section-head.centered {
         margin-right: 0;
         margin-left: 0;
         text-align: left;
@@ -1336,12 +1353,15 @@ body[data-theme="dark"] .site-footer {
 
     .hero-actions {
         width: 100%;
-        max-width: none;
-        margin: 0;
+        max-width: 340px;
+        margin: 0 auto;
         gap: 16px;
     }
 
-    .hero .download-group,
+    .hero .download-group {
+        width: 100%;
+    }
+
     .desktop-screenshot-button,
     .mobile-screenshot-button {
         width: 100%;
@@ -1410,7 +1430,8 @@ body[data-theme="dark"] .site-footer {
         grid-template-columns: 1fr;
     }
 
-    .features-section .section-head {
+    .features-section .section-head,
+    .screenshots-section .section-head {
         margin-bottom: 16px;
         text-align: center;
     }
