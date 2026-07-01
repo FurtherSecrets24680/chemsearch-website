@@ -433,6 +433,7 @@ ul {
 .mobile-nav a {
     display: flex;
     align-items: center;
+    gap: 10px;
     padding: 11px 12px;
 }
 
@@ -720,8 +721,8 @@ body[data-theme="dark"] .highlight-grid {
     display: grid;
     align-content: start;
     min-width: 0;
-    min-height: 468px;
-    padding: 18px clamp(18px, 2vw, 28px) 32px;
+    min-height: 380px;
+    padding: 18px clamp(18px, 2vw, 28px) 24px;
     border-right: 1px solid var(--line-strong);
     background: transparent;
 }
@@ -733,11 +734,11 @@ body[data-theme="dark"] .highlight-grid {
 .highlight-visual {
     display: grid;
     place-items: center;
-    width: min(100%, 140px);
+    width: min(100%, 120px);
     aspect-ratio: 1.18;
     margin: 0 auto 16px;
     border: 2px solid var(--line-strong);
-    border-radius: 20px;
+    border-radius: 18px;
     background:
         radial-gradient(circle at 28% 24%, rgba(96, 165, 250, 0.28), transparent 34%),
         linear-gradient(145deg, rgba(96, 165, 250, 0.16), rgba(255, 255, 255, 0.03));
@@ -751,7 +752,7 @@ body[data-theme="dark"] .highlight-visual {
 
 .highlight-visual i {
     color: var(--brand-3);
-    font-size: clamp(3rem, 6vw, 4.5rem);
+    font-size: clamp(2.4rem, 5vw, 3.6rem);
 }
 
 .info-card h3 {
