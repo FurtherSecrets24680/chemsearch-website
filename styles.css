@@ -1858,3 +1858,151 @@ body[data-theme="dark"] .site-footer {
         transition-duration: 0.01ms !important;
     }
 }
+
+/* ===== Floating Chemistry Background ===== */
+.chem-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 1;           /* above body bg; content uses higher z-index */
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.chem-item {
+    position: absolute;
+    display: block;
+    line-height: 0;
+    will-change: transform;
+}
+
+/* Dark mode: bright blue glow */
+.chem-item i {
+    display: block;
+    color: var(--brand-3);
+    line-height: 1;
+    filter:
+        drop-shadow(0 0 6px var(--brand-3))
+        drop-shadow(0 0 18px rgba(96, 165, 250, 0.55));
+}
+
+/* Light mode: darker blue, softer glow, slightly more opaque so visible on white */
+body:not([data-theme="dark"]) .chem-item i {
+    color: #2563EB;
+    filter:
+        drop-shadow(0 0 4px rgba(37, 99, 235, 0.5))
+        drop-shadow(0 0 12px rgba(37, 99, 235, 0.25));
+}
+
+body:not([data-theme="dark"]) .chem-item {
+    opacity-scale: 1.8; /* fallback – handled per-item below */
+}
+
+body:not([data-theme="dark"]) .chem-i1  { opacity: 0.18; }
+body:not([data-theme="dark"]) .chem-i2  { opacity: 0.14; }
+body:not([data-theme="dark"]) .chem-i3  { opacity: 0.14; }
+body:not([data-theme="dark"]) .chem-i4  { opacity: 0.16; }
+body:not([data-theme="dark"]) .chem-i5  { opacity: 0.14; }
+body:not([data-theme="dark"]) .chem-i6  { opacity: 0.14; }
+body:not([data-theme="dark"]) .chem-i7  { opacity: 0.12; }
+body:not([data-theme="dark"]) .chem-i8  { opacity: 0.12; }
+body:not([data-theme="dark"]) .chem-i9  { opacity: 0.12; }
+body:not([data-theme="dark"]) .chem-i10 { opacity: 0.14; }
+body:not([data-theme="dark"]) .chem-i11 { opacity: 0.11; }
+body:not([data-theme="dark"]) .chem-i12 { opacity: 0.14; }
+body:not([data-theme="dark"]) .chem-i13 { opacity: 0.12; }
+body:not([data-theme="dark"]) .chem-i14 { opacity: 0.11; }
+
+/* 8 distinct float paths — different stop counts, directions, & easing curves
+   to prevent any two items from ever looking synchronized                       */
+
+@keyframes chem-float-a {
+    0%   { transform: translate(0px, 0px)    rotate(0deg)  scale(1); }
+    18%  { transform: translate(7px, -24px)  rotate(4deg)  scale(1.03); }
+    37%  { transform: translate(-5px, -12px) rotate(-2deg) scale(0.98); }
+    55%  { transform: translate(11px, -34px) rotate(5deg)  scale(1.02); }
+    74%  { transform: translate(-8px, -20px) rotate(-3deg) scale(1.00); }
+    88%  { transform: translate(4px,  -30px) rotate(2deg)  scale(0.99); }
+    100% { transform: translate(0px, 0px)    rotate(0deg)  scale(1); }
+}
+
+@keyframes chem-float-b {
+    0%   { transform: translate(0px, 0px)     rotate(0deg)  scale(1); }
+    22%  { transform: translate(-11px, -19px) rotate(-5deg) scale(1.04); }
+    44%  { transform: translate(7px,  -33px)  rotate(3deg)  scale(0.97); }
+    61%  { transform: translate(-7px, -23px)  rotate(-2deg) scale(1.01); }
+    80%  { transform: translate(9px,  -40px)  rotate(5deg)  scale(0.98); }
+    100% { transform: translate(0px, 0px)     rotate(0deg)  scale(1); }
+}
+
+@keyframes chem-float-c {
+    0%   { transform: translate(0px, 0px)    rotate(0deg)  scale(1); }
+    15%  { transform: translate(13px, -21px) rotate(3deg)  scale(1.05); }
+    38%  { transform: translate(-9px, -37px) rotate(-4deg) scale(0.96); }
+    56%  { transform: translate(15px, -17px) rotate(6deg)  scale(1.03); }
+    73%  { transform: translate(-5px, -29px) rotate(-2deg) scale(0.98); }
+    89%  { transform: translate(6px,  -11px) rotate(3deg)  scale(1.01); }
+    100% { transform: translate(0px, 0px)    rotate(0deg)  scale(1); }
+}
+
+@keyframes chem-float-d {
+    0%   { transform: translate(0px, 0px)     rotate(0deg)  scale(1); }
+    27%  { transform: translate(-15px, -25px) rotate(-4deg) scale(1.04); }
+    49%  { transform: translate(11px,  -42px) rotate(6deg)  scale(0.95); }
+    66%  { transform: translate(-6px,  -17px) rotate(-2deg) scale(1.02); }
+    83%  { transform: translate(13px,  -33px) rotate(4deg)  scale(0.97); }
+    100% { transform: translate(0px, 0px)     rotate(0deg)  scale(1); }
+}
+
+@keyframes chem-float-e {
+    0%   { transform: translate(0px, 0px)    rotate(0deg)  scale(1); }
+    21%  { transform: translate(9px,  -22px) rotate(7deg)  scale(1.03); }
+    41%  { transform: translate(-13px,-35px) rotate(-3deg) scale(0.97); }
+    62%  { transform: translate(5px,  -19px) rotate(5deg)  scale(1.02); }
+    81%  { transform: translate(-9px, -44px) rotate(-6deg) scale(0.96); }
+    100% { transform: translate(0px, 0px)    rotate(0deg)  scale(1); }
+}
+
+@keyframes chem-float-f {
+    0%   { transform: translate(0px, 0px)    rotate(0deg)  scale(1); }
+    31%  { transform: translate(-7px, -29px) rotate(-3deg) scale(1.03); }
+    57%  { transform: translate(11px, -17px) rotate(5deg)  scale(0.98); }
+    76%  { transform: translate(-5px, -38px) rotate(-2deg) scale(1.04); }
+    100% { transform: translate(0px, 0px)    rotate(0deg)  scale(1); }
+}
+
+@keyframes chem-float-g {
+    0%   { transform: translate(0px, 0px)    rotate(0deg)  scale(1); }
+    19%  { transform: translate(17px, -15px) rotate(4deg)  scale(1.04); }
+    43%  { transform: translate(-7px, -30px) rotate(-6deg) scale(0.95); }
+    64%  { transform: translate(13px, -40px) rotate(5deg)  scale(1.05); }
+    81%  { transform: translate(-11px,-23px) rotate(-2deg) scale(0.98); }
+    100% { transform: translate(0px, 0px)    rotate(0deg)  scale(1); }
+}
+
+@keyframes chem-float-h {
+    0%   { transform: translate(0px, 0px)    rotate(0deg)  scale(1); }
+    29%  { transform: translate(15px, -33px) rotate(6deg)  scale(1.02); }
+    53%  { transform: translate(-11px,-21px) rotate(-5deg) scale(0.96); }
+    77%  { transform: translate(7px,  -46px) rotate(4deg)  scale(1.03); }
+    100% { transform: translate(0px, 0px)    rotate(0deg)  scale(1); }
+}
+
+/* Prime-number durations + large irrational-ish delays = zero visible sync */
+.chem-i1  { top:  6%; left:  2%;  font-size: 70px; opacity: 0.10; animation: chem-float-a  17s cubic-bezier(0.45,0.05,0.55,0.95) infinite   0s; }
+.chem-i2  { top: 12%; right: 4%;  font-size: 50px; opacity: 0.08; animation: chem-float-e  23s cubic-bezier(0.37,0,0.63,1)         infinite  -7s; }
+.chem-i3  { top: 38%; left:  1%;  font-size: 86px; opacity: 0.08; animation: chem-float-c  29s cubic-bezier(0.5,0.1,0.5,0.9)        infinite -14s; }
+.chem-i4  { top: 52%; right: 2%;  font-size: 66px; opacity: 0.09; animation: chem-float-g  19s cubic-bezier(0.35,0,0.65,1)          infinite  -5s; }
+.chem-i5  { top: 72%; left:  6%;  font-size: 56px; opacity: 0.08; animation: chem-float-b  13s cubic-bezier(0.45,0.05,0.55,0.95)    infinite -18s; }
+.chem-i6  { top: 78%; right: 4%;  font-size: 78px; opacity: 0.08; animation: chem-float-f  31s cubic-bezier(0.4,0,0.6,1)            infinite -10s; }
+.chem-i7  { top:  2%; left: 36%;  font-size: 46px; opacity: 0.07; animation: chem-float-h  21s cubic-bezier(0.5,0.1,0.5,0.9)        infinite  -3s; }
+.chem-i8  { top: 28%; right:16%;  font-size: 60px; opacity: 0.07; animation: chem-float-d  37s cubic-bezier(0.35,0,0.65,1)          infinite -22s; }
+.chem-i9  { top: 60%; left: 26%;  font-size: 52px; opacity: 0.07; animation: chem-float-a  27s cubic-bezier(0.45,0.05,0.55,0.95)    infinite -12s; }
+.chem-i10 { top: 86%; left: 46%;  font-size: 64px; opacity: 0.08; animation: chem-float-c  15s cubic-bezier(0.37,0,0.63,1)          infinite  -8s; }
+.chem-i11 { top: 22%; left: 12%;  font-size: 44px; opacity: 0.06; animation: chem-float-e  41s cubic-bezier(0.5,0.1,0.5,0.9)        infinite -16s; }
+.chem-i12 { top: 68%; right:20%;  font-size: 58px; opacity: 0.08; animation: chem-float-b  33s cubic-bezier(0.35,0,0.65,1)          infinite  -4s; }
+.chem-i13 { top: 20%; right:28%;  font-size: 54px; opacity: 0.07; animation: chem-float-g  25s cubic-bezier(0.45,0.05,0.55,0.95)    infinite -20s; }
+.chem-i14 { top: 48%; left: 44%;  font-size: 48px; opacity: 0.06; animation: chem-float-f  43s cubic-bezier(0.4,0,0.6,1)            infinite -35s; }
+
+@media (prefers-reduced-motion: reduce) {
+    .chem-item { animation: none !important; }
+}
