@@ -16,12 +16,12 @@
     const lightboxCaption = document.getElementById("galleryLightboxCaption");
     const lightboxClose = document.getElementById("galleryLightboxClose");
     const apkDownloadLinks = Array.from(document.querySelectorAll("[data-download-apk]"));
-    const latestReleaseApiUrl = "https://api.github.com/repos/FurtherSecrets24680/chemsearch-android/releases/latest";
+    const releasesApiUrl = "https://api.github.com/repos/FurtherSecrets24680/chemsearch-android/releases";
     const transparentPixel = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
     const fallbackApk = {
-        name: "ChemSearch.v1.13.7.apk",
-        url: "https://github.com/FurtherSecrets24680/chemsearch-android/releases/download/1.13.7/ChemSearch.v1.13.7.apk",
-        version: "v1.13.7"
+        name: "ChemSearch.v1.13.8.apk",
+        url: "https://github.com/FurtherSecrets24680/chemsearch-android/releases/download/1.13.8/ChemSearch.v1.13.8.apk",
+        version: "v1.13.8"
     };
     let returnFocus = null;
 
@@ -61,12 +61,15 @@
         setApkDownload(fallbackApk.url, fallbackApk.name, fallbackApk.version);
 
         try {
-            const response = await fetch(latestReleaseApiUrl, {
+            const response = await fetch(`${releasesApiUrl}?t=${Date.now()}`, {
                 headers: { Accept: "application/vnd.github+json" }
             });
             if (!response.ok) return;
 
-            const release = await response.json();
+            const data = await response.json();
+            const release = Array.isArray(data) ? data[0] : data;
+            if (!release) return;
+
             const apkAsset = Array.isArray(release.assets)
                 ? release.assets.find((asset) => {
                     const name = typeof asset.name === "string" ? asset.name.toLowerCase() : "";
